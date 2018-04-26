@@ -1,0 +1,227 @@
+#main-addmanager.mui-scroll-wrapper {
+	margin-top: 44px;
+	margin-bottom: 50px;
+}
+
+#main-addmanager .mui-content {
+	background: 0 0;
+}
+
+.mui-bar#addadd-box {
+	position: fixed;
+	bottom: 0;
+	padding: 0;
+	height: 50px;
+	box-shadow: none;
+}
+
+.mui-bar#addadd-box button {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 50px;
+	border: 0;
+	border-radius: 0;
+	background: #FE2000;
+	color: #fff;
+}
+
+#main-addmanager .mui-content .tip {
+	position: absolute;
+	margin-top: 20px;
+	width: 100%;
+	text-align: center;
+	line-height: 3em;
+}
+
+#main-addmanager .mui-content .mui-card .mui-card-header.mui-card-media
+	{
+	display: flex;
+	padding-bottom: 10px;
+	min-height: auto;
+}
+
+#main-addmanager .mui-content .mui-card .mui-card-header span {
+	color: #222;
+	font-size: 14px;
+}
+
+#main-addmanager .mui-content .mui-card .mui-card-header span b {
+	font-weight: 400;
+}
+
+#main-addmanager .mui-content .mui-card .mui-card-header:after {
+	height: 0;
+}
+
+#main-addmanager .mui-content .mui-card .mui-card-content-inner {
+	padding: 10px;
+	padding-top: 0;
+}
+
+#main-addmanager .mui-content .mui-card .mui-card-content-inner p {
+	margin: 0;
+	color: #777;
+}
+
+#main-addmanager .mui-content .mui-card input[type=radio] {
+	top: 10px;
+	left: 10px;
+	width: 26px;
+	height: 25px;
+}
+
+#main-addmanager .mui-content .mui-card input[type=radio]:checked:before
+	{
+	position: absolute;
+	top: 0;
+	left: 0;
+	color: #FE3000;
+	content: '\e442';
+}
+
+#main-addmanager .mui-content .mui-card input[type=radio]:before {
+	color: #FE3000;
+	content: '\e411';
+	font-size: 1.5em;
+}
+
+#main-addmanager .mui-content .mui-card .mui-radio label {
+	padding-left: 26px;
+	width: auto;
+}
+
+#main-addmanager .mui-content .mui-card .mui-radio button {
+	margin-left: 15px;
+	padding: 0;
+	border: 0;
+	line-height: 24px;
+}
+
+#main-addmanager .mui-content .mui-card .mui-radio button span.mui-icon
+	{
+	position: relative;
+	top: 1px;
+	font-size: 22px;
+}
+
+#main-addmanager .mui-content .mui-card .mui-card-footer {
+	padding-bottom: 8px;
+	line-height: 24px;
+}
+
+#offCanvasWrapper .mui-loading {
+	position: absolute;
+	top: 43%;
+	z-index: 99999;
+	display: none;
+	width: 100%;
+}
+
+#offCanvasWrapper .mui-loading .loading-bg {
+	margin: 0 auto;
+	width: 45px;
+	height: 45px;
+	border-radius: 100%;
+	background: #fff;
+	box-shadow: 1px 1px 3px rgba(0, 0, 0, .4);
+}
+
+#offCanvasWrapper .mui-loading .loading-bg .mui-spinner {
+	position: relative;
+	top: 11px;
+	width: 24px;
+	height: 24px;
+}
+
+#aside.mui-off-canvas-right {
+	width: 100%;
+	background: #fff;
+}
+
+#aside .mui-table-view .mui-table-view-cell:after {
+	left: 0;
+}
+
+#aside .mui-table-view .mui-table-view-cell.side-head {
+	padding: 0;
+	background: #fefefe;
+	box-shadow: 0 1px 5px rgba(0, 0, 0, .2);
+	text-align: center;
+	font-size: 15px;
+	line-height: 45px;
+}
+
+#aside .mui-table-view .mui-table-view-cell.side-head:after {
+	height: 0;
+}
+
+#aside button.saveEdit {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	height: 50px;
+	border: 0;
+	border-radius: 0;
+	background: #fe2000;
+	color: #fff;
+}
+
+#aside .mui-input-group .mui-input-row {
+	padding: 10px;
+	height: auto;
+}
+
+#aside .mui-input-group .mui-input-row label {
+	overflow: hidden;
+	padding: 0;
+	width: 20%;
+	color: #777;
+	white-space: nowrap;
+	font-size: 13px;
+	line-height: 2;
+}
+
+#aside .mui-input-group .mui-input-row input {
+	float: left;
+	padding: 0;
+	width: 80%;
+	height: auto;
+	color: #000;
+	font-size: 13px;
+	line-height: 2;
+}
+
+#aside .mui-input-group .mui-input-row textarea {
+	padding: 2px 5px;
+	width: 80%;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	font-size: 13px;
+}
+
+#aside .mui-input-group .mui-input-row .mui-navigate-right {
+	margin: 0;
+	padding: 0;
+}
+
+#aside .mui-input-group .mui-input-row .mui-navigate-right:after {
+	right: 0;
+}
+
+#aside .mui-input-group .mui-input-row .area-text {
+	float: right;
+	padding-right: 22px;
+	width: 80%;
+	white-space: normal;
+	font-size: 13px;
+	line-height: 2;
+}
+
+#aside .mui-icon#action_back_side {
+	position: absolute;
+	top: 0;
+	left: 0;
+	margin: 0;
+	padding: 10px;
+}

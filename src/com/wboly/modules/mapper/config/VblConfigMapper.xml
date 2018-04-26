@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wboly.modules.dao.config.VblConfigMapper">
+
+	<resultMap id="vblconfig" type="com.wboly.modules.entity.config.VblConfigEntity">
+		<result column="CONFIGNAME" property="configname" />
+		<result column="CONFIGVALUE" property="configvalue" />
+		<result column="DESCRIBE" property="describe" />
+	</resultMap>
+
+	<!-- 查询表 -->
+	<select id="select" parameterType="com.wboly.modules.entity.config.VblConfigEntity" resultType="java.util.Map">
+		SELECT CONFIGNAME AS configname, CONFIGVALUE AS configvalue 
+		FROM VBL_CONFIG WITH(NOLOCK)
+		<where>
+			1=1
+			<if test="configname != null and configname != ''">
+				AND CONFIGNAME=#{configname}
+			</if>
+			<if test="configvalue != null and configvalue != ''">
+				AND CONFIGVALUE=#{configvalue}
+			</if>
+			<if test="describe != null and describe != ''">
+				AND DESCRIBE=#{describe}
+			</if>
+			<if test="confignames != null and confignames.size()>0">
+				AND CONFIGNAME IN
+				<foreach item="item" index="index" collection="confignames"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+	<!-- 查询行数 -->
+	<select id="selectCount" parameterType="com.wboly.modules.entity.config.VblConfigEntity" resultType="Integer">
+		SELECT COUNT(*) FROM VBL_CONFIG WITH(NOLOCK)
+		<where>
+			1=1
+			<if test="configname != null and configname != ''">
+				AND CONFIGNAME=#{configname}
+			</if>
+			<if test="configvalue != null and configvalue != ''">
+				AND CONFIGVALUE=#{configvalue}
+			</if>
+			<if test="describe != null and describe != ''">
+				AND DESCRIBE=#{describe}
+			</if>
+			<if test="confignames != null and confignames.size()>0">
+				AND CONFIGNAME IN
+				<foreach item="item" index="index" collection="confignames"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+	<!-- 查询单行数据 -->
+	<select id="selectOne" parameterType="com.wboly.modules.entity.config.VblConfigEntity" resultMap="vblconfig">
+		SELECT CONFIGNAME, CONFIGVALUE,DESCRIBE FROM VBL_CONFIG WITH(NOLOCK)
+		<where>
+			1=1
+			<if test="configname != null and configname != ''">
+				AND CONFIGNAME=#{configname}
+			</if>
+			<if test="configvalue != null and configvalue != ''">
+				AND CONFIGVALUE=#{configvalue}
+			</if>
+			<if test="describe != null and describe != ''">
+				AND DESCRIBE=#{describe}
+			</if>
+		</where>
+	</select>
+
+	<!-- 新增表 -->
+	<insert id="insert" parameterType="com.wboly.modules.entity.config.VblConfigEntity">
+		INSERT INTO VBL_CONFIG (CONFIGNAME, CONFIGVALUE, DESCRIBE)VALUES(
+		#{configname,jdbcType=VARCHAR}, #{configvalue,jdbcType=VARCHAR}, #{describe,jdbcType=VARCHAR})
+	</insert>
+
+	<!-- 更新表 -->
+	<update id="update" parameterType="com.wboly.modules.entity.config.VblConfigEntity">
+		UPDATE VBL_CONFIG
+		<set>
+			CONFIGNAME = #{configname}
+			<if test="configvalue != null and configvalue != ''">
+				,CONFIGVALUE = #{configvalue}
+			</if>
+			<if test="describe != null and describe != ''">
+				,DESCRIBE = #{describe}
+			</if>
+		</set>
+		WHERE CONFIGNAME=#{configname}
+	</update>
+
+	<!--删除表 -->
+	<delete id="delete" parameterType="com.wboly.modules.entity.config.VblConfigEntity">
+		DELETE FROM VBL_CONFIG WHERE CONFIGNAME=#{configname}
+	</delete>
+</mapper>

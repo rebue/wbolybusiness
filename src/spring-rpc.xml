@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd   
+    http://www.springframework.org/schema/tx   
+    http://www.springframework.org/schema/tx/spring-tx-3.0.xsd  
+    http://www.springframework.org/schema/context  
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd  
+    http://www.springframework.org/schema/mvc  
+    http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+
+	<!-- 加载wbloy_data.properties配置文件 -->
+	<!-- <bean id="propertyConfigurer" -->
+	<!-- class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"> -->
+	<!-- <property name="location"> -->
+	<!-- <value>classpath:wbloy_rpc.properties</value> -->
+	<!-- </property> -->
+	<!-- </bean> -->
+
+	<context:property-placeholder
+		ignore-unresolvable="true" location="classpath:wbloy_rpc.properties" />
+
+	<!-- service连接池配置 -->
+	<bean id="connectionProvider" class="com.wboly.rpc.pool.ConnectionProviderImpl">
+		<property name="serviceIP" value="${wbloy.ens.ip}" />
+		<property name="servicePort" value="${wbloy.ens.port}" />
+		<property name="maxActive" value="${wbloy.ens.maxActive}" />
+		<property name="maxIdle" value="${wbloy.ens.maxIdle}" />
+		<property name="testOnBorrow" value="${wbloy.ens.testOnBorrow}" />
+		<property name="testOnReturn" value="${wbloy.ens.testOnReturn}" />
+		<property name="testWhileIdle" value="${wbloy.ens.testWhileIdle}" />
+		<property name="conTimeOut" value="${wbloy.ens.conTimeOut}" />
+	</bean>
+
+	<!-- service连接管理配置 -->
+	<bean id="connectionManager" class="com.wboly.rpc.pool.ConnectionManager">
+		<property name="connectionProvider" ref="connectionProvider" />
+	</bean>
+
+	<bean id="wbloyTBinaryProtocol" class="com.wboly.rpc.protocol.WbloyTBinaryProtocol">
+		<constructor-arg>
+			<ref bean="connectionManager" />
+		</constructor-arg>
+	</bean>
+
+	<bean id="wbloyTMultiplexedProtocol" class="com.wboly.rpc.protocol.WbloyTMultiplexedProtocol">
+		<constructor-arg>
+			<ref bean="wbloyTBinaryProtocol" />
+		</constructor-arg>
+	</bean>
+
+	<bean id="rpcEntity" class="com.wboly.rpc.entity.RpcEntity">
+		<property name="service_ip" value="${wbloy.ens.ip}" />
+		<property name="service_port" value="${wbloy.ens.port}" />
+	</bean>
+</beans>

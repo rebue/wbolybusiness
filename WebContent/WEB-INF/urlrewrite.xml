@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>   
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 3.2//EN"
+	"http://tuckey.org/res/dtds/urlrewrite3.2.dtd">
+<urlrewrite>
+
+	<!-- 订单详情页规则 -->
+	<rule>
+		<!--参数: 订单号 -->
+		<from>^/wechat/myorder/([0-9a-zA-Z]+).htm$</from>
+		<to>/wechat/order/myOrderDetail.htm\?key=59c23bdde5603ef993cf03fe64e448f1&amp;order_data=$1</to>
+	</rule>
+
+	<!-- 微信授权登陆规则 -->
+	<rule>
+		<from>^/wechat/oauth2/checkSignature/([0-9a-zA-Z]+).htm$</from>
+		<to>/wechat/oauth2/checkSignature.htm\?checkSignature=$1</to>
+	</rule>
+
+	<!-- 微信支付规则 测试目录 -->
+	<rule>
+		<from>^/wechat/paytest/authpay/([0-9a-zA-Z]+).htm$</from>
+		<to>/wechat/paytest/authpay.htm\?orderId=$1</to>
+	</rule>
+
+	<!-- 微信支付规则 正式目录 -->
+	<rule>
+		<from>^/wechat/pay/authpay/([0-9a-zA-Z]+).htm$</from>
+		<to>/wechat/pay/authpay.htm\?orderId=$1</to>
+	</rule>
+
+	<!-- 微信商品类目规则 -->
+	<rule>
+		<from>^/wechat/class/goods/([0-9a-zA-Z\u4e00-\u9fa5_]+).htm$</from>
+		<to>/wechat/goods/allGoodsList.htm\?c=$1</to>
+	</rule>
+
+	<!-- 微信支付成功后的跳转页面规则 -->
+	<rule>
+		<from>^/wechat/test/success/([0-9a-zA-Z\u4e00-\u9fa5_]+)/([0-9a-zA-Z\u4e00-\u9fa5_]+).htm$</from>
+		<to>/wechat/paytest/success.htm\?orderId=$2&amp;type=$1</to>
+	</rule>
+
+	<!-- 支付页面 -->
+	<rule>
+		<!--参数: 订单号 -->
+		<from>^/wechat/pay/center/([0-9a-zA-Z\u4e00-\u9fa5_]+).htm$</from>
+		<to>/wechat/pay/paycenterPage.htm\?payOrderId=$1</to>
+	</rule>
+
+	<!-- 支付成功页面 -->
+	<rule>
+		<!--参数: 获取用户信息的key -->
+		<from>^/wechat/success/([0-9a-zA-Z\u4e00-\u9fa5_]+)/([0-9a-zA-Z\u4e00-\u9fa5_]+).htm$</from>
+		<to>/wechat/pay/success.htm\?type=$1&amp;orderId=$2</to>
+	</rule>
+</urlrewrite>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wboly.wechat.dao.cart.WeChatCartMapper">
+
+	<!--微信 购物车信息 -->
+
+	<!-- 查询购物车商品数量 -->
+	<select id="selectShoppingCartCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT sum(num) as cartNum from vbl_market_order_data.dbo.vbl_cart_user WITH(NOLOCK)
+		where buyerUid=#{buyerUid} and shopId=#{shopId}
+	</select>
+
+	<!-- 用户加入购物车开始 -->
+	<!-- 查询已上线商品价格和名称 -->
+	<select id="selectHasBeenLaunchedGoodsPriceAndName" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT activityId, goodsTitle, retailPrice FROM vbl_market_goods_data.dbo.vbl_activity WITH(NOLOCK)
+		WHERE shopId=${shopId} AND goodsId=${goodsId} AND skuId=${skuId} AND supplierUid=${supplierUid}
+	</select>
+
+	<!-- 查询商品图片 -->
+	<select id="selectGoodsImg" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT faceImg FROM vbl_market_goods_data.dbo.vbl_goods WITH(NOLOCK) WHERE goodsId=${goodsId}
+	</select>
+
+	<!-- 获取购物车编号、订单数量 -->
+	<select id="selectShoppingCartNumberAndNum" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT ISNULL(id, 0) AS id, ISNULL(num, 0) AS oldNum FROM vbl_market_order_data.dbo.vbl_cart_user WITH ( NOLOCK )
+		WHERE buyerUid = ${buyerUid} AND shopId = ${shopId} AND goodsId = ${goodsId} AND
+		skuId = ${skuId} AND supplierUid=${supplierUid}
+	</select>
+
+	<!-- 根据购物车编号删除购物车信息 -->
+	<delete id="delectVblCartUserInId" parameterType="java.util.Map">
+		DELETE vbl_market_order_data.dbo.vbl_cart_user WHERE id=${id}
+	</delete>
+
+	<!-- 更新购物车信息 -->
+	<update id="updateVblCartUserDataInId" parameterType="java.util.Map">
+		UPDATE vbl_market_order_data.dbo.vbl_cart_user
+		SET num = num + ${num}, price = price + ${retailPrice} * ${num}, dateline = dbo.GetTimeStamp(GETDATE(), -1)
+		WHERE id = ${id}
+	</update>
+
+	<!-- 添加购物车信息 -->
+	<insert id="insertVblCartUserData" parameterType="java.util.Map">
+		INSERT INTO vbl_market_order_data.dbo.vbl_cart_user ( buyerUid, shopId, 
+		goodsId, skuId, status, supplierUid, num, goodsTitle, price, img, dateline )
+		VALUES ( ${buyerUid}, ${shopId}, ${goodsId}, ${skuId}, 1 <!-- 1=正常 -->, ${supplierUid}, ${num}, '${goodsTitle}',
+		${retailPrice} * ${num}, '${img}', dbo.GetTimeStamp(GETDATE(), -1) );
+	</insert>
+
+	<!-- 查询用户已购买规则商品数量和类型 -->
+	<select id="selectUserHaveRuleTypeAndNum" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT type, SUM(num) AS num FROM vbl_market_goods_data.dbo.vbl_goods_rule_log WITH (nolock)
+		WHERE 1 = 1 AND buyerUid = ${buyerUid} AND activityId = ${activityId} GROUP BY type
+	</select>
+	<!-- 用户加入购物车结束 -->
+
+	<!-- 根据用户编号和购物车编号删除购物车编号 -->
+	<delete id="deleteShoppingCartInUserIdAndId" parameterType="java.util.Map">
+		DELETE vbl_market_order_data.dbo.vbl_cart_user WHERE buyerUid = ${buyerUid} AND id IN (${ids})
+	</delete>
+</mapper>

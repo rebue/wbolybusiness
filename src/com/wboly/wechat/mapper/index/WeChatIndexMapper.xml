@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wboly.wechat.dao.index.WeChatIndexMapper">
+
+	<!--微信 首页信息 -->
+
+	<!-- 查询所有已上线活动的商品编号 -->
+	<select id="selectAllActivityOfGoodsIdList" resultType="java.lang.Integer">
+		SELECT DISTINCT goodsId FROM vbl_market_goods_data.dbo.vbl_activity WITH(nolock)
+	</select>
+
+	<!-- 根据商品编号查询商品表的品牌编号 -->
+	<select id="selectGoodsOfbrandIdByGoodsId" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT DISTINCT brandId FROM vbl_market_goods_data.dbo.vbl_goods WITH(nolock) WHERE 1=1
+		<if test="goodsList != null and goodsList !=''">
+			AND goodsId IN
+			<foreach collection="goodsList" item="item" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+
+	<!-- 根据品牌编号查询品牌信息 -->
+	<select id="selectBrandInfoByBrandId" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT brandId = (
+			stuff(
+				(SELECT ',' + CONVERT(VARCHAR,brandId)
+				FROM vbl_market_goods_data.dbo.vbl_goods_brand WITH (NOLOCK)
+				WHERE brandName = a.brandName FOR xml path ('')),1,1,''
+			)
+		),a.brandName
+		FROM vbl_market_goods_data.dbo.vbl_goods_brand a WITH (NOLOCK)
+		where 1=1
+		<if test="brandList != null and brandList !=''">
+			AND brandId IN
+			<foreach collection="brandList" item="item" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		GROUP BY a.brandName,sort
+		ORDER BY sort
+	</select>
+
+</mapper>

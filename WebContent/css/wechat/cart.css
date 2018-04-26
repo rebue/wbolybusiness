@@ -1,0 +1,555 @@
+﻿.mui-bar .mui-btn-link {
+	color: #777
+}
+
+.mui-bar-nav {
+	box-shadow: none;
+	border-bottom: 1px solid #eee
+}
+
+#main {
+	margin-top: 44px;
+	margin-bottom: 100px
+}
+
+#main-checkorder {
+	margin-top: 44px;
+	margin-bottom: 50px
+}
+
+.mui-content {
+	background: 0 0
+}
+
+.mui-input-row {
+	font-size: .875rem
+}
+
+.mui-input-group .mui-input-row:after {
+	left: 0
+}
+
+.mui-input-group.AddBox:before {
+	height: 0
+}
+
+.mui-input-group.AddBox {
+	padding-top: 3px
+}
+
+.mui-input-group.AddBox .mui-input-row {
+	z-index: 9
+}
+
+.mui-input-group.AddBox .mui-input-row.sendtit {
+	box-shadow: 0 2px 4px rgba(0, 0, 0, .1)
+}
+
+.mui-radio.mui-left label {
+	padding-left: 42px;
+	padding-top: 13px
+}
+
+.mui-radio.mui-left input[type=radio] {
+	width: 20px;
+	height: 20px;
+	top: 10px;
+	left: 13px
+}
+
+.mui-radio input[type=radio]:checked:before {
+	color: #FE3000;
+	content: '\e443'
+}
+
+.mui-radio input[type=radio]:before {
+	color: #FE3000;
+	content: '\e413';
+	font-size: 1.25rem
+}
+
+.mui-table-view:after {
+	height: 1px
+}
+
+.mui-table-view#AddList {
+	background: #fcfcfc;
+	transition: all .2s linear;
+	height: 67px;
+	overflow: hidden
+}
+
+.mui-table-view#AddList .mui-table-view-cell {
+	padding-right: 50px;
+	padding-left: 41px;
+	position: relative
+}
+
+.mui-table-view#AddList .mui-table-view-cell:before {
+	color: #fe3000;
+	content: "\e333";
+	font-size: 1.875rem;
+	width: 30px;
+	height: 30px;
+	position: absolute;
+	left: 7px;
+	top: 20px;
+	font-family: Muiicons;
+	line-height: 1
+}
+
+.mui-table-view#AddList .mui-table-view-cell .mui-h5 {
+	color: #333
+}
+
+.mui-table-view#AddList .mui-table-view-cell h5 {
+	color: #333;
+	font-weight: 700
+}
+
+#goods-main-box {
+	/* margin-top: 14px; */
+	background: #fff;
+	position: relative
+}
+
+#goods-main-box:before {
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	height: 1px;
+	content: '';
+	-webkit-transform: scaleY(.5);
+	transform: scaleY(.5);
+	background-color: #c8c7cc
+}
+
+#goods-main-box .shoptop {
+	width: 100%;
+	font-size: .8125rem;
+	overflow: hidden
+}
+
+#goods-main-box .shoptop span {
+	margin: 7px 15px 6px 0;
+	line-height: 1.25rem;
+	color: #aaa
+}
+
+#goods-main-box .shoptop span.spt {
+	color: #000;
+	margin: 7px 0 6px 15px;
+	border-left: 5px solid #fe3000;
+	padding-left: 5px
+}
+
+#goods-main-box .mui-input-group .mui-input-row {
+	height: auto;
+	padding: 12px 10px 12px 42px;
+	position: relative
+}
+
+#goods-main-box .car-inner-box {
+	height: auto
+}
+
+#goods-main-box .car-inner-box .car-inner-box-img {
+	float: left;
+	width: 20%;
+	position: relative;
+	overflow: hidden
+}
+
+#goods-main-box .car-inner-box img.goodspic {
+	width: 100%;
+	display: block
+}
+
+#goods-main-box .car-inner-box .car-inner-box-img.limit:after {
+	content: '限购';
+	width: 150%;
+	line-height: 150%;
+	background: #fe3000;
+	position: absolute;
+	top: 10%;
+	left: 0;
+	z-index: 999;
+	font-size: 0.75rem;
+	color: #fff;
+	text-align: center;
+	transform: rotate(45deg);
+	-webkit-transform: rotate(45deg);
+}
+
+#goods-main-box .car-inner-box .car-inner-body {
+	float: right;
+	padding-left: 6px;
+	width: 80%
+}
+
+#goods-main-box .car-inner-box .car-inner-body h5 {
+	color: #333;
+	height: 1.4em;
+	overflow: hidden;
+	margin: 1px 0 0 0;
+	white-space: nowrap;
+	text-overflow: ellipsis
+}
+
+#goods-main-box .car-inner-box .car-inner-body h5 a {
+	color: #333
+}
+
+#goods-main-box .car-inner-box .car-inner-body p {
+	margin: 0;
+	font-size: .75rem;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden
+}
+
+#goods-main-box .car-inner-box .car-inner-body .price-area {
+	position: absolute;
+	bottom: 12px;
+	line-height: 1
+}
+
+#goods-main-box .car-inner-box .car-inner-body .price-area .m-price {
+	font-size: 1.0625rem;
+	color: #fe3000
+}
+
+#goods-main-box .car-inner-box .car-inner-body .price-area .b-money {
+	font-size: .75rem;
+	color: #444
+}
+
+#goods-main-box .car-inner-box .car-inner-body .mui-numbox {
+	margin: 0;
+	height: 25px;
+	position: absolute;
+	right: 10px;
+	bottom: 11px;
+	width: 85px;
+	padding: 0 26px
+}
+
+#goods-main-box .car-inner-box .car-inner-body .mui-numbox button.mui-btn
+	{
+	width: 26px
+}
+
+#goods-main-box .car-inner-box .car-inner-body .mui-numbox .mui-numbox-input
+	{
+	font-size: .875rem;
+	text-overflow: inherit;
+}
+
+#goods-main-box .mui-input-group .mui-table-view-cell {
+	display: block;
+	padding: 0
+}
+
+#goods-main-box .mui-input-group .mui-input-row input[type=checkbox] {
+	width: 20px;
+	height: 20px;
+	top: 33px;
+	left: 13px
+}
+
+#goods-main-box .mui-input-group .mui-input-row input[type=checkbox]:checked:before
+	{
+	color: #FE3000;
+	content: '\e443'
+}
+
+#goods-main-box .mui-input-group .mui-input-row input[type=checkbox]:before
+	{
+	color: #FE3000;
+	content: '\e413';
+	font-size: 1.25rem
+}
+
+.total-box {
+	height: 50px;
+	bottom: 51px;
+	box-shadow: none;
+	border-top: 1px solid #fe3000;
+	padding-right: 0
+}
+
+.total-box .paybtn {
+	background: #FE2000;
+	height: 49px;
+	color: #fff;
+	width: 33%;
+	padding: 0;
+	border-radius: 0;
+	border: 0
+}
+
+.total-box .paybtn:enabled:active {
+	background: #fe0000
+}
+
+.total-box.mui-checkbox.mui-left input[type=checkbox] {
+	width: 20px;
+	height: 20px;
+	top: 16px;
+	left: 13px
+}
+
+.total-box.mui-checkbox.mui-left label {
+	width: auto;
+	padding: 15px 0 0 28px;
+	font-size: .875rem
+}
+
+.total-box input[type=checkbox]:checked:before {
+	color: #FE3000;
+	content: '\e443'
+}
+
+.total-box input[type=checkbox]:before {
+	color: #FE3000;
+	content: '\e413';
+	font-size: 1.25rem
+}
+
+.total-box.mui-checkbox {
+	position: fixed;
+	overflow: hidden
+}
+
+.total-box .total-price-box {
+	height: 49px;
+	text-align: right;
+	padding-right: 3px
+}
+
+.total-box .total-price-box h4 {
+	margin: 0;
+	height: 26px;
+	line-height: 1.875rem;
+	font-size: .9375rem
+}
+
+.total-box .total-price-box h5 {
+	margin: 0;
+	height: 1.4em;
+	line-height: 1.4;
+	font-size: .75rem
+}
+
+.total-box .total-price-box h4 span {
+	color: #FE3000;
+	font-size: 1.0625rem;
+	font-weight: 700
+}
+
+.total-box .total-price-box h5 span {
+	color: #FE3000;
+	font-size: .875rem
+}
+
+.case-box {
+	display: inline;
+	overflow: hidden;
+	transition: all .2s linear
+}
+
+#case_1 {
+	opacity: 1
+}
+
+#case_1 .total-price-box {
+	transition: all .2s linear
+}
+
+#case_2 {
+	position: absolute;
+	height: 49px;
+	right: 0;
+	top: 50px;
+	padding-top: 8px;
+	padding-right: 10px;
+	background: #FFF
+}
+
+#case_2 button {
+	padding: 6px 30px;
+	margin-left: 10px;
+	border-color: #fe3000;
+	color: #fff;
+	background: #fe3000
+}
+
+#case_2 button:enabled:active {
+	background: #fe0000
+}
+
+.dialog-ul {
+	padding: 0;
+	margin: 0
+}
+
+.dialog-ul li {
+	text-align: left;
+	list-style: none;
+	position: relative
+}
+
+.dialog-ul li.tip {
+	color: #FE3000
+}
+
+.dialog-ul li span.mui-icon, .dialog-ul li span.mui-icon-extra {
+	vertical-align: bottom;
+	padding-right: 5px
+}
+
+.mui-bar-nav.not-border {
+	border-bottom: none
+}
+
+#goods-main-box.check-order-box, #goods-main-box.pay-box {
+	margin-top: 0
+}
+
+#goods-main-box.check-order-box .mui-input-group .mui-input-row {
+	padding-left: 10px
+}
+
+#goods-main-box.check-order-box .car-inner-box .car-inner-body .numbox {
+	margin: 0;
+	position: absolute;
+	right: 15px;
+	bottom: 10px
+}
+
+#goods-main-box.pay-box .mui-input-group .mui-input-row {
+	padding-left: 10px;
+	padding-right: 42px
+}
+
+.fixbtm {
+	bottom: 0
+}
+
+.fixbtm .total-price-box {
+	text-align: left
+}
+
+.fixbtm .total-price-box h5 {
+	float: left;
+	margin-right: 10px;
+	color: #555
+}
+
+.fixbtm.total-box .paybtn {
+	width: 30%
+}
+
+.message-box {
+	padding: 10px;
+	background: #fff;
+	border-bottom: 1px solid #D7D5DA
+}
+
+.message-box textarea {
+	margin: 0;
+	margin-top: 3px;
+	font-size: .75rem;
+	padding: 8px
+}
+
+.fixbtm.total-box.fullbtm {
+	padding: 0
+}
+
+.fixbtm.total-box.fullbtm .paybtn {
+	width: 100%
+}
+
+.pay-info {
+	margin: 0;
+	padding: 0
+}
+
+.pay-info .mui-table-view-cell {
+	padding: 10px
+}
+
+.pay-info .mui-table-view-cell h5 {
+	margin: 0
+}
+
+.pay-info .mui-table-view-cell:after {
+	left: 0
+}
+
+#goods-main-box.pay-box .car-inner-box img.goodspic {
+	width: 100%
+}
+
+#goods-main-box.pay-box .pay-info .mui-table-view-cell h5 {
+	color: #666
+}
+
+#goods-main-box.pay-box .pay-info .mui-table-view-cell h5 span {
+	line-height: 1.3125rem;
+	color: #fe3000
+}
+
+#goods-main-box.pay-box .mui-input-group .mui-input-row {
+	padding-top: 15px;
+	padding-bottom: 14px
+}
+
+#goods-main-box.pay-box .car-inner-box .car-inner-body {
+	width: 80%;
+	padding-left: 10px
+}
+
+#goods-main-box.pay-box .car-inner-box .car-inner-body #vmoney {
+	position: absolute;
+	right: 54px;
+	top: 18px
+}
+
+#goods-main-box.pay-box .car-inner-box .car-inner-body #vmoney span {
+	color: #FE3000
+}
+
+#goods-main-box.pay-box .car-inner-box .car-inner-body h5 {
+	font-size: 1rem;
+	margin-top: 6px;
+	font-weight: 700
+}
+
+#goods-main-box.pay-box .car-inner-box .car-inner-body p {
+	position: absolute;
+	bottom: 18px;
+	line-height: 1
+}
+
+#goods-main-box.pay-box .mui-radio.mui-left input[type=radio] {
+	width: 20px;
+	height: 20px;
+	top: 19px;
+	right: 13px;
+	left: auto
+}
+
+#goods-main-box.pay-box .mui-radio.mui-left input[type=radio]:checked:before
+	{
+	color: #FE3000;
+	content: '\e443'
+}
+
+#goods-main-box.pay-box .mui-radio.mui-left input[type=radio]:before {
+	color: #FE3000;
+	content: '\e413';
+	font-size: 1.25rem
+}

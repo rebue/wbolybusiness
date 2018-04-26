@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wboly.modules.dao.courier.VblCourierMapper">
+
+	<!-- 快递员信息列表 -->
+
+	<!-- 快递员订单列表接口 -->
+	<select id="CourierOrders" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT top 10 lp.provinceName,lc.cityName,la.areaName,ls.streetName,
+		V1.orderId,V1.address,V1.mobile,V1.dateline,V1.realName,V1.message,
+		barcode = (
+			stuff((SELECT ',' + CONVERT(VARCHAR,barcode)
+			FROM vbl_market_order_data.dbo.vbl_shop_order_trade WITH (NOLOCK)
+			WHERE orderId = V1.orderId FOR xml path ('') ),1,1,'')
+		)
+		from (
+			SELECT row_number()OVER(ORDER BY vso.finishDate desc) rn,vso.orderId,vso.addressId,vso.dateline,
+			vua.provinceId,vua.cityId,vua.areaId,vua.streetId,vua.address,vua.mobile,vua.realName,vso.message
+			from vbl_market_order_data.dbo.vbl_shop_order vso WITH(NOLOCK),
+			vbl_market_base_data.dbo.vbl_user_address vua WITH(NOLOCK)
+			where 1=1 AND vso.addressId = vua.addressId AND vso.courierId = #{userid} AND vso.state = #{state}
+		)V1
+		LEFT JOIN locality_data.dbo.loc_province lp WITH(nolock) ON V1.provinceId = lp.provinceId
+		LEFT JOIN locality_data.dbo.loc_city lc WITH(nolock) ON V1.cityId = lc.cityId
+		LEFT JOIN locality_data.dbo.loc_area la WITH(nolock) ON V1.areaId = la.areaId
+		LEFT JOIN locality_data.dbo.loc_street ls WITH(nolock) ON V1.streetId = ls.streetId
+		where V1.rn>0
+	</select>
+
+	<!-- 验证快递员信息表是否有这个快递员 -->
+	<select id="VerifyCourierInfo" parameterType="java.util.Map" resultType="int">
+		select count(courierId) count 
+		from vbl_market_order_data.dbo.vbl_shop_courier WITH(NOLOCK)
+		where courierId = #{userid}
+	</select>
+
+	<!-- 验证用户是否是有门店信息 -->
+	<select id="VerifyUserIsWhat" parameterType="java.util.Map" resultType="int">
+		IF NOT EXISTS (
+			SELECT shopId COUNT FROM vbl_market_goods_data.dbo.vbl_shop WITH (NOLOCK)
+			WHERE userid = #{userid}
+		) SELECT 0
+		ELSE (
+			SELECT shopId COUNT FROM vbl_market_goods_data.dbo.vbl_shop WITH (NOLOCK)
+			WHERE userid = #{userid}
+		)
+	</select>
+
+	<!-- 快递信息接口 -->
+	<select id="OrderCourierSite" parameterType="java.util.Map" resultType="java.util.Map">
+		select courierId,orderId,longitude,latitude,dateline
+		from vbl_market_order_data.dbo.vbl_shop_order_courier_address WITH(NOLOCK)
+		where orderId = #{orderId} order by dateline desc
+	</select>
+
+	<select id="selectCourierInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		IF NOT EXISTS (
+			SELECT shopId FROM vbl_market_order_data.dbo.vbl_shop_courier WITH (NOLOCK)
+			WHERE courierId = #{userid}
+		)
+		IF NOT EXISTS (
+			SELECT shopId FROM vbl_market_goods_data.dbo.vbl_shop
+			WHERE userid = #{userid}
+		) SELECT 0 result
+		ELSE (
+			SELECT shopId FROM vbl_market_goods_data.dbo.vbl_shop
+			WHERE userid = #{userid}
+		)
+		ELSE SELECT shopId, realName, mobile courierPhone
+		FROM vbl_market_order_data.dbo.vbl_shop_courier WITH(NOLOCK)
+		WHERE courierId = #{userid}
+	</select>
+
+	<select id="selectShopInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		IF NOT EXISTS (
+			SELECT userid, shopName, address
+			FROM vbl_market_goods_data.dbo.vbl_shop WITH (NOLOCK)
+			WHERE shopId = #{shopId}
+		) SELECT 0 result
+		ELSE SELECT userid, shopName, address
+		FROM vbl_market_goods_data.dbo.vbl_shop WITH (NOLOCK)
+		WHERE shopId = #{shopId}
+	</select>
+
+	<select id="selectLeagueInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT realName shopRealName, mobile shopPhone
+		FROM vbl_market_base_data.dbo.vbl_user_league_application WITH (NOLOCK)
+		WHERE userid = #{userid}
+	</select>
+
+	<!-- 门店订单列表 -->
+	<select id="ShopOrders" parameterType="com.wboly.rpc.entity.OrderEntity" resultType="java.util.Map">
+		SELECT s1.orderId,buyerUid,message,dateline,s3.address,dbo.GetTimeStamp(GETDATE(),-1) system,state,courierId
+		FROM vbl_market_order_data.dbo.vbl_shop_order s1 WITH(NOLOCK),(
+			SELECT TOP (#{start} + #{limit}) row_number() OVER (ORDER BY dateline DESC) rn, orderId
+			FROM vbl_market_order_data.dbo.vbl_shop_order WITH(NOLOCK)
+			WHERE 1=1 AND shopId = #{shopId}
+			<if test=" state != 0">
+				<if test="state == 1">
+					AND state in(1,0)
+				</if>
+				<if test="state == 2">
+					AND state in(2)
+				</if>
+				<if test="state == 4">
+					AND state in(3,4,7)
+				</if>
+				<if test="state != 4 and state != 2 and state != 1">
+					AND state = #{state}
+				</if>
+			</if>
+		)s2 , 
+		vbl_market_base_data.dbo.vbl_user_address s3 WITH(NOLOCK)
+		WHERE s1.orderId = s2.orderId AND s1.addressId=s3.addressId AND s2.rn > ${start}
+	</select>
+
+	<!-- 门店订单清单列表 -->
+	<select id="ShopOrdersInventory" parameterType="com.wboly.rpc.entity.OrderEntity" resultType="java.util.Map">
+		SELECT o.goodsId,s.attrVal sku,o.num,o.retailPrice,g.goodsName,g.faceimg,o.appraiseState,o.aftersaleState,o.returnState
+		FROM vbl_market_order_data.dbo.vbl_shop_order_inventory o WITH(NOLOCK)
+		LEFT JOIN vbl_market_goods_data.dbo.vbl_goods g WITH(NOLOCK) on o.goodsId = g.goodsid
+		LEFT JOIN vbl_market_goods_data.dbo.vbl_goods_sku s with (nolock) on o.skuId = s.skuid
+		WHERE 1=1 and o.orderId = #{orderIds}
+	</select>
+
+	<!-- 门店快递员列表 -->
+	<select id="ShopCouriers" parameterType="com.wboly.rpc.entity.OrderEntity" resultType="java.util.Map">
+		SELECT courierId,realName,mobile
+		FROM vbl_market_order_data.dbo.vbl_shop_courier WITH(NOLOCK)
+		WHERE shopId = #{shopId}
+	</select>
+
+	<!-- 门店信息 -->
+	<select id="Shops" parameterType="com.wboly.rpc.entity.OrderEntity" resultType="java.util.Map">
+		SELECT s.userid,shopName,username
+		FROM vbl_market_goods_data.dbo.vbl_shop s WITH(NOLOCK)
+		LEFT JOIN vbl_market_base_data.dbo.vbl_user u WITH(NOLOCK) ON s.userid = u.userid
+		WHERE s.shopId = #{shopId}
+	</select>
+
+	<!-- 查询可配送的区域信息 -->
+	<select id="ShopCanBeDelivery" parameterType="com.wboly.rpc.entity.OrderEntity" resultType="java.util.Map">
+		SELECT la.areaName,lc.cityName,lp.provinceName,A.shopId,A.areaId,
+		A.streetId,A.streetName,lp.provinceId,lc.cityId,A.userid,A.shopName,A.postUid,A.dateline,A.id
+		FROM vbl_market_goods_data.dbo.vbl_shop_adress A
+		LEFT JOIN locality_data.dbo.loc_province lp WITH(nolock) ON A.provinceId = lp.provinceId
+		LEFT JOIN locality_data.dbo.loc_city lc WITH(nolock) ON A.cityId = lc.cityId
+		LEFT JOIN locality_data.dbo.loc_area la WITH(nolock) ON A.areaId = la.areaId
+		WHERE 1=1 and A.shopId = #{shopId}
+		AND A.areaId = #{dateline} ;<!-- //Dateline 因为没字段,用不常用的代替区域编号 -->
+	</select>
+</mapper>

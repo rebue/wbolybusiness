@@ -1,0 +1,145 @@
+.account-page {
+	background: #fafafa;
+}
+
+.account-page .mui-content {
+	background: #fafafa;
+}
+
+.account-page a {
+	color: #666;
+}
+
+.account-page .main-btn.mui-btn {
+	border: 1px solid #FE3000;
+	background-color: #FE3000;
+}
+
+.account-page .mui-input-group {
+	margin-top: 10px
+}
+
+.account-page .mui-input-group:first-child {
+	margin-top: 20px
+}
+
+.account-page .mui-input-group label {
+	width: 22%
+}
+
+.account-page .mui-input-row label ~input, .mui-input-row label ~select,
+	.mui-input-row label ~textarea {
+	width: 78%
+}
+
+.account-page .mui-input-group .mui-input-row:after {
+	left: 0;
+}
+
+.account-page .mui-content-padded {
+	margin-top: 25px
+}
+
+.account-page .main-btn.mui-btn {
+	padding: 10px
+}
+
+.account-page .link-area {
+	display: block;
+	margin-top: 15px;
+	text-align: center;
+}
+
+.account-page .spliter {
+	color: #bbb;
+	padding: 0 8px
+}
+
+.account-page .btm-area {
+	position: absolute;
+	bottom: 20px;
+	left: 0;
+	text-align: center;
+	width: 100%;
+	padding: 0;
+	margin: 0
+}
+
+.account-page .btm-area p {
+	font-size: 0.625rem;
+	margin-bottom: 0;
+}
+
+.account-page .mui-input-row .mui-input-password ~.mui-icon-eye.mui-active
+	{
+	color: #FE3000;
+}
+
+.account-page .mui-table-view-cell {
+	font-size: 0.875rem;
+	color: #333;
+}
+
+.account-page .mui-switch.mui-active {
+	border-color: #2FAB6C;
+	background-color: #2FAB6C;
+}
+
+.account-page .mui-input-row {
+	height: 50px;
+}
+
+.account-page .mui-input-row input {
+	height: 50px;
+	line-height: 1.9375rem;
+	font-size: 0.875rem;
+}
+
+.account-page .mui-input-row .mui-input-clear ~.mui-icon-clear,
+	.mui-input-row .mui-input-password ~.mui-icon-eye {
+	top: 15px;
+}
+
+.account-page .mui-input-row.phone-row .mui-input-clear ~.mui-icon-clear
+	{
+	right: 28%;
+}
+
+.account-page .mui-input-row .btn-getcode {
+	position: absolute;
+	top: 8px;
+	right: 10px;
+	width: 25%;
+	font-size: 0.75rem;
+	padding: 0;
+	line-height: 1;
+	height: 33px;
+	color: #777;
+	background: #F7F7F7;
+}
+
+.account-page .mui-input-row .btn-getcode:enabled:active {
+	background: #FE3000;
+	border-color: #FE3000;
+	color: #fff;
+}
+
+.account-page .mui-input-row .btn-getcode.locked {
+	color: #aaa;
+}
+
+.account-page .psw-tip {
+	width: 100%;
+	padding: 8px 2px 5px 15px;
+	font-size: 0.75rem;
+	color: #fe3000;
+}
+
+#ad_3v {
+	display: none !important;
+}
+
+.mui-toast-container {
+	top: 100px !important;
+	bottom: auto !important;
+}
