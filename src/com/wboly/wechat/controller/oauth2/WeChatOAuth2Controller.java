@@ -32,6 +32,9 @@ import com.wboly.system.sys.util.wx.WeixinUtil.SITE;
 import com.wboly.system.sys.util.wx.WxConfig;
 import com.wboly.wechat.service.user.WeChatUserService;
 
+import rebue.wheel.MapUtils;
+import rebue.wheel.turing.SignUtils;
+
 /**
  * @Author: nick
  */
@@ -88,12 +91,12 @@ public class WeChatOAuth2Controller extends SysController {
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
 	 */
-	@SuppressWarnings("rawtypes")
 	@RequestMapping(value = { "myPreReg" })
 	@ResponseBody
-	public ModelAndView wechatBackss(HttpServletRequest request, HttpServletResponse response)
+	public ModelAndView wechatBackss(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, Object> wxMaps)
 			throws JsonParseException, JsonMappingException, IOException {
 		ModelAndView andView = new ModelAndView();
+		// 本地
 		String code = request.getParameter("code");
 		// 微信授权登陆获取到的用户信息
 		String userData = getUserData(code, response);
@@ -105,10 +108,19 @@ public class WeChatOAuth2Controller extends SysController {
 		String unionid = String.valueOf(userMap.get("unionid"));
 		String nickname = String.valueOf(userMap.get("nickname"));
 		String headimgurl = String.valueOf(userMap.get("headimgurl"));
-		/*String openid = request.getParameter("openid");
-		String unionid = request.getParameter("unionid");
-		String nickname = request.getParameter("nickname");
-		String headimgurl = request.getParameter("headimgurl");*/
+		/*System.out.println("微信回调解码之前的参数为：" + String.valueOf(wxMaps));
+		// 对微信回调参数进行解码
+		MapUtils.decodeUrl(wxMaps);
+		// 微信回调登录校验
+		if (!SignUtils.verify1(wxMaps, SysContext.WXLOGINKEY)) {
+			return new ModelAndView("非法请求");
+		}
+		
+		// 线上
+		String openid = String.valueOf(wxMaps.get("openid"));
+		String unionid = String.valueOf(wxMaps.get("unionid"));
+		String nickname = String.valueOf(wxMaps.get("nickname"));
+		String headimgurl = String.valueOf(wxMaps.get("headimgurl"));*/
 
 		System.out.println("微信登录获取到的用户 信息为：openid=" + openid + "====unionid=" + unionid + "=====nickname=" + nickname
 				+ "====headimgurl=" + headimgurl);
@@ -152,7 +164,7 @@ public class WeChatOAuth2Controller extends SysController {
 	public Map<String, Object> wechatLogin(HttpServletRequest request, Map<String, Object> map)
 			throws JsonParseException, JsonMappingException, IOException {
 		String wechatLoginUrl = SysContext.USERCENTERURL + "/user/login/by/wx";
-		String wechatLoginResults = /*HttpUtil.postUrl(wechatLoginUrl, map)*/ "{\"userId\":451273803712954379,\"result\":1}" ;
+		String wechatLoginResults = HttpUtil.postUrl(wechatLoginUrl, map) /*"{\"userId\":451273803712954379,\"result\":1}" */;
 		Map<String, Object> m = new HashMap<String, Object>();
 		if (!wechatLoginResults.equals("") && !wechatLoginResults.equals("null") && wechatLoginResults != null) {
 			String wechatLoginResult = JsonUtil.GetJsonValue(wechatLoginResults, "result");
