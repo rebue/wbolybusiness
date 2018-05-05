@@ -16,6 +16,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wboly.system.sys.spring.SysController;
 import com.wboly.system.sys.system.SysCache;
+import com.wboly.system.sys.system.SysContext;
+
 import rebue.wheel.OkhttpUtils;
 
 /**
@@ -47,7 +49,7 @@ public class WeChatCartController extends SysController {
 			map.put("id", cartId);
 			map.put("userId", userId);
 			System.err.println("删除购物车的参数为：" + map.toString());
-			String results = OkhttpUtils.delete("http://localhost:9100/onl/cart?id=" + cartId + "&userId=" + userId);
+			String results = OkhttpUtils.delete(SysContext.ONLINEURL +"/onl/cart?id=" + cartId + "&userId=" + userId);
 			System.err.println("删除购物车返回值为：" + results);
 			if (results != null && !results.equals("") && !results.equals("null")) {
 				ObjectMapper mapper = new ObjectMapper();
@@ -91,7 +93,7 @@ public class WeChatCartController extends SysController {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("userId", userId);
 			// 获取购物车列表
-			String results = OkhttpUtils.get("http://localhost:9100/onl/cart", map);
+			String results = OkhttpUtils.get(SysContext.ONLINEURL +"/onl/cart", map);
 			if (results != null && !results.equals("") && !results.equals("null")) {
 				this.render(response, "{\"message\":" + results + ",\"flag\":true}");
 			} else {
@@ -131,7 +133,7 @@ public class WeChatCartController extends SysController {
 		map.put("userId", userId);
 		map.put("cartCount", cartCount);
 		System.err.println("加入购物车的参数为：" + map.toString());
-		String results = OkhttpUtils.postByFormParams("http://localhost:9100/onl/cart", map);
+		String results = OkhttpUtils.postByFormParams(SysContext.ONLINEURL + "/onl/cart", map);
 		System.err.println("加入购物车的返回值为：" + results);
 		if (results == null || results.equals("") || results.equals("null")) {
 			this.render(response, "{\"message\":\"加入购物车出错\",\"flag\":false}");
@@ -163,7 +165,7 @@ public class WeChatCartController extends SysController {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("userId", userId);
 			// 根据用户编号获取购物车数量
-			Integer num = Integer.parseInt(OkhttpUtils.get("http://localhost:9100/onl/cart/count?userId=" + userId));
+			Integer num = Integer.parseInt(OkhttpUtils.get(SysContext.ONLINEURL +"/onl/cart/count?userId=" + userId));
 			num = num == null ? 0 : num;
 			if (num < 0) {
 				num = 0;
@@ -192,7 +194,7 @@ public class WeChatCartController extends SysController {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("ids", cartId);
 			map.put("userId", userId);
-			int result = Integer.parseInt(OkhttpUtils.deleteByFormParams("http://localhost:9100/onl/cart/deletes", map));
+			int result = Integer.parseInt(OkhttpUtils.deleteByFormParams(SysContext.ONLINEURL +"/onl/cart/deletes", map));
 			if (result < 1) {
 				this.render(response, "{\"message\":\"删除失败\",\"flag\":false}");
 			} else {

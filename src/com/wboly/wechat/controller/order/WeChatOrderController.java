@@ -151,7 +151,29 @@ public class WeChatOrderController extends SysController {
 		}
 		return mav;
 	}
-
+	
+	/**
+	 * @throws IOException 
+	 * @Name: 查看物流信息页面跳转
+	 * @Author: nick
+	 */
+	@SuppressWarnings("static-access")
+	@RequestMapping(value = "/wechat/order/queryLogistics")
+	public ModelAndView queryLogistics(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		ObjectMapper mapper = new ObjectMapper();
+		
+		String orderInfo = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/info?orderCode="+request.getParameter("orderId"));
+		List<Map<String, Object>> list = JsonUtil.listMaps(orderInfo);
+		System.out.println(String.valueOf(list));
+		String shipperCode = String.valueOf(list.get(0).get("shipperCode"));
+		String logisticCode = String.valueOf(list.get(0).get("logisticCode"));
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("shipperCode", shipperCode);
+		mav.addObject("logisticCode", logisticCode);
+		mav.setViewName("/htm/wechat/order/queryLogistics");
+		return mav;
+	}
+	
 	/**
 	 * @throws IOException 
 	 * @Name: 买家部分退货提交
