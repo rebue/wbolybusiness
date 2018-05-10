@@ -380,7 +380,7 @@ public class WeChatOrderController extends SysController {
 		String limit = request.getParameter("limit");
 		// 订单状态
 		String orderState = request.getParameter("orderState");
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		if (!orderState.equals("") && orderState != null && !orderState.equals("null") && !orderState.equals("0")) {
 			map.put("orderState", orderState);
 		}
