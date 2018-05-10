@@ -270,7 +270,7 @@ public class WeChatPayController extends SysController {
 			return mav;
 		} else {
 			mav.addObject("payOrderId", orderId);
-			Map<String, String> map = new HashMap<String, String>();
+			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("orderCode", orderId);
 			map.put("userId", userId);
 			String results = OkhttpUtils.get(SysContext.ORDERURL + "ord/order/info", map);

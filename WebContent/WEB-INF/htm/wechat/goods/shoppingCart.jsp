@@ -428,7 +428,7 @@
 							html += '		<div class="car-inner-box">';
 							html += '			<div class="car-inner-box-img">';
 							html += '				<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].onlineId + '">';
-							html += '					<img src="http://localhost:8080/img.wboly.com/' + data.message[i].picPath + '_187_187.' + strs[1] + '" alt="" class="goodspic"/>';
+							html += '					<img src="${goodsImgUrl}' + data.message[i].picPath + '_187_187.' + strs[1] + '" alt="" class="goodspic"/>';
 							html += '				</a>';
 							html += '			</div>';
 							html += '			<div class="car-inner-body">';

@@ -194,7 +194,7 @@
 								html += '	<input type="hidden" value="' + parseInt(parseInt(data.message[i].dateline) + 259200)+'" class="endtime">'; //付款时间加三天（三天返款）
 								html += '	<p><span class="grey">获取订单状态中...</span></p>';
 								html += '</div>';
-								html += '<div class="unit-pay">';
+								html += '<div class="unit-pay">';                                                      
 								html += '	<a class="mui-pull-right mui-btn bg" href="javascript:queryLogistics(\'' + data.message[i].orderCode + '\')">查看物流</a>';
 								html += '	<a class="mui-pull-right mui-btn bg" href="javascript:aboutCinfirmReceipt(\'' + data.message[i].orderCode + '\')">确认收货</a>';
 								html += '</div>';
@@ -495,7 +495,13 @@
 		
 		// 查看物流
 		function queryLogistics(orderId) {
-			
+			if (orderId == null) {
+				mui.toast("没有该商品信息");
+				return;
+			}
+			console.log(orderId);
+// 			window.location.href = "/wbolybusiness/wechat/order/queryLogistics.htm?orderId=" + b.encode("\"" + orderId + "\"");
+			window.location.href = "/wbolybusiness/wechat/order/queryLogistics.htm?orderId="+ orderId;
 		}
 	</script>
 </body>
