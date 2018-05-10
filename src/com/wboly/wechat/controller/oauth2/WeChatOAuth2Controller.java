@@ -33,7 +33,6 @@ import com.wboly.system.sys.util.wx.WxConfig;
 import com.wboly.wechat.service.user.WeChatUserService;
 
 import rebue.wheel.MapUtils;
-import rebue.wheel.turing.SignUtils;
 
 /**
  * @Author: nick
@@ -137,7 +136,8 @@ public class WeChatOAuth2Controller extends SysController {
 			map.put("wxFace", headimgurl);// 微信头像
 			map.put("appId", 11);// 应用编号
 			map.put("userAgent", request.getHeader("User-Agent").replaceAll("-", ""));// ；浏览器信息
-			map.put("mac", MacAddressUtil.getLocalMac().replaceAll("-", ""));// 登录用户mac
+//			map.put("mac", MacAddressUtil.getLocalMac().replaceAll("-", ""));// 登录用户mac
+			map.put("mac", "123");
 			map.put("ip", IpUtil.getIp(request));// 登录用户ip
 			System.err.println("微信登录的参数为：" + map.toString());
 			// 微信用户登录
@@ -318,7 +318,8 @@ public class WeChatOAuth2Controller extends SysController {
 		maps.put("lastLoninType", 1);
 		maps.put("userSource", "");
 		maps.put("regTime", currentTime);
-		maps.put("lastLoginMarket", MacAddressUtil.getLocalMac());
+//		maps.put("lastLoginMarket", MacAddressUtil.getLocalMac());
+		maps.put("lastLoginMarket", "123");
 
 		// 根据用户编号查询用户是否存在
 		String userIds = weChatUserService.selectUserInformation(maps);
