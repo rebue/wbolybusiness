@@ -107,9 +107,9 @@ public class SysListener implements ServletContextListener {
 		// 保存图片路径进Session
 		sc.setAttribute("imgUrl", imgUrl);
 
-		// 用户推广的二维码
-		String TempPath = PropertiesUtil.getPropertiesValue("system.properties", "TEMPPATH").toString();
-		SysContext.TEMPPATH = TempPath;
+		// 微信登录校验key
+		String wxLoginKey = PropertiesUtil.getPropertiesValue("system.properties", "WXLOGINKEY").toString();
+		SysContext.WXLOGINKEY = wxLoginKey;
 
 		String QRCODEPATH = PropertiesUtil.getPropertiesValue("system.properties", "QRCODEPATH").toString();
 		SysContext.QRCODEPATH = QRCODEPATH;
