@@ -12,6 +12,7 @@ import org.apache.thrift.TException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -157,7 +158,7 @@ public class WeChatOrderController extends SysController {
 	 * @Name: 查看物流信息页面跳转
 	 * @Author: nick
 	 */
-	@SuppressWarnings("static-access")
+	@SuppressWarnings({ "unused" })
 	@RequestMapping(value = "/wechat/order/queryLogistics")
 	public ModelAndView queryLogistics(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
@@ -180,39 +181,14 @@ public class WeChatOrderController extends SysController {
 	 * @Author: nick
 	 */
 	@RequestMapping(value = "/wechat/order/returnGoods")
-	public void ReturnPartofGoods(HttpServletRequest request, HttpServletResponse response) throws TException, IOException {
+	public void ReturnPartofGoods(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, Object> map) throws TException, IOException {
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
 		if (userId.equals("")) {
 			this.render(response, "{\"msg\":\"您没有登录\",\"result\":-11}");
 			return;
 		}
-		// 订单编号
-		String orderCode = request.getParameter("orderCode").trim();
-		// 上线编号
-		String onlineId = request.getParameter("onlineId").trim();
-		// 订单详情编号
-		String orderDetailId = request.getParameter("orderDetailId");
-		// 退货数量
-		String returnNum = request.getParameter("returnNum");
-		// 退货原因
-		String returnReason = request.getParameter("returnReason").trim();
-		// 退货图片
-		String returnImg = request.getParameter("returnImg");
-		// 退货金额
-		String returnPrice = request.getParameter("returnPrice");
-		// 规格名称
-		String specName = request.getParameter("specName");
 		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("orderCode", orderCode);
-		map.put("onlineId", onlineId);
-		map.put("orderDetailId", orderDetailId);
-		map.put("returnNum", returnNum);
-		map.put("returnReason", returnReason);
-		map.put("returnImg", returnImg);
 		map.put("userId", userId);
-		map.put("returnPrice", returnPrice);
-		map.put("specName", specName);
 		System.err.println("添加用户退货信息的参数为：" + String.valueOf(map));
 		// 添加用户退货信息
 		String results = OkhttpUtils.postByFormParams(SysContext.ORDERURL + "/ord/return", map);

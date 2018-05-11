@@ -63,6 +63,7 @@
 				var strs = new Array();
 				// 根据逗号获取图片后缀
 				strs = item.goodsQsmm.split(".");
+				console.log(strs);
 				html += '<div class="mui-input-group">';
 				html += '	<div class="mui-input-row mui-left">';
 				html += '		<div class="car-inner-box">';

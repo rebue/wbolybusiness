@@ -741,7 +741,6 @@ public class WeChatUserController extends SysController {
 				}
 			}
 		}
-
 	}
 
 	/**
