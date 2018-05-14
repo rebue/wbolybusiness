@@ -139,7 +139,7 @@ public class WeChatUserController extends SysController {
 		if (userId.equals("")) {
 			mav.setViewName("/htm/wechat/login/login");
 		} else {
-			String result = OkhttpUtils.get(SysContext.ORDERURL + "ord/addr?userId=" + userId);
+			String result = OkhttpUtils.get(SysContext.ORDERURL + "/ord/addr?userId=" + userId);
 			System.err.println("查询用户收货地址返回值为：" + result);
 			List<Map<String, Object>> list = JsonUtil.listMaps(result);
 			mav.addObject("AddressList", list);
@@ -169,7 +169,7 @@ public class WeChatUserController extends SysController {
 			return;
 		}
 		System.err.println("删除用户收货地址的参数为：" + addressId);
-		String results = OkhttpUtils.delete(SysContext.ORDERURL + "ord/addr/" + addressId);
+		String results = OkhttpUtils.delete(SysContext.ORDERURL + "/ord/addr/" + addressId);
 		System.err.println("删除用户收货地址的返回值为：" + results);
 		ObjectMapper mapper = new ObjectMapper();
 		Map resultMap = mapper.readValue(results, Map.class);
@@ -224,7 +224,7 @@ public class WeChatUserController extends SysController {
 		map.put("receiverMobile", mobile);
 		map.put("isDef", 0);
 		// 添加用户收货地址
-		String results = OkhttpUtils.postByFormParams(SysContext.ORDERURL + "ord/addr", map);
+		String results = OkhttpUtils.postByFormParams(SysContext.ORDERURL + "/ord/addr", map);
 		ObjectMapper mapper = new ObjectMapper();
 		Map resultMap = mapper.readValue(results, Map.class);
 		int result = Integer.parseInt(String.valueOf(resultMap.get("result")));
@@ -262,7 +262,7 @@ public class WeChatUserController extends SysController {
 		map.put("userId", userId);
 		System.err.println("修改用户默认收货地址的参数为：" + map.toString());
 		// 修改默认收货地址
-		String results = OkhttpUtils.putByFormParams(SysContext.ORDERURL + "ord/addr/def", map);
+		String results = OkhttpUtils.putByFormParams(SysContext.ORDERURL + "/ord/addr/def", map);
 		System.err.println("修改用户默认收货地址的返回值为：" + results);
 		if (results != null && !results.equals("") && !results.equals("null")) {
 			ObjectMapper mapper = new ObjectMapper();
@@ -335,7 +335,7 @@ public class WeChatUserController extends SysController {
 
 		System.err.println("修改用户收货地址信息的参数为：" + map.toString());
 		// 修改用户收货地址
-		String results = OkhttpUtils.putByFormParams(SysContext.ORDERURL + "ord/addr", map);
+		String results = OkhttpUtils.putByFormParams(SysContext.ORDERURL + "/ord/addr", map);
 		if (results != null && !results.equals("") && !results.equals("null")) {
 			ObjectMapper mapper = new ObjectMapper();
 			Map resultMap = mapper.readValue(results, Map.class);
@@ -555,7 +555,7 @@ public class WeChatUserController extends SysController {
 			map.put("isDef", "false");
 		}
 		System.err.println("查询用户收货地址的参数为：" + map.toString());
-		String result = OkhttpUtils.get(SysContext.ORDERURL + "ord/addr", map);
+		String result = OkhttpUtils.get(SysContext.ORDERURL + "/ord/addr", map);
 		List<Map<String, Object>> list = JsonUtil.listMaps(result);
 
 		if (list.size() > 0) {

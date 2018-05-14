@@ -55,7 +55,7 @@ public class WeChatShopController extends SysController {
 		if (level.equals("0")) {
 			System.out.println(id);
 			// 获取所有省份信息
-			String provinceResult = OkhttpUtils.get(SysContext.AREAURL + "are/area/provinceall");
+			String provinceResult = OkhttpUtils.get(SysContext.AREAURL + "/are/area/provinceall");
 			System.err.println("获取所有省份的返回值为：" + provinceResult);
 			List<Map<String, Object>> provinceList = JsonUtil.listMaps(provinceResult);
 			for (int i = 0; i < provinceList.size(); i++) {
@@ -73,7 +73,7 @@ public class WeChatShopController extends SysController {
 			System.out.println(id);
 			String[] split1 = id.split(",");
 			// 根据上级编号获取下级信息
-			String LowerAreaResult = OkhttpUtils.get(SysContext.AREAURL + "are/area/lowerareaall?areaCode=" + split1[0]);
+			String LowerAreaResult = OkhttpUtils.get(SysContext.AREAURL + "/are/area/lowerareaall?areaCode=" + split1[0]);
 			System.err.println("获取所有下级信息的返回值为：" + LowerAreaResult);
 			List<Map<String, Object>> LowerAreaList = JsonUtil.listMaps(LowerAreaResult);
 			for (int i = 0; i < LowerAreaList.size(); i++) {
@@ -97,9 +97,9 @@ public class WeChatShopController extends SysController {
 				areaId = id;
 			}
 			// 根据上级编号获取下级信息
-			String LowerAreaResult = OkhttpUtils.get(SysContext.AREAURL + "are/area/lowerareaall?areaCode=" + areaId);
+			String LowerAreaResult = OkhttpUtils.get(SysContext.AREAURL + "/are/area/lowerareaall?areaCode=" + areaId);
 			if (LowerAreaResult == null || LowerAreaResult.equals("") || LowerAreaResult.equals("null") || LowerAreaResult.equals("[]")) {
-				LowerAreaResult = OkhttpUtils.get(SysContext.AREAURL + "are/area/countyall?areaCode=" + split1[1]);
+				LowerAreaResult = OkhttpUtils.get(SysContext.AREAURL + "/are/area/countyall?areaCode=" + split1[1]);
 			}
 			System.err.println("获取所有下级信息的返回值为：" + LowerAreaResult);
 			List<Map<String, Object>> LowerAreaList = JsonUtil.listMaps(LowerAreaResult);
@@ -124,7 +124,7 @@ public class WeChatShopController extends SysController {
 				areaId = split1[1];
 			}
 			// 根据上级编号获取下级信息
-			String LowerAreaResult = OkhttpUtils.get(SysContext.AREAURL + "are/area/lowerareaall?areaCode=" + areaId);
+			String LowerAreaResult = OkhttpUtils.get(SysContext.AREAURL + "/are/area/lowerareaall?areaCode=" + areaId);
 			System.err.println("获取所有下级信息的返回值为：" + LowerAreaResult);
 			List<Map<String, Object>> LowerAreaList = JsonUtil.listMaps(LowerAreaResult);
 			for (int i = 0; i < LowerAreaList.size(); i++) {
