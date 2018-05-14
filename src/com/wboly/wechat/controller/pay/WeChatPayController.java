@@ -87,12 +87,13 @@ public class WeChatPayController extends SysController {
 
 	/**
 	 * @throws InterruptedException
+	 * @throws IOException 
 	 * @Name: 微信支付
 	 * @Author: knick
 	 */
 	@RequestMapping(value = "/wechat/pay/toPay", params = { "orderId" })
 	public ModelAndView wechatToPay(HttpServletRequest request, HttpServletResponse response, Model model,
-			@RequestParam("orderId") String orderId) throws InterruptedException {
+			@RequestParam("orderId") String orderId) throws InterruptedException, IOException {
 
 		ModelAndView mav = new ModelAndView();
 
@@ -125,11 +126,15 @@ public class WeChatPayController extends SysController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		String buyerUid = SysCache.getWeChatUserByColumn(request, "userId");
 		map.put("orderId", orderId);
-		map.put("buyerUid", buyerUid);
-
-		List<Map<String, Object>> orderInfo = weChatOrderService.selectOrderInventoryByParm(map);
-
-		if (orderInfo == null || orderInfo.size() < 1) {
+		
+		System.err.println("微信订单的参数为：" + String.valueOf(map));
+		String orderdetail = OkhttpUtils.get(SysContext.ORDERURL + "/ord/orderdetail/info", map);
+		List<Map<String, Object>> orderdetailInfo = JsonUtil.listMaps(orderdetail);
+		Map<String, Object> ordMap = new HashMap<String, Object>();
+		ordMap.put("orderCode", orderId);		
+		String order = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/info", ordMap);
+		List<Map<String, Object>> orderInfo = JsonUtil.listMaps(order);
+		if (orderdetailInfo == null || orderdetailInfo.size() < 1) {
 			System.err.println("该订单号不存在");
 			mav.addObject("page", "{\"message\":\"该订单信息不存在。\",\"flag\":false,\"page\":2}");
 			mav.setViewName("/htm/wechat/prompt/alert");
@@ -138,8 +143,8 @@ public class WeChatPayController extends SysController {
 		
 		StringBuilder goodsName = new StringBuilder();// 商品名称
 
-		for (int i = 0; i < orderInfo.size(); i++) {
-			goodsName.append(orderInfo.get(i).get("goodsTitle") + ",");
+		for (int i = 0; i < orderdetailInfo.size(); i++) {
+			goodsName.append(orderdetailInfo.get(i).get("onlineTitle") + ",");
 		}
 
 		map.clear();
@@ -156,7 +161,7 @@ public class WeChatPayController extends SysController {
 			tradeDetail = goodsNames[0];
 		}
 		map.put("tradeDetail", "购买商品为：" + tradeDetail); // 支付交易详情
-		map.put("tradeAmount", orderInfo.get(0).get("money")); // 支付交易金额（单位为元）
+		map.put("tradeAmount", orderInfo.get(0).get("realMoney")); // 支付交易金额（单位为元）
 		map.put("ip", IpUtil.getIp(request)); // 用户ip地址
 
 		//String finalsign = "";
@@ -273,7 +278,7 @@ public class WeChatPayController extends SysController {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("orderCode", orderId);
 			map.put("userId", userId);
-			String results = OkhttpUtils.get(SysContext.ORDERURL + "ord/order/info", map);
+			String results = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/info", map);
 			System.out.println("查询订单信息的返回值为：" + results);
 			List<Map<String, Object>> listMap = JsonUtil.listMaps(results);
 			if (listMap != null && listMap.size() > 0) {
@@ -416,25 +421,26 @@ public class WeChatPayController extends SysController {
 	}
 
 	/**
+	 * @throws IOException 
 	 * @Name: 支付成功页面
 	 * @Author: knick
 	 */
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value = "/wechat/pay/success", params = { "type", "orderId" })
 	public ModelAndView successPage(@RequestParam String orderId, @RequestParam String type,
-			HttpServletRequest request) {
+			HttpServletRequest request) throws IOException {
 		ModelAndView mav = new ModelAndView();
 		System.err.println("----------------------- 支付成功 ---------------------------");
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
-		map.put("orderId", orderId);
-		map.put("buyerUid", SysCache.getWeChatUserByColumn(request, "userId"));
+		map.put("orderCode", orderId);
 
 		if (type.equals("vpay")) {
 			System.err.println("____进入V支付返回通知通道____");
 
-			List<Map<String, Object>> orderInfo = weChatOrderService.selectOrderInventoryByParm(map);
+			String order = OkhttpUtils.putByFormParams(SysContext.ORDERURL + "/ord/order/info", map);
+			List<Map<String, Object>> orderInfo = JsonUtil.listMaps(order);
 
 			if (orderInfo == null || orderInfo.size() < 1) {
 				System.err.println("V支付:该订单号不存在");
@@ -537,7 +543,8 @@ public class WeChatPayController extends SysController {
 			return ;
 		}
 		
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("orderCode", orderId);
 		map.put("orderId", orderId);
 		map.put("buyerUid", buyerUid);
 		map.put("tradeTitle", "微薄利商超-商品购买"); // 支付交易标题
@@ -546,18 +553,18 @@ public class WeChatPayController extends SysController {
 		map.put("userId", buyerUid);
 		
 		// 查询订单是否存在
-		List<Map<String, Object>> orderDataList = weChatOrderMapper.selectShopAndBuyer(map);
+		String results = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/info", map);
+		List<Map<String, Object>> orderDataList = JsonUtil.listMaps(results);
 		if (orderDataList.size() == 0) {
 			this.render(response, "{\"message\":\"该订单不存在\",\"flag\":false}");
 			return ;
 		}
-		BigDecimal decimal = new BigDecimal(String.valueOf(orderDataList.get(0).get("money")));
-		// 经过运算之后的订单总金额
-		double tradeAmount = decimal.divide(new BigDecimal(100)).doubleValue();
-		map.put("tradeAmount", tradeAmount);
+		BigDecimal decimal = new BigDecimal(String.valueOf(orderDataList.get(0).get("realMoney")));
+		map.put("tradeAmount", decimal.toString());
 		
 		// 获取商品订单详情
-		List<Map<String, Object>> orderInventoryList = weChatOrderService.selectOrderInventoryData(map);
+		String orderdetail = OkhttpUtils.get(SysContext.ORDERURL + "/ord/orderdetail/info", map);
+		List<Map<String, Object>> orderInventoryList = JsonUtil.listMaps(orderdetail);
 		if (orderInventoryList.size() == 0) {
 			this.render(response, "{\"message\":\"该订单不存在\",\"flag\":false}");
 			return ;
@@ -565,9 +572,9 @@ public class WeChatPayController extends SysController {
 		
 		String goodsNames = "";// 商品名称
 		if (orderInventoryList.size() >= 2) {
-			goodsNames = orderInventoryList.get(0).get("goodsTitle") + "," + orderInventoryList.get(1).get("goodsTitle") + "等。。。";
+			goodsNames = orderInventoryList.get(0).get("onlineTitle") + "," + orderInventoryList.get(1).get("onlineTitle") + "等。。。";
 		} else {
-			goodsNames = String.valueOf(orderInventoryList.get(0).get("goodsTitle"));
+			goodsNames = String.valueOf(orderInventoryList.get(0).get("onlineTitle"));
 		}
 		map.put("tradeDetail", "您在微薄利商超购买的商品订单为：" + orderId + "，所购买的商品为：" + goodsNames);
 		System.err.println();
