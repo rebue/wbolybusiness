@@ -95,7 +95,7 @@ public class WeChatOAuth2Controller extends SysController {
 	public ModelAndView wechatBackss(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, Object> wxMaps)
 			throws JsonParseException, JsonMappingException, IOException {
 		ModelAndView andView = new ModelAndView();
-		// 本地
+		/*// 本地
 		String code = request.getParameter("code");
 		// 微信授权登陆获取到的用户信息
 		String userData = getUserData(code, response);
@@ -106,20 +106,24 @@ public class WeChatOAuth2Controller extends SysController {
 		String openid = String.valueOf(userMap.get("openid"));
 		String unionid = String.valueOf(userMap.get("unionid"));
 		String nickname = String.valueOf(userMap.get("nickname"));
-		String headimgurl = String.valueOf(userMap.get("headimgurl"));
-		/*System.out.println("微信回调解码之前的参数为：" + String.valueOf(wxMaps));
-		// 对微信回调参数进行解码
+		String headimgurl = String.valueOf(userMap.get("headimgurl"));*/
+		
+		System.out.println("微信回调解码之前的参数为：" + String.valueOf(wxMaps));
+		/*// 对微信回调参数进行解码
 		MapUtils.decodeUrl(wxMaps);
 		// 微信回调登录校验
 		if (!SignUtils.verify1(wxMaps, SysContext.WXLOGINKEY)) {
-			return new ModelAndView("非法请求");
-		}
+			System.out.println("========微信校验出错=======");
+			andView.addObject("errormsg", "微信校验出错");
+			andView.setViewName("/htm/wechat/prompt/errors");
+			return andView;
+		}*/
 		
 		// 线上
 		String openid = String.valueOf(wxMaps.get("openid"));
 		String unionid = String.valueOf(wxMaps.get("unionid"));
 		String nickname = String.valueOf(wxMaps.get("nickname"));
-		String headimgurl = String.valueOf(wxMaps.get("headimgurl"));*/
+		String headimgurl = String.valueOf(wxMaps.get("headimgurl"));
 
 		System.out.println("微信登录获取到的用户 信息为：openid=" + openid + "====unionid=" + unionid + "=====nickname=" + nickname
 				+ "====headimgurl=" + headimgurl);
@@ -142,13 +146,26 @@ public class WeChatOAuth2Controller extends SysController {
 			System.err.println("微信登录的参数为：" + map.toString());
 			// 微信用户登录
 			Map<String, Object> wechatLoginResult = wechatLogin(request, map);
-			andView.addObject("JSURL", request.getRequestURL());
-			andView.addObject("userId", wechatLoginResult.get("userId"));
-			andView.setViewName(String.valueOf(wechatLoginResult.get("msg")));
-			return andView;
+			System.out.println("微信用户登录的返回值为：" + String.valueOf(wechatLoginResult));
+			long result = Long.parseLong(String.valueOf(wechatLoginResult.get("result")));
+			System.out.println("微信用户登录的result的值为：" + result);
+			if (result < 0) {
+				System.out.println("==============登录失败，开始返回===========");
+				andView.addObject("errormsg", wechatLoginResult.get("msg"));
+				andView.setViewName("/htm/wechat/prompt/errors");
+				return andView;
+			} else {
+				System.out.println("==============登录成功，开始返回===========");
+				andView.addObject("JSURL", request.getRequestURL());
+				andView.addObject("userId", wechatLoginResult.get("userId"));
+				andView.setViewName(String.valueOf(wechatLoginResult.get("msg")));
+				return andView;
+			}
 		} else {
 			System.err.println("微信回调:无法获取到授权登陆的用户数据");
-			return new ModelAndView("无法获取到您的授权登陆信息");
+			andView.addObject("errormsg", "无法获取到您的授权登陆信息");
+			andView.setViewName("/htm/wechat/prompt/errors");
+			return andView;
 		}
 	}
 
@@ -164,7 +181,7 @@ public class WeChatOAuth2Controller extends SysController {
 	public Map<String, Object> wechatLogin(HttpServletRequest request, Map<String, Object> map)
 			throws JsonParseException, JsonMappingException, IOException {
 		String wechatLoginUrl = SysContext.USERCENTERURL + "/user/login/by/wx";
-		String wechatLoginResults = HttpUtil.postUrl(wechatLoginUrl, map) /*"{\"userId\":451273803712954379,\"result\":1}" */;
+		String wechatLoginResults = HttpUtil.postUrl(wechatLoginUrl, map) /*"{\"userId\":451273803712954379,\"result\":1}"*/ ;
 		Map<String, Object> m = new HashMap<String, Object>();
 		if (!wechatLoginResults.equals("") && !wechatLoginResults.equals("null") && wechatLoginResults != null) {
 			String wechatLoginResult = JsonUtil.GetJsonValue(wechatLoginResults, "result");
@@ -191,7 +208,7 @@ public class WeChatOAuth2Controller extends SysController {
 				Map<String, Object> regMap = wechatReg(request, map);
 				String regResult = String.valueOf(regMap.get("result"));
 				if (regResult.equals("1")) {
-					map.put("userId", regMap.get("userId"));
+					map.put("userId", regMap.get("msg"));
 					m = insertRegInfoAndCacheUserInfo(map);
 				} else {
 					m = regMap;
@@ -308,6 +325,7 @@ public class WeChatOAuth2Controller extends SysController {
 				+ "\",\"openid\":\"" + map.get("wxId") + "\"}";
 		SysCache.setWechatUser(map.get("openid").toString(), userjson);// 缓存用户信息
 		m.put("result", userId);
+		m.put("userId", userId);
 		m.put("msg", "/htm/wechat/index/index");
 
 		// 获取当前时间戳

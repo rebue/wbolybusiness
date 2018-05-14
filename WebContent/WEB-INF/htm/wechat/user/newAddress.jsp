@@ -119,6 +119,7 @@
 					<c:forEach items="${AddressList }" var="item">
 						<div class="mui-card">
 							<input type="hidden" name="add" value="${item.id }" /> 
+							<input type="hidden" name="postalCode" value="${item.receiverPostCode }" /> 
 							<input type="hidden" name="areaId" value="${item.receiverProvince },${item.receiverCity },${item.receiverExpArea },${item.receiverExpArea }" />
 							<div class="mui-card-header mui-card-media">
 								<span class="mui-pull-left">姓名：<b class="name">${item.receiverName }</b></span>
@@ -187,6 +188,7 @@
 						unit = this.parentNode.parentNode.parentNode;
 						var id = this.parentNode.parentNode.parentNode.querySelector("input[name='add']").value; //地址标识
 						var areaid = this.parentNode.parentNode.parentNode.querySelector("input[name='areaId']").value; //区域标识
+						var postalCode = this.parentNode.parentNode.parentNode.querySelector("input[name='postalCode']").value; //区域标识
 						var type = 0; //0是标记类型为“修改”
 						mui("#aside li.side-head span")[0].innerText = "修改地址";
 
@@ -203,6 +205,7 @@
 						mui("#aside input[name='add-id']")[0].value = id;
 						mui("#aside input[name='area-id']")[0].value = areaid;
 						mui("#aside input[name='type']")[0].value = type;
+						mui("#aside input[name='postal-code']")[0].value = postalCode;
 						mui("#aside span.area-text")[0].innerHTML = add;
 						offCanvasWrapper.offCanvas('show');
 					});
@@ -242,6 +245,7 @@
 						var _postalCode = mui("#aside input[name='postal-code']")[0].value;// 邮编
 						var mobile = /^13[0-9]{9}$|14[0-9]{9}$|15[0-9]{9}$|17[0-9]{9}$|18[0-9]{9}$/;
 						var special = /[~'\:\：\"\“\”\、\‘\’\。\，\,\$\[\]\{\}\【\】^*!\！?\？\（\）()\/<>;=\\+]/g;
+						var patrn = /^[0-9]*$/;
 						if(_name != "" && _name != null && !special.test(_name)) {
 							if(_name.length < 8){
 								check = true;
@@ -265,6 +269,11 @@
 						};
 						
 						if(_postalCode != "" && _postalCode != null && _postalCode != "null") {
+							if (_postalCode.length != 6 || !patrn.test(_postalCode)) {
+								mui.toast("邮政编号只能为6位数字");
+								check = false;
+								return false;
+							}
 							check = true;
 						} else {
 							mui.toast("请输入邮政编号");

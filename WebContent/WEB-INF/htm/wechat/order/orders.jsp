@@ -134,14 +134,15 @@
 							var retailBacLimit = 0; // 总返现
 							var totalCount = 0; // 总数量
 							for (j = 0; j < data.message[i].items.length; j++) {
+								var goodsQsmm = data.message[i].items[j].goodsQsmm;
 								var strs = new Array();
 								// 根据逗号获取图片后缀
-								strs = data.message[i].items[j].goodsQsmm.split(".");
+								strs = goodsQsmm.split(".");
 								html += '<div class="mui-input-row mui-left">';
 								html += '	<input type="hidden" name="goodsId" value="' + data.message[i].items[j].goodsId + '">';
 								html += '	<div class="car-inner-box">';
 								html += '		<div class="car-inner-box-img">';
-								html += '			<img src="${goodsImgUrl}' + data.message[i].items[j].goodsQsmm + '_187_187.' + strs[1] + '" alt="" class="goodspic">';
+								html += '			<img src="${goodsImgUrl}' + goodsQsmm + '_187_187.' + strs[1] + '" alt="" class="goodspic">';
 								html += '		</div>';
 								html += '		<div class="car-inner-body">';
 								html += '			<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId="' + data.message[i].items[j].onlineId + '>' + data.message[i].items[j].onlineTitle +'</a></h5>';
@@ -158,7 +159,7 @@
 								}else if(data.message[i].items[j].returnState ==2){
 									html+='<button class="mui-btn locked">已退货</button>'
 								}else if(data.message[i].items[j].returnState == 0){
-									var unitJson ='{"orderCode":"' + data.message[i].orderCode + '","orderDetailId":"' + data.message[i].items[j].id + '","onlineId":"' + data.message[i].items[j].onlineId + '","onlineTitle":"' + data.message[i].items[j].onlineTitle + '","goodsQsmm":"${goodsImgUrl}' + data.message[i].items[j].goodsQsmm + '_187_187.jpg","produceId":"' + data.message[i].items[j].produceId + '","buyPrice":"' + formatCurrency(data.message[i].items[j].buyPrice) + '","cashbackAmount":"' + formatCurrency(data.message[i].items[j].cashbackAmount) + '","buyCount":"' + data.message[i].items[j].buyCount + '","specName":"' + data.message[i].items[j].specName + '"}';
+									var unitJson ='{"orderCode":"' + data.message[i].orderCode + '","orderDetailId":"' + data.message[i].items[j].id + '","onlineId":"' + data.message[i].items[j].onlineId + '","onlineTitle":"' + data.message[i].items[j].onlineTitle + '","goodsQsmm":"${goodsImgUrl}' + goodsQsmm + '_187_187.' + strs[1] + '","produceId":"' + data.message[i].items[j].produceId + '","buyPrice":"' + formatCurrency(data.message[i].items[j].buyPrice) + '","cashbackAmount":"' + formatCurrency(data.message[i].items[j].cashbackAmount) + '","buyCount":"' + data.message[i].items[j].buyCount + '","specName":"' + data.message[i].items[j].specName + '"}';
 									if (data.message[i].orderState != 1 && data.message[i].orderState != -1){
 										if(data.message[i].items[j].returnState == 0){
 											html+='<a href="javascript:returnPage(\'' + b.encode(unitJson) + '\')"  class="mui-btn">退货</a>';
@@ -318,15 +319,16 @@
 							var retailBacLimit = 0; // 总返现
 							var totalCount = 0; // 总数量
 							for (j = 0; j < data.message[i].items.length; j++) {
+								var goodsQsmm = data.message[i].items[j].goodsQsmm;
 								var strs = new Array();
 								// 根据逗号获取图片后缀
-								strs = data.message[i].items[j].goodsQsmm.split(".");
+								strs = goodsQsmm.split(".");
 								html += '<div class="mui-input-row mui-left">';
 								html += '	<input type="hidden" name="goodsId" value="' + data.message[i].items[j].onlineId + '">';
 								html += '<div class="car-inner-box">';
 								html += '<div class="car-inner-box-img">';
 								html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '">';
-								html += '		<img src="${goodsImgUrl}' + data.message[i].items[j].goodsQsmm + '_187_187.' + strs[1] + '" alt="" class="goodspic">';
+								html += '		<img src="${goodsImgUrl}' + goodsQsmm + '_187_187.' + strs[1] + '" alt="" class="goodspic">';
 								html += '	</a>';
 								html += '</div>';
 								html += '<div class="car-inner-body">';
@@ -344,7 +346,7 @@
 								}else if(data.message[i].items[j].returnState ==2){
 									html += '<button class="mui-btn locked">已退货</button>';
 								}else if(data.message[i].items[j].returnState == 0){
-									var unitJson ='{"orderCode":"' + data.message[i].orderCode + '","orderDetailId":"' + data.message[i].items[j].id + '","onlineId":"' + data.message[i].items[j].onlineId + '","onlineTitle":"' + data.message[i].items[j].onlineTitle + '","goodsQsmm":"${goodsImgUrl}' + data.message[i].items[j].goodsQsmm + '_187_187.jpg","produceId":"' + data.message[i].items[j].produceId + '","buyPrice":"' + formatCurrency(data.message[i].items[j].buyPrice) + '","cashbackAmount":"' + formatCurrency(data.message[i].items[j].cashbackAmount) + '","buyCount":"' + data.message[i].items[j].buyCount + '","specName":"' + data.message[i].items[j].specName + '"}';
+									var unitJson ='{"orderCode":"' + data.message[i].orderCode + '","orderDetailId":"' + data.message[i].items[j].id + '","onlineId":"' + data.message[i].items[j].onlineId + '","onlineTitle":"' + data.message[i].items[j].onlineTitle + '","goodsQsmm":"${goodsImgUrl}' + goodsQsmm + '_187_187.' + strs[1] + '","produceId":"' + data.message[i].items[j].produceId + '","buyPrice":"' + formatCurrency(data.message[i].items[j].buyPrice) + '","cashbackAmount":"' + formatCurrency(data.message[i].items[j].cashbackAmount) + '","buyCount":"' + data.message[i].items[j].buyCount + '","specName":"' + data.message[i].items[j].specName + '"}';
 									if (data.message[i].orderState != 1 && data.message[i].orderState != -1){
 										if(data.message[i].items[j].returnState == 0){
 											html += '<a href="javascript:returnPage(\'' + b.encode(unitJson) + '\')"  class="mui-btn">退货</a>'

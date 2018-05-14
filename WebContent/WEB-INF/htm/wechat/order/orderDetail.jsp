@@ -62,12 +62,13 @@
 			mui.each(json.items, function(index, item) {
 				var strs = new Array();
 				// 根据逗号获取图片后缀
-				strs = item.faceimg.split(".");
+				strs = item.goodsQsmm.split(".");
+				console.log(strs);
 				html += '<div class="mui-input-group">';
 				html += '	<div class="mui-input-row mui-left">';
 				html += '		<div class="car-inner-box">';
 				html += '			<div class="car-inner-box-img">';
-				html += '				<img src="${goodsImgUrl}' + item.faceimg + '_187_187.' + strs[1] + '" alt="" class="goodspic">';
+				html += '				<img src="${goodsImgUrl}' + item.goodsQsmm + '_187_187.' + strs[1] + '" alt="" class="goodspic">';
 				html += '			</div>';
 				html += '			<div class="car-inner-body">';
 				html += '				<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + item.onlineId + '">' + item.onlineTitle + '</a></h5>';
@@ -94,7 +95,7 @@
 			html = '';
 			document.getElementById("orderDetail").innerHTML = html;
 			html += '<span class="fullwidth">订单编号：' + json.orderCode + '</span>';
-			html += '<span class="fullwidth">下单时间：' + json.orderTime + '</span>';
+			html += '<span class="fullwidth">下单时间：' + timestampToTime(json.orderTime) + '</span>';
 			document.getElementById("orderDetail").innerHTML = html;
 			
 			html = '';

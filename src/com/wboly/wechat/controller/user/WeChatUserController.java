@@ -547,7 +547,7 @@ public class WeChatUserController extends SysController {
 			this.render(response, "{\"message\":\"您的请求有误\",\"flag\":false}");
 			return;
 		}
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		if (isDefault.equals("1")) {
 			map.put("isDef", "true");
@@ -741,7 +741,6 @@ public class WeChatUserController extends SysController {
 				}
 			}
 		}
-
 	}
 
 	/**

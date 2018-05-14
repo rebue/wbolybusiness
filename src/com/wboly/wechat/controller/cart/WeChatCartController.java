@@ -49,7 +49,7 @@ public class WeChatCartController extends SysController {
 			map.put("id", cartId);
 			map.put("userId", userId);
 			System.err.println("删除购物车的参数为：" + map.toString());
-			String results = OkhttpUtils.delete(SysContext.ONLINEURL +"/onl/cart?id=" + cartId + "&userId=" + userId);
+			String results = OkhttpUtils.delete(SysContext.ONLINEURL + "/onl/cart?id=" + cartId + "&userId=" + userId);
 			System.err.println("删除购物车返回值为：" + results);
 			if (results != null && !results.equals("") && !results.equals("null")) {
 				ObjectMapper mapper = new ObjectMapper();
@@ -90,10 +90,10 @@ public class WeChatCartController extends SysController {
 		// 获取当前用户编号
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
 		if (!userId.equals("")) {
-			Map<String, String> map = new HashMap<String, String>();
+			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("userId", userId);
 			// 获取购物车列表
-			String results = OkhttpUtils.get(SysContext.ONLINEURL +"/onl/cart", map);
+			String results = OkhttpUtils.get(SysContext.ONLINEURL + "/onl/cart", map);
 			if (results != null && !results.equals("") && !results.equals("null")) {
 				this.render(response, "{\"message\":" + results + ",\"flag\":true}");
 			} else {
@@ -165,7 +165,7 @@ public class WeChatCartController extends SysController {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("userId", userId);
 			// 根据用户编号获取购物车数量
-			Integer num = Integer.parseInt(OkhttpUtils.get(SysContext.ONLINEURL +"/onl/cart/count?userId=" + userId));
+			Integer num = Integer.parseInt(OkhttpUtils.get(SysContext.ONLINEURL + "/onl/cart/count?userId=" + userId));
 			num = num == null ? 0 : num;
 			if (num < 0) {
 				num = 0;
@@ -194,7 +194,7 @@ public class WeChatCartController extends SysController {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("ids", cartId);
 			map.put("userId", userId);
-			int result = Integer.parseInt(OkhttpUtils.deleteByFormParams(SysContext.ONLINEURL +"/onl/cart/deletes", map));
+			int result = Integer.parseInt(OkhttpUtils.deleteByFormParams(SysContext.ONLINEURL + "/onl/cart/deletes", map));
 			if (result < 1) {
 				this.render(response, "{\"message\":\"删除失败\",\"flag\":false}");
 			} else {

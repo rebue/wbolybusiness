@@ -93,6 +93,24 @@ function getTime(nS) {
 }
 
 /**
+ * 时间戳转日期格式
+ * 
+ * @param nS
+ * @returns {String}
+ */
+function timestampToTime(nS) {
+	var date = new Date(parseInt(nS)); // 中国标准时间
+	var year = date.getFullYear();// 年
+	var mon = date.getMonth() + 1; // 月
+	var day = date.getDate(); // 日
+	var hours = date.getHours(); // 时
+	var minu = date.getMinutes(); // 分
+	var sec = date.getSeconds(); // 秒
+	// 拼成时间格式
+	return year + '-' + mon + '-' + day + ' ' + hours + ':' + minu + ':' + sec;
+}
+
+/**
  * 格式化金钱
  * 
  * @param num

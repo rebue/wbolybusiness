@@ -245,7 +245,7 @@ public class WeChatGoodsController extends SysController {
 		// 每页条数
 		String limit = request.getParameter("limit");
 		
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("sortname", sortField);
 		map.put("sortOrder", sortType);
 		map.put("start", start);
@@ -317,7 +317,7 @@ public class WeChatGoodsController extends SysController {
 		// 每页条数
 		String limit = request.getParameter("limit");
 		
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("sortname", sortField);
 		map.put("sortOrder", sortType);
 		map.put("start", start);
@@ -531,7 +531,7 @@ public class WeChatGoodsController extends SysController {
 	 */
 	@RequestMapping("/wechat/goods/goodsCarouselPic")
 	public void goodsCarouselPic(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		String onlineId = request.getParameter("onlineId").trim();
 		map.put("onlineId", onlineId);
 		map.put("picType", "0");
@@ -583,7 +583,7 @@ public class WeChatGoodsController extends SysController {
 		String specId = request.getParameter("specId");
 		// 上线编号
 		String onlineId = request.getParameter("onlineId").trim();
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		if (!specId.equals("0")) {
 			map.put("id", specId);
 		}

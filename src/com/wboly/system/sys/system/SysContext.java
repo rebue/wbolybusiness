@@ -98,6 +98,6 @@ public class SysContext {
 	/** 图片请求url  **/
 	public static String IMGURL;
 	
-	// 项目名称
-	public static String PROJECTNAME;
+	/**微信登录校验key**/
+	public static String WXLOGINKEY;
 }
