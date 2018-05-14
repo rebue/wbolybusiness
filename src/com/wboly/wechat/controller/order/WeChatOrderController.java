@@ -371,7 +371,7 @@ public class WeChatOrderController extends SysController {
 		map.put("cancelingOrderOpId", userId);
 		System.out.println("取消订单的参数为：{}" + String.valueOf(map));
 		// 取消订单
-		String results = OkhttpUtils.putByFormParams(SysContext.ORDERURL + "ord/order/cancel", map);
+		String results = OkhttpUtils.putByFormParams(SysContext.ORDERURL + "/ord/order/cancel", map);
 		System.out.println("取消订单的返回值为：" + results);
 		ObjectMapper mapper = new ObjectMapper();
 		Map resultMap = mapper.readValue(results, Map.class);
@@ -410,7 +410,7 @@ public class WeChatOrderController extends SysController {
 		map.put("limit", limit);
 		map.put("userId", userId);
 		System.out.println("获取用户订单的参数为：" + String.valueOf(map));
-		String results = OkhttpUtils.get(SysContext.ORDERURL + "ord/order/info", map);
+		String results = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/info", map);
 		System.out.println("获取用户订单的返回值为：" + results);
 		this.render(response, "{\"message\":" + results + ",\"flag\":true}");
 	}
@@ -454,7 +454,7 @@ public class WeChatOrderController extends SysController {
 		ObjectMapper mapper = new ObjectMapper();
 		String goodsJson = mapper.writeValueAsString(goodsList);
 		System.err.println("用户下订单的参数为=====" + goodsJson);
-		String results = OkhttpUtils.post(SysContext.ORDERURL + "ord/order?orderJson=" + java.net.URLEncoder.encode(goodsJson, "UTF-8"));
+		String results = OkhttpUtils.post(SysContext.ORDERURL + "/ord/order?orderJson=" + java.net.URLEncoder.encode(goodsJson, "UTF-8"));
 		System.err.println("用户下订单返回值为：" + results);
 		if (results != null && !results.equals("") && !results.equals("null") && !results.equals("{}")) {
 			Map resultMap = mapper.readValue(results, Map.class);
@@ -491,7 +491,7 @@ public class WeChatOrderController extends SysController {
 			map.put("orderCode", orderCode);
 			map.put("receivedOpId", userId);
 			System.err.println("用户订单签收的参数为：" + String.valueOf(map));
-			String signInResult = OkhttpUtils.putByFormParams(SysContext.ORDERURL + "ord/order/ordersignin", map);
+			String signInResult = OkhttpUtils.putByFormParams(SysContext.ORDERURL + "/ord/order/ordersignin", map);
 			System.err.println("用户订单签收的返回值为：" + signInResult);
 			ObjectMapper mapper = new ObjectMapper();
 			Map resultMap = mapper.readValue(signInResult, Map.class);
