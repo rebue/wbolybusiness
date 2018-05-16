@@ -33,7 +33,6 @@ import com.wboly.system.sys.util.HttpUtil;
 import com.wboly.system.sys.util.IpUtil;
 import com.wboly.system.sys.util.JsonUtil;
 import com.wboly.system.sys.util.MD5CodeUtil;
-import com.wboly.system.sys.util.wx.UnifyDowdUtil;
 import com.wboly.system.sys.util.wx.WXSignUtils;
 import com.wboly.system.sys.util.wx.WeixinUtil.SITE;
 import com.wboly.system.sys.util.wx.WxConfig;
@@ -434,88 +433,88 @@ public class WeChatPayController extends SysController {
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
-		map.put("orderCode", orderId);
-
-		if (type.equals("vpay")) {
-			System.err.println("____进入V支付返回通知通道____");
-
-			String order = OkhttpUtils.putByFormParams(SysContext.ORDERURL + "/ord/order/info", map);
-			List<Map<String, Object>> orderInfo = JsonUtil.listMaps(order);
-
-			if (orderInfo == null || orderInfo.size() < 1) {
-				System.err.println("V支付:该订单号不存在");
-				mav.addObject("orderId", "- - - - - - - - - -");
-				mav.addObject("money", "- -");
-			} else {
-				mav.addObject("orderId", String.valueOf(orderInfo.get(0).get("orderId")));
-				mav.addObject("money", String.valueOf(orderInfo.get(0).get("money")));
-			}
-
-		} else if (type.equals("wxpay")) {
-			System.err.println("____进入微信支付返回通知通道____");
-			try {
-				// 查询微信统一下单信息
-				Map resultMap = UnifyDowdUtil.checkWxOrderPay(orderId);
-				System.err.println("resultMap:" + resultMap);
-
-				String return_code = (String) resultMap.get("return_code");
-
-				System.err.println("return_code:" + return_code);
-
-				if ("SUCCESS".equals(return_code)) {
-					String result_code = (String) resultMap.get("result_code");
-					System.err.println("result_code:" + result_code);
-					if ("SUCCESS".equals(result_code)) {
-						// 商家订单号
-						String out_trade_no = (String) resultMap.get("out_trade_no");
-						// 支付完成时间
-						String time_end = (String) resultMap.get("time_end");
-						// 订单金额 (单位:分)
-						String total_fee = (String) resultMap.get("total_fee");
-						// 微信支付订单号
-						String transaction_id = (String) resultMap.get("transaction_id");
-						BigDecimal big = new BigDecimal(total_fee);
-						big = big.divide(new BigDecimal(100));
-						big = big.setScale(2, BigDecimal.ROUND_HALF_DOWN);
-						System.err.println("---------- 微信支付订单信息 ------------");
-						System.err.println("订单号:" + out_trade_no);
-						System.err.println("支付金额(元):" + big);
-						System.err.println("微信支付订单号:" + transaction_id);
-						System.err.println("支付完成时间:" + time_end);
-						mav.addObject("orderId", out_trade_no);
-						mav.addObject("money", big);
-					} else {
-						System.err.println("微信支付业务结果:支付失败");
-						String err_code = (String) resultMap.get("err_code");
-						String err_code_des = (String) resultMap.get("err_code_des");
-						System.err.println("weixin resultCode:" + result_code + ",err_code:" + err_code
-								+ ",err_code_des:" + err_code_des);
-
-						mav.addObject("orderId", "- - - - - - - - - -");
-						mav.addObject("money", "- -");
-					}
-				} else {
-					System.err.println("微信支付:支付失败");
-					mav.addObject("orderId", "- - - - - - - - - -");
-					mav.addObject("money", "- -");
-				}
-			} catch (Exception e) {
-				// e.printStackTrace();
-				System.err.println("微信支付:抛出异常");
-				mav.addObject("orderId", "- - - - - - - - - -");
-				mav.addObject("money", "- -");
-			}
-		}
-
-		map.put("code", 0);
-
-		vblorderService.selectOrderCodeByOrderId(map);
-
-		mav.addObject("code", map.get("code").toString());
-
-		System.err.println(map.toString());
-
-		map = null;
+//		map.put("orderCode", orderId);
+//
+//		if (type.equals("vpay")) {
+//			System.err.println("____进入V支付返回通知通道____");
+//
+//			String order = OkhttpUtils.putByFormParams(SysContext.ORDERURL + "/ord/order/info", map);
+//			List<Map<String, Object>> orderInfo = JsonUtil.listMaps(order);
+//
+//			if (orderInfo == null || orderInfo.size() < 1) {
+//				System.err.println("V支付:该订单号不存在");
+//				mav.addObject("orderId", "- - - - - - - - - -");
+//				mav.addObject("money", "- -");
+//			} else {
+//				mav.addObject("orderId", String.valueOf(orderInfo.get(0).get("orderId")));
+//				mav.addObject("money", String.valueOf(orderInfo.get(0).get("realMoney")));
+//			}
+//
+//		} else if (type.equals("wxpay")) {
+//			System.err.println("____进入微信支付返回通知通道____");
+//			try {
+//				// 查询微信统一下单信息
+//				Map resultMap = UnifyDowdUtil.checkWxOrderPay(orderId);
+//				System.err.println("resultMap:" + resultMap);
+//
+//				String return_code = (String) resultMap.get("return_code");
+//
+//				System.err.println("return_code:" + return_code);
+//
+//				if ("SUCCESS".equals(return_code)) {
+//					String result_code = (String) resultMap.get("result_code");
+//					System.err.println("result_code:" + result_code);
+//					if ("SUCCESS".equals(result_code)) {
+//						// 商家订单号
+//						String out_trade_no = (String) resultMap.get("out_trade_no");
+//						// 支付完成时间
+//						String time_end = (String) resultMap.get("time_end");
+//						// 订单金额 (单位:分)
+//						String total_fee = (String) resultMap.get("total_fee");
+//						// 微信支付订单号
+//						String transaction_id = (String) resultMap.get("transaction_id");
+//						BigDecimal big = new BigDecimal(total_fee);
+//						big = big.divide(new BigDecimal(100));
+//						big = big.setScale(2, BigDecimal.ROUND_HALF_DOWN);
+//						System.err.println("---------- 微信支付订单信息 ------------");
+//						System.err.println("订单号:" + out_trade_no);
+//						System.err.println("支付金额(元):" + big);
+//						System.err.println("微信支付订单号:" + transaction_id);
+//						System.err.println("支付完成时间:" + time_end);
+//						mav.addObject("orderId", out_trade_no);
+//						mav.addObject("money", big);
+//					} else {
+//						System.err.println("微信支付业务结果:支付失败");
+//						String err_code = (String) resultMap.get("err_code");
+//						String err_code_des = (String) resultMap.get("err_code_des");
+//						System.err.println("weixin resultCode:" + result_code + ",err_code:" + err_code
+//								+ ",err_code_des:" + err_code_des);
+//
+//						mav.addObject("orderId", "- - - - - - - - - -");
+//						mav.addObject("money", "- -");
+//					}
+//				} else {
+//					System.err.println("微信支付:支付失败");
+//					mav.addObject("orderId", "- - - - - - - - - -");
+//					mav.addObject("money", "- -");
+//				}
+//			} catch (Exception e) {
+//				// e.printStackTrace();
+//				System.err.println("微信支付:抛出异常");
+//				mav.addObject("orderId", "- - - - - - - - - -");
+//				mav.addObject("money", "- -");
+//			}
+//		}
+//
+//		map.put("code", 0);
+//
+//		vblorderService.selectOrderCodeByOrderId(map);
+//
+//		mav.addObject("code", map.get("code").toString());
+//
+//		System.err.println(map.toString());
+//
+//		map = null;
 
 		mav.setViewName("/htm/wechat/pay/paysuccess");
 
@@ -526,10 +525,10 @@ public class WeChatPayController extends SysController {
 	 * 获取v支付预支付Id
 	 * @param request
 	 * @param response
-	 * @throws SocketException 
+	 * @throws IOException 
 	 */
 	@RequestMapping(value = "/wechat/pay/createVpayPrepaymentId", method = RequestMethod.POST)
-	public void createVpayPrepaymentId(HttpServletRequest request, HttpServletResponse response) throws SocketException {
+	public void createVpayPrepaymentId(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String buyerUid = request.getParameter("userId"); // 用户编号
 		String orderId = request.getParameter("orderId"); // 订单编号
 		
@@ -543,7 +542,7 @@ public class WeChatPayController extends SysController {
 			return ;
 		}
 		
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("orderCode", orderId);
 		map.put("orderId", orderId);
 		map.put("buyerUid", buyerUid);
