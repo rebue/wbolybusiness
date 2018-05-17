@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.wboly.modules.controller.Util.MacAddressUtil;
-import com.wboly.modules.service.order.VblOrderService;
 import com.wboly.system.sys.spring.SysController;
 import com.wboly.system.sys.system.SysCache;
 import com.wboly.system.sys.system.SysContext;
@@ -36,7 +35,6 @@ import com.wboly.system.sys.util.MD5CodeUtil;
 import com.wboly.system.sys.util.wx.WXSignUtils;
 import com.wboly.system.sys.util.wx.WeixinUtil.SITE;
 import com.wboly.system.sys.util.wx.WxConfig;
-import com.wboly.wechat.dao.order.WeChatOrderMapper;
 import com.wboly.wechat.service.order.WeChatOrderService;
 
 import rebue.wheel.OkhttpUtils;
@@ -50,12 +48,6 @@ public class WeChatPayController extends SysController {
 
 	@Autowired
 	private WeChatOrderService weChatOrderService;
-
-	@Autowired
-	private VblOrderService vblorderService;
-
-	@Autowired
-	private WeChatOrderMapper weChatOrderMapper;
 
 	/**
 	 * @Name: 微信支付授权，先获取 code，跳转 url 通过 code 获取 openId

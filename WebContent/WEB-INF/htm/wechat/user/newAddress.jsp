@@ -385,7 +385,6 @@
 					//设置默认按钮
 					mui(document).on("change", ".mui-card input[type='radio']", function(e) {
 						mui("#loading")[0].style.display="block";
-						console(mui("#loading")[0]);
 						if(this.checked == true){
 							var _addid = this.parentNode.parentNode.querySelector("input[name='add']").value;//地址标识
 							if(_addid==null||_addid==""){
