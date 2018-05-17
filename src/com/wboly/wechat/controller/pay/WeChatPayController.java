@@ -2,7 +2,6 @@ package com.wboly.wechat.controller.pay;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.SocketException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
@@ -159,7 +158,7 @@ public class WeChatPayController extends SysController {
 		String prepay_id = "";
 
 		System.err.println("获取微信预支付Id请求参数：" + map);
-		String result = HttpUtil.postUrl(SysContext.VPAYURL + "/wxpay/prepay", map);
+		String result = OkhttpUtils.get(SysContext.VPAYURL + "/wxpay/prepay", map);
 		System.err.println("获取微信预支付Id返回结果：" + result);
 
 		if (null == result || "".equals(result) || "null".equals(result)) {
@@ -283,12 +282,13 @@ public class WeChatPayController extends SysController {
 	}
 
 	/**
+	 * @throws IOException 
 	 * @Name: V支付 支付确认
 	 * @Author: nick
 	 */
 	@SuppressWarnings("static-access")
 	@RequestMapping(value = "/wechat/pay/payVerify", method = RequestMethod.POST)
-	public void payVerify(HttpServletRequest request, HttpServletResponse response) {
+	public void payVerify(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
 		if (userId.equals("")) {
 			this.render(response, "{\"message\":\"您没有登录\",\"flag\":false}");
@@ -381,7 +381,7 @@ public class WeChatPayController extends SysController {
 
 		System.err.println("请求V支付参数:" + map.toString());
 
-		String result = HttpUtil.postUrl(SysContext.CONFIGMAP.get("vpaySite") + "/wechatmobileconfirmpass.do", map);
+		String result = OkhttpUtils.get(SysContext.CONFIGMAP.get("vpaySite") + "/wechatmobileconfirmpass.do", map);
 		System.err.println("返回结果:" + result);
 		if (null == result || "".equals(result) || "null".equals(result)) {
 			this.render(response, "{\"message\":\"请求超时\",\"flag\":false}");
@@ -482,7 +482,7 @@ public class WeChatPayController extends SysController {
 		map.put("tradeDetail", "您在微薄利商超购买的商品订单为：" + orderId + "，所购买的商品为：" + goodsNames);
 		System.err.println();
 		// 获取v支付预支付Id
-		String vpayPrepaymentResult = HttpUtil.postUrl(SysContext.VPAYURL + "/vpay/prepay", map);
+		String vpayPrepaymentResult = OkhttpUtils.get(SysContext.VPAYURL + "/vpay/prepay", map);
 		// 判断v支付生成预支付Id是否为空
 		if (vpayPrepaymentResult == null || vpayPrepaymentResult.equals("") || vpayPrepaymentResult.equals("null")) {
 			this.render(response, "{\"message\":\"v支付生成预支付Id出错\",\"flag\":false}");
@@ -510,10 +510,10 @@ public class WeChatPayController extends SysController {
 	 * @param request
 	 * @param response
 	 *            2018年1月18日14:12:15
-	 * @throws SocketException
+	 * @throws IOException 
 	 */
 	@RequestMapping(value = "/wechat/pay/shopOrderPay", method = RequestMethod.POST)
-	public void shopOrderPay(HttpServletRequest request, HttpServletResponse response) throws SocketException {
+	public void shopOrderPay(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		System.err.println("==============订单支付开始============");
 		String prepayId = request.getParameter("prepayId"); // v支付预支付id
 		String requirePayPswd = request.getParameter("requirePayPswd");
@@ -532,7 +532,7 @@ public class WeChatPayController extends SysController {
 		}
 		System.err.println("支付的参数为：" + map.toString());
 		// 订单支付
-		String result = HttpUtil.postUrl(SysContext.VPAYURL + "/vpay/pay", map);
+		String result = OkhttpUtils.get(SysContext.VPAYURL + "/vpay/pay", map);
 		String results = JsonUtil.getJSONValue(result, "result");
 		System.err.println("调用v支付返回值为：" + result);
 		if (results == null || results.equals("") || results.equals("null")) {
