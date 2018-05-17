@@ -27,10 +27,11 @@
 	</header>
 	<script>
         window.onload = function () {
+        	var logisticCode = "${logisticCode}";
         	KDNWidget.run({
                            serviceType: "A",
                            expCode: "${shipperCode}",
-                           expNo: "${logisticCode}",
+                           expNo: logisticCode,
             })
           }
      </script> 

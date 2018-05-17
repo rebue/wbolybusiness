@@ -17,11 +17,8 @@
 	<div class="noticepage noticepage-main">
 		<div class="mui-icon mui-icon-checkmarkempty success"></div>
 		<h3>付款成功</h3>
+		<p>您的宝贝就要飞向您的怀抱啦，请保持电话畅通</p>
 	</div>
-	<ul class="mui-table-view">
-		<li class="mui-table-view-cell">成功支付：<span>¥ ${money }</span></li>
-		<li class="mui-table-view-cell">订单编号：${orderId }</li>
-	</ul>
 	<div class="btn-box">
 		<button type="button" class="mui-btn" onclick="window.location.href='${ctx }/wechat/goods/allGoodsList.htm'">继续购物</button>
 		<button type="button" class="mui-btn" onclick="window.location.href='${ctx }/wechat/order/myOrders.htm'">返回</button>

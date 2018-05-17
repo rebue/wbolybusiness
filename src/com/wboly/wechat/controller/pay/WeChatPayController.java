@@ -480,9 +480,10 @@ public class WeChatPayController extends SysController {
 			goodsNames = String.valueOf(orderInventoryList.get(0).get("onlineTitle"));
 		}
 		map.put("tradeDetail", "您在微薄利商超购买的商品订单为：" + orderId + "，所购买的商品为：" + goodsNames);
-		System.err.println();
+		
+		System.err.println("微信端获取v支付预支付Id的参数为：{}" + String.valueOf(map));
 		// 获取v支付预支付Id
-		String vpayPrepaymentResult = OkhttpUtils.postByFormParams(SysContext.VPAYURL + "/vpay/prepay", map);
+		String vpayPrepaymentResult = OkhttpUtils.postByJsonParams(SysContext.VPAYURL + "/vpay/prepay", map);
 		// 判断v支付生成预支付Id是否为空
 		if (vpayPrepaymentResult == null || vpayPrepaymentResult.equals("") || vpayPrepaymentResult.equals("null")) {
 			this.render(response, "{\"message\":\"v支付生成预支付Id出错\",\"flag\":false}");
@@ -532,7 +533,7 @@ public class WeChatPayController extends SysController {
 		}
 		System.err.println("支付的参数为：" + map.toString());
 		// 订单支付
-		String result = OkhttpUtils.postByFormParams(SysContext.VPAYURL + "/vpay/pay", map);
+		String result = OkhttpUtils.postByJsonParams(SysContext.VPAYURL + "/vpay/pay", map);
 		String results = JsonUtil.getJSONValue(result, "result");
 		System.err.println("调用v支付返回值为：" + result);
 		if (results == null || results.equals("") || results.equals("null")) {

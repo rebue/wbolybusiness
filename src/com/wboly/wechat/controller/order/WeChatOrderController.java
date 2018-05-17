@@ -26,7 +26,9 @@ import com.wboly.system.sys.spring.SysController;
 import com.wboly.system.sys.system.SysCache;
 import com.wboly.system.sys.system.SysContext;
 import com.wboly.system.sys.util.Base64EnOut;
+import com.wboly.system.sys.util.IpUtil;
 import com.wboly.system.sys.util.JsonUtil;
+import com.wboly.system.sys.util.MacAddressUtil;
 import com.wboly.wechat.service.order.WeChatOrderService;
 import com.wboly.wechat.service.shop.WeChatShopService;
 
@@ -466,6 +468,8 @@ public class WeChatOrderController extends SysController {
 			map.put("userId", userId);
 			map.put("orderCode", orderCode);
 			map.put("receivedOpId", userId);
+			map.put("mac", MacAddressUtil.getLocalMac());
+			map.put("ip", IpUtil.getIp(request));
 			System.err.println("用户订单签收的参数为：" + String.valueOf(map));
 			String signInResult = OkhttpUtils.putByFormParams(SysContext.ORDERURL + "/ord/order/ordersignin", map);
 			System.err.println("用户订单签收的返回值为：" + signInResult);

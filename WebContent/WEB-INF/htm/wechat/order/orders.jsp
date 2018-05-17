@@ -502,8 +502,7 @@
 				return;
 			}
 			console.log(orderId);
-// 			window.location.href = "/wbolybusiness/wechat/order/queryLogistics.htm?orderId=" + b.encode("\"" + orderId + "\"");
-			window.location.href = "/wbolybusiness/wechat/order/queryLogistics.htm?orderId="+ orderId;
+			window.location.href = "${ctx}/wechat/order/queryLogistics.htm?orderId=" + orderId;
 		}
 	</script>
 </body>
