@@ -134,6 +134,14 @@
 							var retailBacLimit = 0; // 总返现
 							var totalCount = 0; // 总数量
 							for (j = 0; j < data.message[i].items.length; j++) {
+								// 购买数量
+								var buyCount = data.message[i].items[j].buyCount;
+								// 退货数量
+								var returnCount = data.message[i].items[j].returnCount;
+								returnCount = returnCount == null ? 0 : returnCount;
+								// 真实购买数量
+								var realBuyCount = parseInt(buyCount) - parseInt(returnCount);
+								
 								var goodsQsmm = data.message[i].items[j].goodsQsmm;
 								var strs = new Array();
 								// 根据逗号获取图片后缀
@@ -150,7 +158,7 @@
 								html += '			<div class="price-area">';
 								html += '				<span class="m-price">¥ <span>' + formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
 								html += '				<span class="b-money"> 返 <span>' + formatCurrency(data.message[i].items[j].cashbackAmount) + '</span></span>';//*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
-								html += '				<span class="numbox">数量：<span>' + data.message[i].items[j].buyCount + '</span></span>';
+								html += '				<span class="numbox">数量：<span>' + buyCount + '</span></span>';
 								html += '			</div>';
 								html += '		</div>';
 								html += '	<div class="button-box">';
@@ -158,10 +166,10 @@
 									html+='<button class="mui-btn locked">退货中</button>'
 								}else if(data.message[i].items[j].returnState ==2){
 									html+='<button class="mui-btn locked">已退货</button>'
-								}else if(data.message[i].items[j].returnState == 0){
-									var unitJson ='{"orderCode":"' + data.message[i].orderCode + '","orderDetailId":"' + data.message[i].items[j].id + '","onlineId":"' + data.message[i].items[j].onlineId + '","onlineTitle":"' + data.message[i].items[j].onlineTitle + '","goodsQsmm":"${goodsImgUrl}' + goodsQsmm + '_187_187.' + strs[1] + '","produceId":"' + data.message[i].items[j].produceId + '","buyPrice":"' + formatCurrency(data.message[i].items[j].buyPrice) + '","cashbackAmount":"' + formatCurrency(data.message[i].items[j].cashbackAmount) + '","buyCount":"' + data.message[i].items[j].buyCount + '","specName":"' + data.message[i].items[j].specName + '"}';
+								}else if(data.message[i].items[j].returnState == 0 || data.message[i].items[j].returnState == 3){
+									var unitJson ='{"orderCode":"' + data.message[i].orderCode + '","orderDetailId":"' + data.message[i].items[j].id + '","onlineId":"' + data.message[i].items[j].onlineId + '","onlineTitle":"' + data.message[i].items[j].onlineTitle + '","goodsQsmm":"${goodsImgUrl}' + goodsQsmm + '_187_187.' + strs[1] + '","produceId":"' + data.message[i].items[j].produceId + '","buyPrice":"' + formatCurrency(data.message[i].items[j].buyPrice) + '","cashbackAmount":"' + formatCurrency(data.message[i].items[j].cashbackAmount) + '","buyCount":"' + realBuyCount + '","specName":"' + data.message[i].items[j].specName + '"}';
 									if (data.message[i].orderState != 1 && data.message[i].orderState != -1){
-										if(data.message[i].items[j].returnState == 0){
+										if(data.message[i].items[j].returnState == 0 || data.message[i].items[j].returnState == 3){
 											html+='<a href="javascript:returnPage(\'' + b.encode(unitJson) + '\')"  class="mui-btn">退货</a>';
 										};
 									};
@@ -169,7 +177,7 @@
 								html += '		</div>';
 								html += '	</div>';
 								html += '</div>';
-								retailBacLimit += parseInt(data.message[i].items[j].cashbackAmount * data.message[i].items[j].buyCount); 
+								retailBacLimit += parseFloat(data.message[i].items[j].cashbackTotal); 
 								totalCount += parseInt(data.message[i].items[j].buyCount);
 							};	
 							html += '</div>';
@@ -319,6 +327,14 @@
 							var retailBacLimit = 0; // 总返现
 							var totalCount = 0; // 总数量
 							for (j = 0; j < data.message[i].items.length; j++) {
+								// 购买数量
+								var buyCount = data.message[i].items[j].buyCount;
+								// 退货数量
+								var returnCount = data.message[i].items[j].returnCount;
+								returnCount = returnCount == null ? 0 : returnCount;
+								// 真实购买数量
+								var realBuyCount = parseInt(buyCount) - parseInt(returnCount);
+								
 								var goodsQsmm = data.message[i].items[j].goodsQsmm;
 								var strs = new Array();
 								// 根据逗号获取图片后缀
@@ -337,7 +353,7 @@
 								html += '	<div class="price-area">';
 								html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
 								html += '		<span class="b-money"> 返 <span>' + formatCurrency(data.message[i].items[j].cashbackAmount) + '</span></span>';//*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
-								html += '		<span class="numbox">数量：<span>' + data.message[i].items[j].buyCount + '</span></span>';
+								html += '		<span class="numbox">数量：<span>' + buyCount + '</span></span>';
 								html += '	</div>';
 								html += '</div>';
 								html += '<div class="button-box">';
@@ -345,17 +361,17 @@
 									html += '<button class="mui-btn locked">退货中</button>';
 								}else if(data.message[i].items[j].returnState ==2){
 									html += '<button class="mui-btn locked">已退货</button>';
-								}else if(data.message[i].items[j].returnState == 0){
-									var unitJson ='{"orderCode":"' + data.message[i].orderCode + '","orderDetailId":"' + data.message[i].items[j].id + '","onlineId":"' + data.message[i].items[j].onlineId + '","onlineTitle":"' + data.message[i].items[j].onlineTitle + '","goodsQsmm":"${goodsImgUrl}' + goodsQsmm + '_187_187.' + strs[1] + '","produceId":"' + data.message[i].items[j].produceId + '","buyPrice":"' + formatCurrency(data.message[i].items[j].buyPrice) + '","cashbackAmount":"' + formatCurrency(data.message[i].items[j].cashbackAmount) + '","buyCount":"' + data.message[i].items[j].buyCount + '","specName":"' + data.message[i].items[j].specName + '"}';
+								}else if(data.message[i].items[j].returnState == 0  || data.message[i].items[j].returnState == 3){
+									var unitJson ='{"orderCode":"' + data.message[i].orderCode + '","orderDetailId":"' + data.message[i].items[j].id + '","onlineId":"' + data.message[i].items[j].onlineId + '","onlineTitle":"' + data.message[i].items[j].onlineTitle + '","goodsQsmm":"${goodsImgUrl}' + goodsQsmm + '_187_187.' + strs[1] + '","produceId":"' + data.message[i].items[j].produceId + '","buyPrice":"' + formatCurrency(data.message[i].items[j].buyPrice) + '","cashbackAmount":"' + formatCurrency(data.message[i].items[j].cashbackAmount) + '","buyCount":"' + realBuyCount + '","specName":"' + data.message[i].items[j].specName + '"}';
 									if (data.message[i].orderState != 1 && data.message[i].orderState != -1){
-										if(data.message[i].items[j].returnState == 0){
+										if(data.message[i].items[j].returnState == 0 || data.message[i].items[j].returnState == 3){
 											html += '<a href="javascript:returnPage(\'' + b.encode(unitJson) + '\')"  class="mui-btn">退货</a>'
 										};
 									};
 								};
 								html+='</div>'	
 								html+='</div></div>'	
-								retailBacLimit += parseInt(data.message[i].items[j].cashbackAmount * data.message[i].items[j].buyCount); 
+								retailBacLimit += parseFloat(data.message[i].items[j].cashbackTotal); 
 								totalCount += parseInt(data.message[i].items[j].buyCount);
 							};	
 							html += '</div>'

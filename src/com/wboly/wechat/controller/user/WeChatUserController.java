@@ -2,7 +2,6 @@ package com.wboly.wechat.controller.user;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -493,8 +492,7 @@ public class WeChatUserController extends SysController {
 		map.put("sumretailBacLimit", df.format(JsonUtil.getJsonValue(result, "cashback")));// 可用返现金额，单位:分
 
 		// 返现总金额单位:分
-		map.put("usableBacLimit", Integer.parseInt(vbluserService.selectResidueBacLimitByParm(entity).get("residueBacLimit").toString())
-				+ new BigDecimal(String.valueOf(JsonUtil.getJsonValue(result, "cashback"))).multiply(new BigDecimal(100)).doubleValue());
+		map.put("usableBacLimit", df.format(JsonUtil.getJsonValue(result, "cashbacking")));
 		this.render(response, "{\"message\":" + JsonUtil.ObjectToJson(map) + ",\"flag\":true}");
 	}
 

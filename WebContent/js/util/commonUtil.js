@@ -351,10 +351,10 @@ function getMoney() {
 				document.getElementById("yue").innerHTML = formatCurrency(data.message.availableBalance);
 				document.getElementById("fanxain").innerHTML = formatCurrency(data.message.sumretailBacLimit);
 				if (document.getElementById("waitFanxian") != null) {
-					document.getElementById("waitFanxian").innerHTML = formatCurrency(data.message.residueBacLimit / 100);
+					document.getElementById("waitFanxian").innerHTML = formatCurrency(data.message.residueBacLimit);
 				}
 				if (document.getElementById("sumEarnings") != null) {
-					document.getElementById("sumEarnings").innerHTML = formatCurrency(data.message.amount / 100);
+					document.getElementById("sumEarnings").innerHTML = formatCurrency(data.message.amount);
 				}
 				return;
 			}
