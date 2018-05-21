@@ -5,6 +5,8 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import rebue.wheel.NetUtils;
+
 /**
  * 
  * @author dwh
@@ -35,7 +37,7 @@ public final class MacAddressUtil {
 	public static String getLocalMac() throws SocketException {
 		InetAddress ia = null;
 		try {
-			ia = InetAddress.getLocalHost();
+			ia = InetAddress.getByName(NetUtils.getFirstMacAddrOfLocalHost());
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
