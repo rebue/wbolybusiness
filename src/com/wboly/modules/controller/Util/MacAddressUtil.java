@@ -37,7 +37,7 @@ public final class MacAddressUtil {
 	public static String getLocalMac() throws SocketException {
 		InetAddress ia = null;
 		try {
-			ia = InetAddress.getByName(NetUtils.getFirstMacAddrOfLocalHost());
+			ia = InetAddress.getByName(NetUtils.getFirstIpOfLocalHost());
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
