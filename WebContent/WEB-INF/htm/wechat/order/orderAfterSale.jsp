@@ -26,9 +26,11 @@
 		<div id="sliderSegmentedControl"
 			class="order-tab-box mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
 			<a class="mui-control-item mui-active" data-value="100"> 退货中 </a> 
-			<a class="mui-control-item " data-value="101"> 退货完成 </a> 
+			<a class="mui-control-item " data-value="101"> 退货完成 </a>
+			<!--  
 			<a class="mui-control-item " data-value="102"> 售后中 </a> 
 			<a class="mui-control-item " data-value="103"> 售后完成 </a>
+			--> 
 		</div>
 		<div class="active-bar">
 			<span class="active-bar-span" id="active-bar-span"></span>
