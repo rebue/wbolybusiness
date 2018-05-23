@@ -1,203 +1,201 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="utf-8">
-<meta name="wap-font-scale" content="no">
-<meta name="viewport"
-	content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-<title>微薄利商超-修改支付密码</title>
-<link href="${ctx }/css/wechat/mui.min.css" rel="stylesheet" />
-<link href="${ctx }/css/wechat/account.css" rel="stylesheet" />
-</head>
-
-<body class="account-page">
-	<header class="mui-bar mui-bar-nav">
-		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"
-			id="action_back"></a>
-		<h1 class="mui-title">修改支付密码</h1>
-	</header>
-	<div class="mui-content">
-		<div id='login-form' class="mui-input-group">
-			<div class="mui-input-row phone-row">
-				<input id='phone' type="text" class="mui-input-clear mui-input"
-					disabled="true" value="${binddata}" placeholder="请输入您的手机号码/邮箱"
-					data-type="phone">
-				<button class="mui-btn mui-btn-outlined btn-getcode locked"
-					id="getcode"></button>
-			</div>
-			<div class="mui-input-row">
-				<input id='verification' type="number"
-					class="mui-input-clear mui-input" placeholder="请输入验证码"
-					data-type="verification">
-			</div>
-		</div>
-		<div class="mui-content-padded">
-			<button id='goNext'
-				class="main-btn mui-btn mui-btn-block mui-btn-primary">下一步</button>
-		</div>
-		<div class="mui-content-padded btm-area">
-			<p>Copyright © 2016-2018 wboly.com</p>
-			<p>广西微薄利科技有限公司 桂ICP备16006215号-1</p>
-		</div>
-	</div>
-	<script src="${ctx }/js/wechat/mui.min.js"></script>
-	<script src="${ctx }/js/wechat/mui.enterfocus.js"></script>
-	<script src="${ctx }/js/util/commonUtil.js"></script>
+	<head>
+		<meta charset="utf-8">
+		<title>微薄利商超</title>
+		<meta name="wap-font-scale" content="no">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="${ctx }/css/wechat/mui.min.css">
+		<link rel="stylesheet" href="${ctx }/css/wechat/wboly_mobile.css">
+		<link href="${ctx }/css/wechat/account.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="${ctx }/css/wechat/usercenter.css" />
+		<script src="${ctx }/js/wechat/mui.min.js"></script>
+		<script src="${ctx }/js/util/commonUtil.js"></script>
+		<script src="${ctx }/js/util/base64.js"></script>
+		<script src="${ctx }/js/wechat/mui.enterfocus.js"></script>
+		<script type="text/javascript" src="${ctx }/js/util/md5.js"></script>
+		<script type="text/javascript" src="${ctx }/js/jquery/jquery-1.9.1.min.js"></script>
+	</head>
 	<script type="text/javascript">
-			// 验证手机号码 
-			function verifyMobile(){
-				var flag = false;
-				var regInMobile = /^1[0-9]{10}/;// 手机号的正则表达式
-				var regInEmail = new  RegExp("^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$");// 邮箱的正则表达式
-				var mobole = document.getElementById("phone").value.trim();
-				var moboles = mobole.trim();
-				if(moboles!=null && moboles!=""){
-					if(moboles.indexOf("@")!=-1){
-						if(regInEmail.test(moboles)){
-							return true;
-						}else{
-							mui.toast('请输入<br/>正确的邮箱格式');
-						}
-					}else{
-						if(regInMobile.test(moboles)){
-							return true;
-						}else{
-							mui.toast('请输入<br/>正确的号码格式');
-						}
-					}
-				}else{
-					mui.toast('请输入<br/>手机号码/邮箱');
-				}
-				return flag;
-			};
-		
-			(function($, doc) {
-				$.init();
-				$.ready(function() {
-					console.log('${binddata}');
-					mui('body').on('tap','#regNewUser',function(){document.location.href=this.href;});
-					
-					if(null == '${binddata}' || ""== '${binddata}' || "null"== '${binddata}'){
-						mui.alert("无法获取您的绑定信息,请联系管理员!",' ',function(){
-							window.location.href=localStorage.getItem("payurl");
-						});
-						return ;
-					}
-					
-					var winHeight = document.documentElement.clientHeight;
-					var goNext = doc.getElementById('goNext');
-					var phone = doc.getElementById('phone');
-					var verification = doc.getElementById('verification');
-					var btn = doc.querySelector('#getcode');
-					var check = false;
-					var cd;
-					if(getItem("ctb",1000*60*2) != null){
-						cd = setInterval(countdown,1000);
-					}else{
-						btn.innerHTML = "获取验证码";
-						btn.classList.remove("locked");
-					};
-					mui(".mui-content")[0].style.height = winHeight+"px";
-					mui(".mui-content")[0].style.position = "relative";					
-					$.enterfocus('#login-form input', function() {
-						$.trigger(goNext, 'tap');
-					});
-					
-					//点击下一步按钮					
-					goNext.addEventListener('tap', function(event) {
-						if(!verifyMobile()){
-							return ;
-						}
-
-						if(btn.innerHTML=='获取验证码'){
-							mui.toast("请获取验证码");
-							return ;
-						}
-						
-						if(verification.value.trim()==''){
-							mui.toast("请输入验证码");
-							return ;
-						}
-
-						check = true;
-						if(check){
-							var updateinfo = "{\"sendType\":\"${binddata}\",\"code\":\""+verification.value.trim()+"\"}";
-							setItem("updatepayinfo", updateinfo);
-							var item = getItem("updatepayinfo",1000*60*30);
-							if(item!=null){
-								window.location.href="${ctx}/wechat/user/updatepaypwdnextpage.htm";
-								return ;
-							}
-							mui.toast("验证信息无效，请重新输入");
-						};
-					});		
-					
-					//点击获取验证码
-					var cdTime = 120;//倒计时时间
-					mui(document).on('tap','#getcode:not(.locked)',function(){
-						if(!verifyMobile()){
-							return ;
-						}
-						check = true;
-						if(check){
-							
-							var title = "手机号码"; 
-							if(phone.value.trim().indexOf("@")!=-1){
-								title = "邮箱";
-							}
-							loading(1);
-							mui.ajax("${ctx}/wechat/user/getupdatepaypwdcode.htm",{
-								data:{
-									key:'59c23bdde5603ef993cf03fe64e448f1',
-									sendType:phone.value.trim(),
-								},
-								dataType:'json',//服务器返回json格式数据
-								type:'post',//HTTP请求类型
-								success:function(data){
-									loading(2);
-									if(data.flag){
-										//此处若发送请求成功，才开始执行倒计时,就是以下代码
-										clearInterval(cd);
-										localStorage.removeItem("ctb");
-										btn.innerHTML = cdTime+"秒";
-										btn.classList.add("locked");
-										cd = setInterval(countdown,1000);
-										mui.alert("验证码已发送至您填写的"+title+"</br>请注意查收",' ');
-										return ;
-									}
-									mui.toast(data.message);
-								},
-								error:function(xhr,type,errorThrown){
-									//异常处理；
-									console.log(type);
-								}
-							});
-						};
-					});
+		$(function () {
+			$(".divTop2").hide();
 			
-					//验证码倒计时
-					function countdown(){
-						if(getItem("ctb",1000*60*2) != null){
-							var countdown = getItem("ctb",1000*60*2);
-						}else{
-							var countdown = cdTime;
-						};	
-						countdown--;
-						if(countdown<=0){
-							clearInterval(cd);
-							localStorage.removeItem("ctb");	
-							btn.classList.remove("locked");
-							btn.innerHTML = "重新获取";
-						}else{
-							setItem("ctb",countdown);//储存倒计时数字到本地														
-							btn.innerHTML = countdown+"秒";
-						};						
-					};
+			$(document).on("tap", "#payTreasure", function() {
+				$(".divTop1").show();
+				$(".divTop2").hide();
+			});
+			
+			$(document).on("tap", "#bankCard", function() {
+				$(".divTop2").show();
+				$(".divTop1").hide();
+			});
+			
+			// 修改密码提交
+			$(document).on("tap", "#updateSubmit", function() {
+				// 验证数字
+				var purenum = /^[0-9]*$/;
+				var regspace =/\s/;
+				// 验证特殊字符
+				var special = /[~'\:\：\"\“\”\、\‘\’\。\，\,\$\[\]\{\}\【\】^*!\！?\？\（\）()\/<>;=\\\s+]/g;
+				// 旧登录密码
+				var updateOldPassword = document.getElementById("updateOldPassword").value.trim();
+				// 新登录密码
+				var updateNewPassword = document.getElementById("updateNewPassword").value.trim();
+				// 确认后的新登录密码
+				var updateValNewPassword = document.getElementById("updateValNewPassword").value.trim();
+				var oldPasswordlength = updateOldPassword.length;
+				var flag = false;
+				if(!(regspace.exec(updateOldPassword) == null) || updateOldPassword == ""){
+					mui.toast("密码请勿留空或包含空格");
+				}else if(special.test(updateOldPassword) || purenum.test(updateOldPassword)){
+			    	mui.toast('密码不能包含特殊字符并且不可为纯数字');
+			    }else if(oldPasswordlength < 6 || oldPasswordlength > 16){
+			    	mui.toast('密码长度为6-16个字符');
+			    }else{
+			    	flag = true;
+			    };
+			    if(!verifyPwd(updateNewPassword, updateValNewPassword)){
+			    	console.log("测试失败");
+					return ;
+				}
+			    console.log("测试成功");
+				$.ajax({
+					url : "${ctx}/wechat/user/changeLogonPassword.htm",
+					type : "post",
+					dataType:'json',//服务器返回json格式数据
+					data : {oldLoginPswd : encodeURIComponent(CryptoJS.MD5(updateOldPassword)), newLoginPswd : encodeURIComponent(CryptoJS.MD5(updateValNewPassword))},
+					success:function(data){
+						if (data.result == 1) {
+							mui.toast(data.msg);
+							window.location.href = "${ctx }/wechat/user/userCenter.htm";
+						} else {
+							mui.toast(data.msg);
+						}
+					}
 				});
-			}(mui, document));
-		</script>
-</body>
-
+			});
+			
+			// 设置密码提交
+			$(document).on("tap", "#setSubmit", function() {
+				// 新登录密码
+				var setNewPassword = document.getElementById("setNewPassword").value.trim();
+				// 确认后的新登录密码
+				var setValNewPassword = document.getElementById("setValNewPassword").value.trim();
+				if(!verifyPwd(setNewPassword, setValNewPassword)){
+			    	console.log("测试失败");
+					return ;
+				}
+				console.log("测试成功");
+				$.ajax({
+					url : "${ctx}/wechat/user/setLoginPassword.htm",
+					type : "post",
+					dataType:'json',//服务器返回json格式数据
+					data : {newLoginPswd : encodeURIComponent(CryptoJS.MD5(setValNewPassword))},
+					success:function(data){
+						if (data.result == 1) {
+							mui.toast(data.msg);
+							window.location.href = "${ctx }/wechat/user/userCenter.htm";
+						} else {
+							mui.toast(data.msg);
+						}
+					}
+				});
+			});
+		});
+		
+		//验证密码是否符合规范
+		function verifyPwd(newPassword, valNewPassword){
+			var purenum = /^[0-9]*$/;
+			var regspace =/\s/;
+			var special = /[~'\:\：\"\“\”\、\‘\’\。\，\,\$\[\]\{\}\【\】^*!\！?\？\（\）()\/<>;=\\\s+]/g;
+			var newPasswordLength = newPassword.length;
+			var valNewPasswordLength = valNewPassword.length;
+			var flag = false;
+			
+			if(!(regspace.exec(newPassword) == null) || newPassword == ""){
+				mui.toast("密码请勿留空或包含空格");
+			}else if(special.test(newPassword) || purenum.test(newPassword)){
+		    	mui.toast('密码不能包含特殊字符并且不可为纯数字');
+		    }else if(newPasswordLength < 6 || newPasswordLength > 16){
+		    	mui.toast('密码长度为6-16个字符');
+		    }else{
+		    	flag = true;
+		    };
+		    
+			if(!(regspace.exec(valNewPassword) == null) || valNewPassword == ""){
+				mui.toast("密码请勿留空或包含空格");
+			}else if(special.test(valNewPassword) || purenum.test(valNewPassword)){
+		    	mui.toast('密码不能包含特殊字符并且不可为纯数字');
+		    }else if(valNewPasswordLength < 6 || valNewPasswordLength > 16){
+		    	mui.toast('密码长度为6-16个字符');
+		    }else{
+		    	flag = true;
+		    };
+		    
+		    if (flag) {
+		    	if (newPassword != valNewPassword) {
+			    	mui.toast('两次输入的密码不一样');
+			    	flag = false;
+				} else {
+					flag = true;
+				}
+			}
+		    return flag;
+		};
+	</script>
+	<style type="text/css">
+		.divTop1 { mcolor: #555; padding: 10px; margin-top: 3px; }
+		.divTop2 { mcolor: #555; padding: 10px; margin-top: 3px; }
+		.mui-input-row{padding: 5px; margin-top: -10px;}
+		input { -webkit-user-select:auto }
+	</style>
+	<body>
+		<header class="mui-bar mui-bar-nav" style="box-shadow: none;">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h4 class="mui-title">修改或设置登录密码</h4>
+		</header>
+		<div id="wallet_main">
+			<div class="mui-content">
+				<div class="mui-slider tab-slider">
+					<div id="sliderSegmentedControl"
+						class="order-tab-box mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+						<div class="mui-control-item mui-active" id="payTreasure">修改登录密码</div>
+						<div class="mui-control-item" id="bankCard">设置登录密码</div>
+					</div>
+				</div>
+				<div id='login-form' class="divTop1">
+					<div class="mui-input-row">
+						<input id='updateOldPassword' type="password" class="mui-input mui-input-password" placeholder="请输入旧密码" data-type="password">
+					</div>
+					<div class="mui-input-row">
+						<input id='updateNewPassword' type="password" class="mui-input mui-input-password" placeholder="请输入长度为6-16位的新密码" data-type="password">
+					</div>
+					<div class="mui-input-row">
+						<input id='updateValNewPassword' type="password" class="mui-input mui-input-password" placeholder="请再次输入新密码" data-type="password">
+						<p style="color: red;">该密码可用于登录操作，请务必牢记！</p>
+					</div>
+					<div class="divTop1" style="text-align: center;">
+						<button id="updateSubmit">确&nbsp;&nbsp;认</button>
+					</div>
+				</div>
+				<div id='login-form' class="divTop2">
+					<div class="mui-input-row">
+						<input id='setNewPassword' type="password" class="mui-input mui-input-password" placeholder="请输入长度为6-16位的新密码" data-type="password">
+					</div>
+					<div class="mui-input-row">
+						<input id='setValNewPassword' type="password" class="mui-input mui-input-password" placeholder="请再次输入新密码" data-type="password">
+						<p style="color: red;">该密码可用于登录操作，请务必牢记！</p>
+					</div>
+					<div class="divTop2" style="text-align: center;">
+						<button id="setSubmit">确&nbsp;&nbsp;认</button>
+					</div>
+				</div>
+				<div style="padding-top: 3px;"></div>
+				<div></div>
+			</div>
+		</div>
+	</body>
 </html>

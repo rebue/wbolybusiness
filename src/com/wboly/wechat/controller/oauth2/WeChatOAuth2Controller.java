@@ -32,7 +32,7 @@ import com.wboly.system.sys.util.wx.WeixinUtil.SITE;
 import com.wboly.system.sys.util.wx.WxConfig;
 import com.wboly.wechat.service.user.WeChatUserService;
 
-import rebue.wheel.MapUtils;
+import rebue.wheel.OkhttpUtils;
 
 /**
  * @Author: nick
@@ -106,9 +106,9 @@ public class WeChatOAuth2Controller extends SysController {
 		String openid = String.valueOf(userMap.get("openid"));
 		String unionid = String.valueOf(userMap.get("unionid"));
 		String nickname = String.valueOf(userMap.get("nickname"));
-		String headimgurl = String.valueOf(userMap.get("headimgurl"));*/
+		String headimgurl = String.valueOf(userMap.get("headimgurl"));
 		
-		System.out.println("微信回调解码之前的参数为：" + String.valueOf(wxMaps));
+		System.out.println("微信回调解码之前的参数为：" + String.valueOf(wxMaps));*/
 		/*// 对微信回调参数进行解码
 		MapUtils.decodeUrl(wxMaps);
 		// 微信回调登录校验
@@ -133,6 +133,9 @@ public class WeChatOAuth2Controller extends SysController {
 		}
 		// 判断是否获取到微信授权登录的用户信息
 		if (openid != null && !openid.equals("") && !openid.equals("null") && !openid.equals("[]")) {
+			// 缓存openid到cookie
+			CookiesUtil.setCookie(openid, response);
+			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("wxId", wxId);// 微信openid或微信unionid
 			map.put("openid", openid);
@@ -140,7 +143,6 @@ public class WeChatOAuth2Controller extends SysController {
 			map.put("wxFace", headimgurl);// 微信头像
 			map.put("appId", 11);// 应用编号
 			map.put("userAgent", request.getHeader("User-Agent").replaceAll("-", ""));// ；浏览器信息
-//			map.put("mac", MacAddressUtil.getLocalMac().replaceAll("-", ""));// 登录用户mac
 			map.put("mac", "123");
 			map.put("ip", IpUtil.getIp(request));// 登录用户ip
 			System.err.println("微信登录的参数为：" + map.toString());
@@ -181,7 +183,7 @@ public class WeChatOAuth2Controller extends SysController {
 	public Map<String, Object> wechatLogin(HttpServletRequest request, Map<String, Object> map)
 			throws JsonParseException, JsonMappingException, IOException {
 		String wechatLoginUrl = SysContext.USERCENTERURL + "/user/login/by/wx";
-		String wechatLoginResults = HttpUtil.postUrl(wechatLoginUrl, map) /*"{\"userId\":451273803712954379,\"result\":1}"*/ ;
+		String wechatLoginResults = OkhttpUtils.postByFormParams(wechatLoginUrl, map) /*"{\"userId\":451273803712954379,\"result\":1}"*/ ;
 		Map<String, Object> m = new HashMap<String, Object>();
 		if (!wechatLoginResults.equals("") && !wechatLoginResults.equals("null") && wechatLoginResults != null) {
 			String wechatLoginResult = JsonUtil.GetJsonValue(wechatLoginResults, "result");
@@ -322,8 +324,9 @@ public class WeChatOAuth2Controller extends SysController {
 		// 用户名称
 		String userName = String.valueOf(map.get("wxNickname"));
 		String userjson = "{\"userId\":" + userId + ",\"userName\":\"" + userName + "\",\"img\":\"" + map.get("wxFace")
-				+ "\",\"openid\":\"" + map.get("wxId") + "\"}";
+				+ "\",\"openid\":\"" + map.get("openid") + "\"}";
 		SysCache.setWechatUser(map.get("openid").toString(), userjson);// 缓存用户信息
+		System.err.println("微信登录或者缓存缓存用户信息成功");
 		m.put("result", userId);
 		m.put("userId", userId);
 		m.put("msg", "/htm/wechat/index/index");
@@ -336,7 +339,6 @@ public class WeChatOAuth2Controller extends SysController {
 		maps.put("lastLoninType", 1);
 		maps.put("userSource", "");
 		maps.put("regTime", currentTime);
-//		maps.put("lastLoginMarket", MacAddressUtil.getLocalMac());
 		maps.put("lastLoginMarket", "123");
 
 		// 根据用户编号查询用户是否存在

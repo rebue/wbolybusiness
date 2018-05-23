@@ -408,12 +408,12 @@ public class SysCache extends Base64EnOut {
 	 * @Author: nick
 	 */
 	public static String getWeChatUserByColumn(HttpServletRequest request, String Column) {
-
 		String result = "";
 		String cookieKey = CookiesUtil.getCookieKey(request);
+		System.out.println("根据字段值获取字段的用户信息获取到的cookieKey为：" + cookieKey);
 		if (!cookieKey.equals("")) {
 			// 将application/x-www-form-urlencoded字符串转换成普通字符串
-			result = JsonUtil.getJSONValue(SysCache.getWechatUser(cookieKey), Column);
+			result = JsonUtil.getJSONValue(getWechatUser(cookieKey), Column);
 		}
 		return result;
 	}
@@ -436,6 +436,7 @@ public class SysCache extends Base64EnOut {
 	 * @Author: nick
 	 */
 	public static String getWechatUser(String openid) {
+		System.out.println("获取用户登录信息的参数为：" + openid);
 		if (openid == null || openid.equals("")) {
 			return "";
 		}

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wboly.modules.controller.Util.MacAddressUtil;
 import com.wboly.system.sys.spring.SysController;
 import com.wboly.system.sys.system.SysCache;
@@ -245,11 +246,13 @@ public class WeChatPayController extends SysController {
 	 * @Name: 跳转至支付页面
 	 * @Author: nick
 	 */
+	@SuppressWarnings("rawtypes")
 	@RequestMapping(value = "/wechat/pay/paycenterPage")
 	public ModelAndView payPage(HttpServletRequest request) throws IOException {
 		ModelAndView mav = new ModelAndView();
-
+		System.out.println("开始跳转至订单支付页面");
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+		System.out.println("获取到的用户编号为：" + userId);
 		if (!"".equals(userId)) {
 			mav.addObject("userId", userId);
 			mav.setViewName("/htm/wechat/pay/paycenter");
@@ -259,20 +262,19 @@ public class WeChatPayController extends SysController {
 		}
 
 		String orderId = request.getParameter("payOrderId");
+		System.out.println("获取到的订单编号为：" + orderId);
 		if (orderId == null || orderId.equals("")) {
 			System.err.println("请求参数有误[订单编号有误]");
 			mav.setViewName("/htm/wechat/login/login");
 			return mav;
 		} else {
 			mav.addObject("payOrderId", orderId);
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("orderCode", orderId);
-			map.put("userId", userId);
-			String results = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/info", map);
+			String results = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/" + orderId);
 			System.out.println("查询订单信息的返回值为：" + results);
-			List<Map<String, Object>> listMap = JsonUtil.listMaps(results);
-			if (listMap != null && listMap.size() > 0) {
-				mav.addObject("orderMoney", listMap.get(0).get("realMoney"));
+			ObjectMapper mapper = new ObjectMapper();
+			Map map = mapper.readValue(results, Map.class);
+			if (map != null && map.size() > 0) {
+				mav.addObject("orderMoney", map.get("realMoney"));
 			} else {
 				mav.addObject("orderMoney", "0.00");
 			}

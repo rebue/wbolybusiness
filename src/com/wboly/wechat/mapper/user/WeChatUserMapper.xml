@@ -45,4 +45,9 @@
 		INSERT  INTO vbl_user_login_record ( userId, loginidentification, agentInformation, loginType, areaId, loginTime )
    	 	VALUES  ( ${userId}, '${lastLoginMarket}', '${agentInfo}', ${loginType}, ${areaId}, ${regTime} );
 	</insert>
+	
+	<!-- 修改用户名称 -->
+	<update id="updateUserName" parameterType="java.util.Map">
+		UPDATE vbl_market_base_data.dbo.vbl_user SET userName='${loginName}' WHERE userId=${userId}
+	</update>
 </mapper>
