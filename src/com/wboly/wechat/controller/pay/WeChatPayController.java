@@ -143,7 +143,7 @@ public class WeChatPayController extends SysController {
 		map.put("userId", buyerUid);
 		map.put("wxId", openid); // 用户微信id（根据不同情况可能是unionid或者openid）
 		map.put("orderId", orderId);// 订单编号
-		map.put("tradeTitle", "微薄利商超-商品购买"); // 支付交易标题
+		map.put("tradeTitle", "大卖网络-商品购买"); // 支付交易标题
 		String[] goodsNames = String.valueOf(goodsName).split(",");
 		String tradeDetail = "";
 		if (goodsNames.length > 2) {
@@ -451,7 +451,7 @@ public class WeChatPayController extends SysController {
 		map.put("orderCode", orderId);
 		map.put("orderId", orderId);
 		map.put("buyerUid", buyerUid);
-		map.put("tradeTitle", "微薄利商超-商品购买"); // 支付交易标题
+		map.put("tradeTitle", "大卖网络-商品购买"); // 支付交易标题
 		map.put("mac", MacAddressUtil.getLocalMac()); // 用户mac地址
 		map.put("ip", IpUtil.getIp(request)); // 用户ip地址
 		map.put("userId", buyerUid);
@@ -481,7 +481,7 @@ public class WeChatPayController extends SysController {
 		} else {
 			goodsNames = String.valueOf(orderInventoryList.get(0).get("onlineTitle"));
 		}
-		map.put("tradeDetail", "您在微薄利商超购买的商品订单为：" + orderId + "，所购买的商品为：" + goodsNames);
+		map.put("tradeDetail", "您在大卖网络购买的商品订单为：" + orderId + "，所购买的商品为：" + goodsNames);
 		
 		System.err.println("微信端获取v支付预支付Id的参数为：{}" + String.valueOf(map));
 		// 获取v支付预支付Id

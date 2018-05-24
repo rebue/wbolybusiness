@@ -9,11 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.thrift.TException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -26,12 +24,7 @@ import com.wboly.system.sys.spring.SysController;
 import com.wboly.system.sys.system.SysCache;
 import com.wboly.system.sys.system.SysContext;
 import com.wboly.system.sys.util.Base64EnOut;
-import com.wboly.system.sys.util.IpUtil;
 import com.wboly.system.sys.util.JsonUtil;
-import com.wboly.system.sys.util.MacAddressUtil;
-import com.wboly.wechat.service.order.WeChatOrderService;
-import com.wboly.wechat.service.shop.WeChatShopService;
-
 import rebue.wheel.NetUtils;
 import rebue.wheel.OkhttpUtils;
 
@@ -41,11 +34,6 @@ import rebue.wheel.OkhttpUtils;
  */
 @Controller
 public class WeChatOrderController extends SysController {
-
-	@Autowired
-	private WeChatOrderService weChatOrderService;
-	@Autowired
-	private WeChatShopService weChatShopService;
 
 	/**
 	 * @Name: 所有订单售后页面跳转
@@ -161,10 +149,9 @@ public class WeChatOrderController extends SysController {
 	 * @Name: 查看物流信息页面跳转
 	 * @Author: nick
 	 */
-	@SuppressWarnings({ "unused" })
 	@RequestMapping(value = "/wechat/order/queryLogistics")
 	public ModelAndView queryLogistics(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		ObjectMapper mapper = new ObjectMapper();
+		new ObjectMapper();
 		
 		String orderInfo = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/info?orderCode="+request.getParameter("orderId"));
 		List<Map<String, Object>> list = JsonUtil.listMaps(orderInfo);
@@ -485,180 +472,5 @@ public class WeChatOrderController extends SysController {
 		} else {
 			this.render(response, "{\"message\":\"您没有登录\",\"flag\":false}");
 		}
-	}
-
-	/**
-	 * 更新门店订单信息 Title: updateOrderNo Description:
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws IOException
-	 */
-	@RequestMapping("/web/order/updateorderno")
-	@ResponseBody
-	public String updateOrderNo(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		System.err.println("=============更新订单开始=============");
-		// 订单编号
-		String orderId = request.getParameter("orderId");
-		// 支付总金额
-		String payAmount = request.getParameter("payAmount");
-		// 判断传过来的订单号是否为空
-		if (orderId == null || orderId.equals("") || orderId.equals("null")) {
-			System.err.println("需要更新的订单为空！！！！！！！！！");
-			return "no";
-		}
-
-		// 获取当前时间戳
-		long currentTime = System.currentTimeMillis() / 1000;
-
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("dateline", currentTime);
-		map.put("orderId", orderId);
-
-		// 获取门店编号、消费用户编号
-		List<Map<String, Object>> shopAndBuyerList = weChatOrderService.selectShopAndBuyer(map);
-
-		// 判断传过来的订单号是否为真实的订单号
-		if (shopAndBuyerList.size() == 0) {
-			System.err.println("vbl_shop_order找不到该订单！！！！！！！！！");
-			return "no";
-		}
-		// 快递费
-		String courierFee = String.valueOf(shopAndBuyerList.get(0).get("courierFee"));
-		// 订单总金额
-		//String totalMoney = String.valueOf(shopAndBuyerList.get(0).get("money"));
-
-		/*// 判断支付总金额和订单总金额是否一致
-		if (!totalMoney.equals(payAmount)) {
-			System.err.println("支付总金额和订单总金额不一致！！！！！！！！！");
-			return "no";
-		}*/
-		map.put("buyerUid", shopAndBuyerList.get(0).get("buyerUid"));// 消费者编号
-		map.put("courierFee", courierFee);
-		map.put("shopId", shopAndBuyerList.get(0).get("shopId"));
-		map.put("payType", shopAndBuyerList.get(0).get("payType"));// 支付类型
-		map.put("describe", "您的订单" + orderId + "已经成功付款" + payAmount + "元，宝贝正使用洪荒之力飞向您的怀抱，请耐心等待。");// 推送信息
-		System.err.println("---------------------------------");
-		System.err.println(map.toString());
-		// 根据门店查询门店信息
-		List<Map<String, Object>> shopList = weChatShopService.selectAllShop(map);
-		// 判断输入的门店是否为存在
-		if (shopList.size() == 0) {
-			System.err.println("没有该门店！！！！！！！！！");
-			return "no";
-		}
-
-		map.put("userid", shopList.get(0).get("userid"));// 加盟商编号
-		map.put("userName", shopList.get(0).get("userName"));// 加盟商名称
-		map.put("pushContent", "支付成功");
-		
-		System.err.println("---------------------------------");
-		System.err.println(map.toString());
-		// 更新门店交易订单支付方式、状态
-		int shopOrderStatusResult = weChatOrderService.updateShopOrderStatus(map);
-		System.err.println("更新门店交易订单支付方式状态返回值为：" + shopOrderStatusResult);
-		// 判断更新门店交易订单支付方式、状态是否成功
-		if (shopOrderStatusResult < 0) {
-			System.err.println("更新门店交易订单支付方式、状态失败！！！！！！！！！");
-			return "no";
-		}
-		
-		System.err.println("---------------------------------");
-		System.err.println(map.toString());
-		// 添加信息到门店交易订单付款信息表
-		int shopTransactionPaymentInfoResult = weChatOrderService.insertShopTransactionPaymentInfo(map);
-		System.err.println("添加门店交易付款信息表返回值为：" + shopTransactionPaymentInfoResult);
-		// 判断添加信息到门店交易订单付款信息表是否成功
-		if (shopTransactionPaymentInfoResult < 1) {
-			System.err.println("添加信息到门店交易订单付款信息表失败！！！！！！！！！");
-			return "no";
-		}
-
-		System.err.println("---------------------------------");
-		System.err.println(map.toString());
-		// 添加门店交易订单状态跟踪信息
-		int vblShopOrderTradeRecordResult = weChatOrderService.insertVblShopOrderTradeRecord(map);
-		System.err.println("添加门店交易订单状态跟踪信息返回值为：" + vblShopOrderTradeRecordResult);
-		// 判断添加门店交易订单状态跟踪信息是否成功
-		if (vblShopOrderTradeRecordResult < 1) {
-			System.err.println("添加门店交易订单状态跟踪信息失败！！！！！！！！！");
-			return "no";
-		}
-
-		System.err.println("---------------------------------");
-		System.err.println(map.toString());
-
-		System.err.println("---------------------------------");
-		System.err.println(map.toString());
-		// 判断是否有快递费
-		if (!courierFee.equals("0") && !courierFee.equals("null") && !courierFee.equals("") && courierFee != null) {
-			// 添加快递费（如果有）
-			int expressFeeVblShopOrderPlantorefundResult = weChatOrderService
-					.insertExpressFeeVblShopOrderPlantorefund(map);
-			System.err.println("添加快递费返回值为： " + expressFeeVblShopOrderPlantorefundResult);
-			// 判断添加快递费（如果有）是否成功
-			if (expressFeeVblShopOrderPlantorefundResult < 1) {
-				System.err.println("添加快递费（如果有）失败！！！！！！！！！");
-				return "no";
-			}
-		}
-
-		System.err.println("---------------------------------");
-		System.err.println(map.toString());
-		// 添加推送消息计划
-		int vblPushPlanResult = weChatOrderService.insertVblPushPlan(map);
-		System.out.println("添加推送消息计划返回值为：" + vblPushPlanResult);
-		// 判断添加推送消息计划是否成功
-		if (vblPushPlanResult < 1) {
-			System.err.println("添加推送消息计划失败！！！！！！！！！");
-			return "no";
-		}
-
-		System.err.println("---------------------------------");
-		System.err.println(map.toString());
-		// 更新vbl_goods销量
-		int vblGoodsSalesResult = weChatOrderService.updateVblGoodsSales(map);
-		System.err.println("更新vbl_goods销量返回值为：" + vblGoodsSalesResult);
-		// 判断更新vbl_goods销量是否成功
-		if (vblGoodsSalesResult < 1) {
-			System.err.println("更新vbl_goods销量失败！！！！！！！！！");
-			return "no";
-		}
-
-		System.err.println("---------------------------------");
-		System.err.println(map.toString());
-		// 更新vbl_goods_stat销量
-		int vblGoodsStatSalesResult = weChatOrderService.updateVblGoodsStatSales(map);
-		System.err.println("更新vbl_goods_stat销量返回值为：" + vblGoodsStatSalesResult);
-		// 判断更新vbl_goods_stat销量是否成功
-		if (vblGoodsStatSalesResult < 1) {
-			System.err.println("更新vbl_goods_stat销量失败！！！！！！！！！");
-			return "no";
-		}
-
-		System.err.println("---------------------------------");
-		System.err.println(map.toString());
-		// 更新vbl_activity销量
-		int vblActivitySalesResult = weChatOrderService.updateVblActivitySales(map);
-		System.err.println("更新vbl_activity销量返回值为：" + vblActivitySalesResult);
-		// 判断更新vbl_activity销量是否成功
-		if (vblActivitySalesResult < 1) {
-			System.err.println("更新vbl_activity销量失败！！！！！！！！！");
-			return "no";
-		}
-
-		System.err.println("---------------------------------");
-		System.err.println(map.toString());
-		// 更新vbl_activity_off销量
-		int vblActivityOffResult = weChatOrderService.updateVblActivityOff(map);
-		System.err.println("更新vbl_activity_off销量返回值为：" + vblActivityOffResult);
-		// 判断更新vbl_activity_off销量是否成功
-		if (vblActivityOffResult < 1) {
-			System.err.println("更新vbl_activity_off销量失败！！！！！！！！！");
-			return "no";
-		}
-
-		System.err.println("=============更新订单成功=============");
-		return "yes";
 	}
 }

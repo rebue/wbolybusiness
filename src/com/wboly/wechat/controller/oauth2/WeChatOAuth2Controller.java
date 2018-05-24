@@ -32,6 +32,7 @@ import com.wboly.system.sys.util.wx.WeixinUtil.SITE;
 import com.wboly.system.sys.util.wx.WxConfig;
 import com.wboly.wechat.service.user.WeChatUserService;
 
+import rebue.wheel.NetUtils;
 import rebue.wheel.OkhttpUtils;
 
 /**
@@ -143,8 +144,8 @@ public class WeChatOAuth2Controller extends SysController {
 			map.put("wxFace", headimgurl);// 微信头像
 			map.put("appId", 11);// 应用编号
 			map.put("userAgent", request.getHeader("User-Agent").replaceAll("-", ""));// ；浏览器信息
-			map.put("mac", "123");
-			map.put("ip", IpUtil.getIp(request));// 登录用户ip
+			map.put("mac", NetUtils.getFirstMacAddrOfLocalHost());
+			map.put("ip", NetUtils.getFirstIpOfLocalHost());// 登录用户ip
 			System.err.println("微信登录的参数为：" + map.toString());
 			// 微信用户登录
 			Map<String, Object> wechatLoginResult = wechatLogin(request, map);

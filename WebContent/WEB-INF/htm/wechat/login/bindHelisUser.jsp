@@ -7,7 +7,7 @@
 <meta name="wap-font-scale" content="no">
 <meta name="viewport"
 	content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-<title>微薄利商超-绑定</title>
+<title>大卖网络-绑定</title>
 <link href="${ctx }/css/wechat/mui.min.css" rel="stylesheet" />
 <link href="${ctx }/css/wechat/account.css" rel="stylesheet" />
 </head>
@@ -38,12 +38,12 @@
 			<div class="link-area" style="float: right;">
 				<a id='regNewUser' class="mui-pull-left"
 					href="${ctx }/wechat/oauth2/regnewuser/page.htm"><h5
-						style="color: red;">我没有微薄利商超账号,去注册>>></h5></a>
+						style="color: red;">我没有大卖网络账号,去注册>>></h5></a>
 			</div>
 		</div>
 		<div class="mui-content-padded btm-area">
-			<p>Copyright © 2014-2018 wboly.com</p>
-			<p>广西微薄利科技有限公司 桂ICP备16006215号-1</p>
+			<p>Copyright © 2018 www.duamai.com</p>
+			<p>浏阳市大卖网络科技有限公司   湘ICP备18005719号-1</p>
 		</div>
 	</div>
 	<script src="${ctx }/js/wechat/mui.min.js"></script>

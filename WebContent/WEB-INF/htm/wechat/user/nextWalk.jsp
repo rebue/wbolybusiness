@@ -7,7 +7,7 @@
 <meta name="wap-font-scale" content="no">
 <meta name="viewport"
 	content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-<title>微薄利商超-重置支付密码</title>
+<title>大卖网络-重置支付密码</title>
 <link href="${ctx }/css/wechat/mui.min.css" rel="stylesheet" />
 <link href="${ctx }/css/wechat/account.css" rel="stylesheet" />
 </head>
@@ -33,7 +33,7 @@
 		</div>
 		<div class="mui-content-padded btm-area">
 			<p>Copyright © 2016-2018 wboly.com</p>
-			<p>广西微薄利科技有限公司 桂ICP备16006215号-1</p>
+			<p>浏阳市大卖网络科技有限公司   湘ICP备18005719号-1</p>
 		</div>
 	</div>
 	<script src="${ctx }/js/wechat/mui.min.js"></script>

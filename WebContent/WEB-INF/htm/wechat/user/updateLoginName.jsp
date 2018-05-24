@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="wap-font-scale" content="no">
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-<title>微薄利商超</title>
+<title>大卖网络</title>
 <link href="${ctx }/css/wechat/mui.min.css" rel="stylesheet" />
 <link href="${ctx }/css/wechat/account.css" rel="stylesheet" />
 </head>
@@ -25,8 +25,8 @@
 			<button id='goNext' class="main-btn mui-btn mui-btn-block mui-btn-primary">确定</button>
 		</div>
 		<div class="mui-content-padded btm-area">
-			<p>Copyright © 2016-2018 wboly.com</p>
-			<p>广西微薄利科技有限公司 桂ICP备16006215号-1</p>
+			<p>Copyright © 2018 www.duamai.com</p>
+			<p>浏阳市大卖网络科技有限公司   湘ICP备18005719号-1</p>
 		</div>
 	</div>
 	<script src="${ctx }/js/wechat/mui.min.js"></script>
@@ -34,29 +34,30 @@
 	<script src="${ctx }/js/util/commonUtil.js"></script>
 	<script type="text/javascript">
 		(function($, doc) {
-			doc.getElementById("loginName").value=${loginName };
+			doc.getElementById("loginName").value = "${loginName}";
 			mui(document).on("tap", "#goNext", function(e) {
 				var loginName = doc.getElementById('loginName').value;
 				console.log(loginName);
-				if (loginName == null || loginName == "" || loginName == "null") {
+				if (loginName == null || loginName == ""
+						|| loginName == "null") {
 					mui.toast('请输入登录名称');
-					return ;
+					return;
 				}
-				mui.ajax('${ctx}/wechat/user/setLoginName.htm',{
-					data:{
-						loginName :loginName.trim()
+				mui.ajax('${ctx}/wechat/user/setLoginName.htm', {
+					data : {
+						loginName : loginName.trim()
 					},
-					dataType:'json',//服务器返回json格式数据
-					type:'post',//HTTP请求类型
-					success:function(data){
-						if(data.result == 1){
+					dataType : 'json',//服务器返回json格式数据
+					type : 'post',//HTTP请求类型
+					success : function(data) {
+						if (data.result == 1) {
 							mui.toast(data.msg);
 							window.location.href = "${ctx }/wechat/user/userCenter.htm";
 						} else {
 							mui.toast(data.msg);
 						}
 					},
-					error:function(xhr,type,errorThrown){
+					error : function(xhr, type, errorThrown) {
 						//异常处理；
 						console.log(type);
 					}

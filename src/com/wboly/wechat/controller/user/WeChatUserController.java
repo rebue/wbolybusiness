@@ -25,12 +25,11 @@ import com.wboly.system.sys.spring.SysController;
 import com.wboly.system.sys.system.SysCache;
 import com.wboly.system.sys.system.SysContext;
 import com.wboly.system.sys.util.HttpUtil;
-import com.wboly.system.sys.util.IpUtil;
 import com.wboly.system.sys.util.JsonUtil;
-import com.wboly.system.sys.util.MacAddressUtil;
 import com.wboly.wechat.service.user.WeChatUserService;
 
 import net.sf.json.JSONArray;
+import rebue.wheel.NetUtils;
 import rebue.wheel.OkhttpUtils;
 
 /**
@@ -490,6 +489,7 @@ public class WeChatUserController extends SysController {
 	 * @throws JsonMappingException 
 	 * @throws JsonParseException 
 	 */
+	@SuppressWarnings("rawtypes")
 	@RequestMapping("/wechat/user/setLoginName")
 	public void setLoginName(HttpServletRequest request, HttpServletResponse response, @RequestParam("loginName") String loginName) throws JsonParseException, JsonMappingException, IOException {
 		// 获取当前登录用户编号
@@ -625,8 +625,8 @@ public class WeChatUserController extends SysController {
 		map.put("tradeTitle", "商超-用户提现");
 		map.put("tradeAmount", amount);
 		map.put("opId", userId);
-		map.put("mac", MacAddressUtil.getLocalMac());
-		map.put("ip", IpUtil.getIp(request));
+		map.put("mac", NetUtils.getFirstMacAddrOfLocalHost());
+		map.put("ip", NetUtils.getFirstIpOfLocalHost());
 		System.err.println("用户申请提现的参数为：" + map.toString());
 		String results = HttpUtil.postUrl(SysContext.VPAYURL + "/withdraw/apply", map);
 		if (!results.equals("") && !results.equals("null") && !results.equals("[]") && results != null) {
