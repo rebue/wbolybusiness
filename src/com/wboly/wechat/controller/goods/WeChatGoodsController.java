@@ -250,6 +250,11 @@ public class WeChatGoodsController extends SysController {
 		map.put("sortOrder", sortType);
 		map.put("start", start);
 		map.put("size", limit);
+		// 搜索关键字
+		String keywords = request.getParameter("keywords");
+		if (keywords != null && !keywords.equals("") && !keywords.equals("null")) {
+			map.put("onlineTitle", keywords);
+		}
 		System.out.println("获取已上线商品列表信息的参数为：" + String.valueOf(map));
 		// 获取已上线商品列表
 		String result = OkhttpUtils.get(SysContext.ONLINEURL + "/onl/online/list", map);

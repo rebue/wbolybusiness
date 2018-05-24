@@ -32,6 +32,7 @@ import com.wboly.system.sys.util.MacAddressUtil;
 import com.wboly.wechat.service.order.WeChatOrderService;
 import com.wboly.wechat.service.shop.WeChatShopService;
 
+import rebue.wheel.NetUtils;
 import rebue.wheel.OkhttpUtils;
 
 /**
@@ -468,8 +469,8 @@ public class WeChatOrderController extends SysController {
 			map.put("userId", userId);
 			map.put("orderCode", orderCode);
 			map.put("receivedOpId", userId);
-			map.put("mac", MacAddressUtil.getLocalMac());
-			map.put("ip", IpUtil.getIp(request));
+			map.put("mac", NetUtils.getFirstMacAddrOfLocalHost());
+			map.put("ip", NetUtils.getFirstIpOfLocalHost());
 			System.err.println("用户订单签收的参数为：" + String.valueOf(map));
 			String signInResult = OkhttpUtils.putByFormParams(SysContext.ORDERURL + "/ord/order/ordersignin", map);
 			System.err.println("用户订单签收的返回值为：" + signInResult);
