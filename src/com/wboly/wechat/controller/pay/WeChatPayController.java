@@ -159,7 +159,7 @@ public class WeChatPayController extends SysController {
 		String prepay_id = "";
 
 		System.err.println("获取微信预支付Id请求参数：" + map);
-		String result = OkhttpUtils.get(SysContext.VPAYURL + "/wxpay/prepay", map);
+		String result = OkhttpUtils.get(SysContext.WXXURL + "/wxx/wxpay/request/prepay", map);
 		System.err.println("获取微信预支付Id返回结果：" + result);
 
 		if (null == result || "".equals(result) || "null".equals(result)) {
