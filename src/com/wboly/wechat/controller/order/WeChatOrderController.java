@@ -417,6 +417,7 @@ public class WeChatOrderController extends SysController {
 		goodsList.get(0).put("address", list.get(0).get("address"));
 		goodsList.get(0).put("userId", userId);
 		goodsList.get(0).put("userName", userName);
+		goodsList.get(0).put("orderMessages", list.get(0).get("orderMessages"));
 		ObjectMapper mapper = new ObjectMapper();
 		String goodsJson = mapper.writeValueAsString(goodsList);
 		System.err.println("用户下订单的参数为=====" + goodsJson);
