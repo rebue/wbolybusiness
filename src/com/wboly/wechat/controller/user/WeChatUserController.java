@@ -462,6 +462,7 @@ public class WeChatUserController extends SysController {
 	 * @return
 	 * @throws IOException 
 	 */
+	@SuppressWarnings("rawtypes")
 	@RequestMapping("/wechat/user/setLoninNamePage")
 	public ModelAndView setLoninNamePage(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		ModelAndView andView = new ModelAndView();
@@ -471,8 +472,11 @@ public class WeChatUserController extends SysController {
 			// 获取当前登录用户编号
 			String wxId = SysCache.getWeChatUserByColumn(request, "openid");
 			String result = OkhttpUtils.get(SysContext.USERCENTERURL + "/user/loginName/bywxid?wxId=" + wxId);
-			System.out.println("跳转至设置登录名称时获取到的登录名称为：" + result);
-			andView.addObject("loginName", result);
+			ObjectMapper mapper = new ObjectMapper();
+			Map map = mapper.readValue(result, Map.class);
+			String loginName = String.valueOf(map.get("loginName"));
+			System.out.println("跳转至设置登录名称时获取到的登录名称为：" + loginName);
+			andView.addObject("loginName", loginName);
 			andView.setViewName("/htm/wechat/user/updateLoginName");
 			return andView;
 		} else {
