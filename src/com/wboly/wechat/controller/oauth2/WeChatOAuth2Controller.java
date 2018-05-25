@@ -187,7 +187,7 @@ public class WeChatOAuth2Controller extends SysController {
 			throws JsonParseException, JsonMappingException, IOException {
 		SignUtils.sign1(map, SysContext.LOGINSIGNKEY);
 		String wechatLoginUrl = SysContext.USERCENTERURL + "/user/login/by/wx";
-		String wechatLoginResults = OkhttpUtils.postByFormParams(wechatLoginUrl, map) /*"{\"userId\":451273803712954379,\"result\":1}"*/ ;
+		String wechatLoginResults = OkhttpUtils.postByJsonParams(wechatLoginUrl, map) /*"{\"userId\":451273803712954379,\"result\":1}"*/ ;
 		Map<String, Object> m = new HashMap<String, Object>();
 		if (!wechatLoginResults.equals("") && !wechatLoginResults.equals("null") && wechatLoginResults != null) {
 			String wechatLoginResult = JsonUtil.GetJsonValue(wechatLoginResults, "result");
@@ -259,7 +259,7 @@ public class WeChatOAuth2Controller extends SysController {
 		SignUtils.sign1(map, SysContext.LOGINSIGNKEY);
 		// 微信用户注册URL
 		String wechatRegUrl = SysContext.USERCENTERURL + "/user/reg/by/wx";
-		String wechatRegResults = HttpUtil.postUrl(wechatRegUrl, map);
+		String wechatRegResults = OkhttpUtils.postByJsonParams(wechatRegUrl, map);
 		Map<String, Object> m = new HashMap<String, Object>();
 		ObjectMapper mapper = new ObjectMapper();
 		if (wechatRegResults != null && !wechatRegResults.equals("") && !wechatRegResults.equals("null")) {

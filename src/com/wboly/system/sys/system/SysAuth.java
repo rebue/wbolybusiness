@@ -62,8 +62,8 @@ public class SysAuth implements Filter {
 		url = url.replaceFirst(SysContext.SYS_NAME, "");
 		System.out.println("拦截器替换url后的值为：" + url);
 		String SYS_KEY = request.getParameter("key");
-
-		if (SysContext.PUBLIC_INTERFACE.contains(url) || WECHAT_PUBLIC_INTERFACE.contains(url)) {
+		System.out.println("SYS_KEY====" + SYS_KEY);
+		if (WECHAT_PUBLIC_INTERFACE.contains(url)) {
 			System.out.println("=========访问公共接口:" + url);
 			return true;
 		} else {
