@@ -38,8 +38,7 @@
 			mui(document).on("tap", "#goNext", function(e) {
 				var loginName = doc.getElementById('loginName').value;
 				console.log(loginName);
-				if (loginName == null || loginName == ""
-						|| loginName == "null") {
+				if (loginName == null || loginName == "" || loginName == "null") {
 					mui.toast('请输入登录名称');
 					return;
 				}

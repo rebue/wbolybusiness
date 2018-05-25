@@ -350,9 +350,7 @@ function getMoney() {
 			if (data.flag) {
 				document.getElementById("yue").innerHTML = formatCurrency(data.message.availableBalance);
 				document.getElementById("fanxain").innerHTML = formatCurrency(data.message.sumretailBacLimit);
-				if (document.getElementById("waitFanxian") != null) {
-					document.getElementById("waitFanxian").innerHTML = formatCurrency(data.message.residueBacLimit);
-				}
+				document.getElementById("waitFanxian").innerHTML = formatCurrency(data.message.usableBacLimit);
 				if (document.getElementById("sumEarnings") != null) {
 					document.getElementById("sumEarnings").innerHTML = formatCurrency(data.message.amount);
 				}
