@@ -1,6 +1,5 @@
 package com.wboly.system.sys.system;
 
-import java.util.ArrayList;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -57,23 +56,6 @@ public class SysListener implements ServletContextListener {
 		WebApplicationContext wac = WebApplicationContextUtils.getWebApplicationContext(se.getServletContext());
 		SysContext.WAC = wac;
 
-		// 缓存公共接口
-		String public_interface = PropertiesUtil.getPropertiesValue("system.properties", "PUBLIC_INTERFACE").toString();
-		SysContext.PUBLIC_INTERFACE = new ArrayList<String>();
-		for (String url : public_interface.split(",")) {
-			if (url != null && !url.equals(",")) {
-				SysContext.PUBLIC_INTERFACE.add(url);
-			}
-		}
-
-		// 获取用户头像域名
-		String userPhotoUrl = PropertiesUtil.getPropertiesValue("system.properties", "USERPHOTOURL").toString();
-		SysContext.USERPHOTOURL = userPhotoUrl;
-
-		// 支付路径
-		String payUrl = PropertiesUtil.getPropertiesValue("system.properties", "PAYURL").toString();
-		SysContext.PAYURL = payUrl;
-
 		// 新v支付路径
 		String vPayUrl = PropertiesUtil.getPropertiesValue("system.properties", "VPAYURL").toString();
 		SysContext.VPAYURL = vPayUrl;
@@ -90,9 +72,13 @@ public class SysListener implements ServletContextListener {
 		String orderUrl = PropertiesUtil.getPropertiesValue("system.properties", "ORDERURL").toString();
 		SysContext.ORDERURL = orderUrl;
 		
-		// 订单微服务地址
+		// 区域微服务地址
 		String areaUrl = PropertiesUtil.getPropertiesValue("system.properties", "AREAURL").toString();
 		SysContext.AREAURL = areaUrl;
+		
+		// 微信微服务地址
+		String wxxUrl = PropertiesUtil.getPropertiesValue("system.properties", "WXXURL").toString();
+		SysContext.WXXURL = wxxUrl;
 		
 		// 图片地址
 		String imgPath = PropertiesUtil.getPropertiesValue("system.properties", "IMGPATH").toString();
@@ -102,13 +88,14 @@ public class SysListener implements ServletContextListener {
 		String imgUrl = PropertiesUtil.getPropertiesValue("system.properties", "IMGURL").toString();
 		SysContext.IMGURL = imgUrl;
 		
+		/** 微信登录校验key **/
+		String loginSignKey =  PropertiesUtil.getPropertiesValue("system.properties", "LOGINSIGNKEY").toString();
+		SysContext.LOGINSIGNKEY = loginSignKey;
+		
 		// 商品轮播图和商品主图路径
 		sc.setAttribute("goodsImgUrl", imgUrl + "goods/");
 		// 保存图片路径进Session
 		sc.setAttribute("imgUrl", imgUrl);
-
-		String QRCODEPATH = PropertiesUtil.getPropertiesValue("system.properties", "QRCODEPATH").toString();
-		SysContext.QRCODEPATH = QRCODEPATH;
 
 		// 查询接口所有配置文件的key和value转化为map
 
