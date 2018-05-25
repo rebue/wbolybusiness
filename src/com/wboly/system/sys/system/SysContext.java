@@ -92,6 +92,9 @@ public class SysContext {
 	/** 区域微服务地址  **/
 	public static String AREAURL;
 	
+	/** 微信微服务服务地址  **/
+	public static String WXXURL;
+	
 	/** 图片路径  **/
 	public static String IMGPATH;
 	
@@ -99,5 +102,5 @@ public class SysContext {
 	public static String IMGURL;
 	
 	/**微信登录校验key**/
-	public static String WXLOGINKEY;
+	public static String LOGINSIGNKEY;
 }
