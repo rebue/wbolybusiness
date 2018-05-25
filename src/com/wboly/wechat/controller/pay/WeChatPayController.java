@@ -13,7 +13,6 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +25,6 @@ import com.wboly.modules.controller.Util.MacAddressUtil;
 import com.wboly.system.sys.spring.SysController;
 import com.wboly.system.sys.system.SysCache;
 import com.wboly.system.sys.system.SysContext;
-import com.wboly.system.sys.util.Base64EnOut;
 import com.wboly.system.sys.util.CookiesUtil;
 import com.wboly.system.sys.util.HttpUtil;
 import com.wboly.system.sys.util.IpUtil;
@@ -35,8 +33,6 @@ import com.wboly.system.sys.util.MD5CodeUtil;
 import com.wboly.system.sys.util.wx.WXSignUtils;
 import com.wboly.system.sys.util.wx.WeixinUtil.SITE;
 import com.wboly.system.sys.util.wx.WxConfig;
-import com.wboly.wechat.service.order.WeChatOrderService;
-
 import rebue.wheel.OkhttpUtils;
 
 /**
@@ -45,9 +41,6 @@ import rebue.wheel.OkhttpUtils;
  */
 @Controller
 public class WeChatPayController extends SysController {
-
-	@Autowired
-	private WeChatOrderService weChatOrderService;
 
 	/**
 	 * @Name: 微信支付授权，先获取 code，跳转 url 通过 code 获取 openId
@@ -281,136 +274,6 @@ public class WeChatPayController extends SysController {
 		}
 
 		return mav;
-	}
-
-	/**
-	 * @throws IOException 
-	 * @Name: V支付 支付确认
-	 * @Author: nick
-	 */
-	@SuppressWarnings("static-access")
-	@RequestMapping(value = "/wechat/pay/payVerify", method = RequestMethod.POST)
-	public void payVerify(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		String userId = SysCache.getWeChatUserByColumn(request, "userId");
-		if (userId.equals("")) {
-			this.render(response, "{\"message\":\"您没有登录\",\"flag\":false}");
-			return;
-		}
-		String requestOrderId = request.getParameter("payOrderId");
-		if (requestOrderId == null || requestOrderId.equals("")) {
-			this.render(response, "{\"message\":\"请求参数有误\",\"flag\":false}");
-			return;
-		}
-
-		String password = request.getParameter("pwd");
-		if (password == null || password.equals("")) {
-			this.render(response, "{\"message\":\"请输入您的V支付密码\",\"flag\":false}");
-			return;
-		}
-
-		Base64EnOut base64 = new Base64EnOut();
-		password = base64.Decode(password);
-
-		if (password == null || password.equals("") || password.equals("null")) {
-			this.render(response, "{\"message\":\"支付密码错误\",\"flag\":false}");
-			return;
-		}
-
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("orderId", requestOrderId);
-		map.put("buyerUid", userId);
-		List<Map<String, Object>> listMap = weChatOrderService.selectOrderInventoryByParm(map);
-
-		if (listMap == null || listMap.size() < 1) {
-			this.render(response, "{\"message\":\"该订单信息不存在。\",\"flag\":false}");
-			return;
-		}
-
-		String goodsId = ""; // 商品编号
-		String summoney = ""; // 订单总金额
-		String buyerUid = ""; // 买家编号
-		BigDecimal big = new BigDecimal("0");
-		String goodsidNum = ""; // 活动编号,多个 "_" 连接
-		Integer shopId = 0; // 门店编号
-		String message = ""; // 买家留言信息
-
-		for (int i = 0; i < listMap.size(); i++) {
-
-			goodsId += "_" + listMap.get(i).get("goodsId");
-
-			goodsidNum += "_" + listMap.get(i).get("activityId");
-
-			summoney = String.valueOf(listMap.get(i).get("money"));
-
-			buyerUid = String.valueOf(listMap.get(i).get("buyerUid"));
-
-			shopId = Integer.parseInt(String.valueOf(listMap.get(i).get("shopId")));
-
-			message = String.valueOf(listMap.get(i).get("message"));
-
-			if (!listMap.get(i).get("retailPrice").equals(listMap.get(i).get("retailBacLimit"))) {
-				big = big.add(new BigDecimal(Integer.parseInt(String.valueOf(listMap.get(i).get("retailPrice")))
-						* Integer.parseInt(String.valueOf(listMap.get(i).get("num")))));
-			}
-		}
-
-		map.clear();
-
-		String key = MD5CodeUtil.md5(summoney + buyerUid + requestOrderId + 1 + SysContext.CONFIGMAP.get("wechatvpay"));
-
-		map.put("key", key);// 交互密钥
-		map.put("orderId", requestOrderId);// 订单编号
-		map.put("uid", buyerUid);// 用户编号
-		map.put("password", MD5CodeUtil.md5(password));// 用户密码
-		map.put("goodsid", goodsId.substring(1, goodsId.length()));// 商品编号
-																	// 多个‘_’相连
-		map.put("goodsidNum", goodsidNum.substring(1, goodsidNum.length()));// 活动编号
-																			// 多个‘_’相连
-		map.put("shopId", shopId);// 门店编号
-		map.put("isvpay", 1);// 是否用v支付支付 1用 2不用
-		map.put("summoney", summoney);// 总金额
-		big = big.divide(new BigDecimal(100));
-		map.put("cashVolume", big);// 可用返现金额付款的金额
-		map.put("payType", 4);// 支付类型 4：v支付 1 ：支付宝 2 网银 3 微信
-		map.put("site", 1);// 网站来源 1: 商超
-		// 支付不能传空
-		if (null == message || "".equals(message)) {
-			message = "- - -";
-		}
-		map.put("message", message);// 备注
-		map.put("backurl", "backurl");// 跳转url
-		map.put("notetyurl", "notetyurl");// 通知url
-
-		System.err.println("请求V支付参数:" + map.toString());
-
-		String result = OkhttpUtils.get(SysContext.CONFIGMAP.get("vpaySite") + "/wechatmobileconfirmpass.do", map);
-		System.err.println("返回结果:" + result);
-		if (null == result || "".equals(result) || "null".equals(result)) {
-			this.render(response, "{\"message\":\"请求超时\",\"flag\":false}");
-			return;
-		}
-		String errorpar = JsonUtil.GetJsonValue(result, "errorpar");
-		if (errorpar.equals("1")) {
-			this.render(response, "{\"message\":\"成功支付\",\"flag\":true}");
-			return;
-		}
-		if (errorpar.equals("-4")) {
-			this.render(response, "{\"message\":\"该订单已处理\",\"flag\":false}");
-			return;
-		}
-		if (errorpar.equals("-9")) {
-			this.render(response, "{\"message\":\"v支付余额不足\",\"flag\":false}");
-			return;
-		}
-		if (errorpar.equals("-8")) {
-			this.render(response, "{\"message\":\"密码错误\",\"flag\":false}");
-			return;
-		}
-		if (errorpar.equals("-3")) {
-			this.render(response, "{\"message\":\"余额不足\",\"flag\":false}");
-			return;
-		}
-		this.render(response, "{\"message\":\"请求超时\",\"flag\":false}");
 	}
 
 	/**

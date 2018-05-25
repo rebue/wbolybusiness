@@ -10,8 +10,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.wboly.system.sys.system.SysContext;
-
 public class CookiesUtil {
 
 	/**
@@ -94,28 +92,10 @@ public class CookiesUtil {
 	}
 
 	/// <summary>
-	/// 生成登录的cookies
-	/// </summary>
-	/// <param name="userid">用户编号</param>
-	/// <param name="userName">用户名</param>
-	/// <param name="loginPswd">业务登录密码</param>
-	@SuppressWarnings("unused")
-	public static void CreateCookies(int userid, String userName, String loginPswd, String userkey,
-			HttpServletRequest request, HttpServletResponse response) {
-		String salt = CreateCheckCodeString(15);
-		String randowSalt = Authcode.RandomString(8);
-		WriteLoginCookieSalt(randowSalt, SysContext.CONFIGMAP.get("cookieDomain"),
-				SysContext.CONFIGMAP.get("dzCookieKey"), SysContext.CONFIGMAP.get("dzCookiePre"), request, response);
-		WriteLoginCookie(loginPswd, userid, SysContext.CONFIGMAP.get("cookieDomain"),
-				SysContext.CONFIGMAP.get("dzCookieKey"), randowSalt, SysContext.CONFIGMAP.get("dzCookiePre"), request,
-				response);
-		WriteUKCookie(userkey, SysContext.CONFIGMAP.get("cookieDomain"), request, response);
-	}
-
-	/// <summary>
 	/// 取得随机字符串0~9 a~Z ~|
 	/// </summary>
 	/// <returns></returns>
+	@SuppressWarnings("unused")
 	private static String CreateCheckCodeString(int num) {
 		String[] beforeShuffle = new String[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d",
 				"e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y",
@@ -130,22 +110,6 @@ public class CookiesUtil {
 		// String result = afterShuffle.subString(5, 9);
 		return result;
 	}
-
-	/// Authcode::
-	/// <summary>
-	/// 生成随机字符
-	/// </summary>
-	/// <param name="lens">随机字符长度</param>
-	/// <returns>随机字符</returns>
-	/*
-	 * public static String RandomString(int lens) { String[] CharArray = {
-	 * "a","b","c","d","e","f","g","h","j","k","l","m","n","o","p","q","r","s",
-	 * "t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","J","K","L",
-	 * "M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","0","1","2","3",
-	 * "4","5","6","7","8","9" }; String rands = ""; for (int i = 0; i < lens; i++)
-	 * { int rand = (int) (Math.random() * CharArray.length); rands +=
-	 * CharArray[rand]; } return rands.toString(); }
-	 */
 
 	/// <summary>
 	/// 写论坛临时验证码cookie

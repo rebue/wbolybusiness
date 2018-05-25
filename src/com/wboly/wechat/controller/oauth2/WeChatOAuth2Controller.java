@@ -34,6 +34,7 @@ import com.wboly.wechat.service.user.WeChatUserService;
 
 import rebue.wheel.NetUtils;
 import rebue.wheel.OkhttpUtils;
+import rebue.wheel.turing.SignUtils;
 
 /**
  * @Author: nick
@@ -95,6 +96,7 @@ public class WeChatOAuth2Controller extends SysController {
 	@ResponseBody
 	public ModelAndView wechatBackss(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, Object> wxMaps)
 			throws JsonParseException, JsonMappingException, IOException {
+		System.out.println("微信授权回调地址的请求参数为：" + wxMaps.toString());
 		ModelAndView andView = new ModelAndView();
 		/*// 本地
 		String code = request.getParameter("code");
@@ -183,6 +185,7 @@ public class WeChatOAuth2Controller extends SysController {
 	 */
 	public Map<String, Object> wechatLogin(HttpServletRequest request, Map<String, Object> map)
 			throws JsonParseException, JsonMappingException, IOException {
+		SignUtils.sign1(map, SysContext.LOGINSIGNKEY);
 		String wechatLoginUrl = SysContext.USERCENTERURL + "/user/login/by/wx";
 		String wechatLoginResults = OkhttpUtils.postByFormParams(wechatLoginUrl, map) /*"{\"userId\":451273803712954379,\"result\":1}"*/ ;
 		Map<String, Object> m = new HashMap<String, Object>();
@@ -253,6 +256,7 @@ public class WeChatOAuth2Controller extends SysController {
 	@SuppressWarnings("rawtypes")
 	public Map<String, Object> wechatReg(HttpServletRequest request, Map<String, Object> map)
 			throws JsonParseException, JsonMappingException, IOException {
+		SignUtils.sign1(map, SysContext.LOGINSIGNKEY);
 		// 微信用户注册URL
 		String wechatRegUrl = SysContext.USERCENTERURL + "/user/reg/by/wx";
 		String wechatRegResults = HttpUtil.postUrl(wechatRegUrl, map);
