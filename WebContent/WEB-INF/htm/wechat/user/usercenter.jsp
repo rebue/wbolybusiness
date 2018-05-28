@@ -132,11 +132,11 @@
 							<span class="mui-icon mui-icon-map mui-pull-left"></span> 收货地址
 						</a>
 					</li>
-					<li class="mui-table-view-cell">
-						<a href="${ctx }/wechat/collect/footprintPage.htm" class="mui-navigate-right notshare"> 
-							<span class="mui-icon mui-icon-paperplane mui-pull-left"></span> 我的足迹
-						</a>
-					</li>
+<!-- 					<li class="mui-table-view-cell"> -->
+<%-- 						<a href="${ctx }/wechat/collect/footprintPage.htm" class="mui-navigate-right notshare">  --%>
+<!-- 							<span class="mui-icon mui-icon-paperplane mui-pull-left"></span> 我的足迹 -->
+<!-- 						</a> -->
+<!-- 					</li> -->
 					<li class="mui-table-view-cell">
 						<a href="javascript:guideDiv();" class="mui-navigate-right weixinshare"> 
 							<span class="mui-icon mui-icon-redo mui-pull-left"></span> 分享给好友
