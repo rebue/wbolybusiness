@@ -374,7 +374,7 @@ public class WeChatOrderController extends SysController {
 		}
 		map.put("start", start);
 		map.put("limit", limit);
-		map.put("userId", userId);
+		map.put("accountId", userId);
 		System.out.println("获取用户订单的参数为：" + String.valueOf(map));
 		String results = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/info", map);
 		System.out.println("获取用户订单的返回值为：" + results);
@@ -474,4 +474,38 @@ public class WeChatOrderController extends SysController {
 			this.render(response, "{\"message\":\"您没有登录\",\"flag\":false}");
 		}
 	}
+	
+	/**
+	 * @Name: 用户订单列表
+	 * @Author: nick
+	 */
+	@RequestMapping(value = "/wechat/order/getCashBackOrders")
+	public void getCashBackOrders(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+
+		if (userId.equals("")) {
+			this.render(response, "{\"message\":\"您没有登录\",\"flag\":false}");
+			return;
+		}
+
+		// 开始条数
+		String pageNum = request.getParameter("pageNum");
+		// 结束条数
+		String pageSize = request.getParameter("pageSize");
+		// 订单状态
+		String orderState = request.getParameter("orderState");
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (!orderState.equals("") && orderState != null && !orderState.equals("null") && !orderState.equals("0")) {
+			map.put("orderState", orderState);
+		}
+		map.put("pageNum", pageNum);
+		map.put("pageSize", pageSize);
+		map.put("userId", userId);
+		System.out.println("获取用户订单的参数为：" + String.valueOf(map));
+		String results = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/getCashBackOrders", map);
+		//String results = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/info", map);
+		System.out.println("获取用户订单的返回值为：" + results);
+		this.render(response, "{\"message\":" + results + ",\"flag\":true}");
+	}
+	
 }

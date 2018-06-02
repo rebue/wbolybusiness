@@ -99,9 +99,9 @@
 
 	<script type="text/javascript" charset="utf-8">
 		var userId = 12345;
-		var state = 3;
-		var limit = 10;
-		var start = 0;
+		var state = 2;
+		var pageNum = 0;
+		var pageSize = 10;
 		
 		var b = new Base64();
 		
@@ -160,14 +160,14 @@
 		//ajax上滑添加事件（滑动到最底部时插入新数据，如果已全部加载完，则会有相应提示）
 		function AjaxAppendData() {
 			var obj = this;
-			start += 10;
-			limit += 10;
-			mui.ajax('${ctx }/wechat/order/getOrders.htm', { 
+			pageNum += 1;
+			pageSize += 10;
+			mui.ajax('${ctx }/wechat/order/getCashBackOrders.htm', { 
 				data: {
-					"state":state,//排序方式标识
+					"orderState":state,//排序方式标识
 					"key":"59c23bdde5603ef993cf03fe64e448f1",
-					"limit":limit,
-					"start":start
+					"pageNum":pageNum,
+					"pageSize":pageSize
 				},
 				dataType: 'json', //测试用，正式应为JSON
 				type: 'post',
@@ -179,55 +179,54 @@
 					}
 					var html = "";
 					for(var i=0;i<data.message.length;i++){
-							localStorage.setItem(b.encode(data.message[i].orderId), JSON.stringify(data.message[i]));
-							html += '<div class="order-list-unit" data-statu="' + data.message[i].state + '">'
-							html += '<div class="shoptop mui-table-view-cell">'
-							html += '<a href="${ctx}/wechat/myorder/'+b.encode(data.message[i].orderId)+'.htm" class="mui-navigate-right">'
-							var totalBacLimit = 0;
-							for(j = 0; j < data.message[i].items.length; j++) {
-								totalBacLimit += parseInt(data.message[i].items[j].retailBacLimit*data.message[i].items[j].num);
-							}
-							html += '<span class="mui-pull-left spt">订单号：' + data.message[i].orderId + '</span>'
-							html += '<span class="mui-pull-right odt">待返现：<span>¥ ' + formatCurrency(totalBacLimit/100) + '</span></span>'
-							html += '</a>'
-							html += '</div>'
-							html += '<div class="mui-input-group">'
-							var totalnum = 0;
-							for(j = 0; j < data.message[i].items.length; j++) {
-								html += '<div class="mui-input-row mui-left">'
-								html += '<input type="hidden" name="goodsId" value="' + data.message[i].items[j].goodsId + '">'
-								html += '<div class="car-inner-box">'
-								// --限购
-								if(data.message[i].items[j].ruleNum==""){
-									html+='<div class="car-inner-box-img">'
-									html+='<img src="http://img.wboly.com/goods/'+data.message[i].items[j].faceimg+'_187_187.jpg" alt="" class="goodspic">'
-									html+='</div>'
-								}else{
-									html+='<div class="car-inner-box-img limit">'
-									html+='<img src="http://img.wboly.com/goods/'+data.message[i].items[j].faceimg+'_187_187.jpg" alt="" class="goodspic">'
-									html+='</div>'
-								}
-								html += '<div class="car-inner-body">'
-								html += '<h5><a href="${ctx}/wechat/goods/'+data.message[i].items[j].shopid+'/'+data.message[i].items[j].supplierUid+'/'+data.message[i].items[j].goodsId+'/'+data.message[i].items[j].activityId+'.htm">' + data.message[i].items[j].goodsTitle + '</a></h5>'
-								html += '<p>规格:' + data.message[i].items[j].attrval + '</p>'
-								html += '<div class="price-area">'
-								html += '<span class="m-price">¥<span>' + formatCurrency(data.message[i].items[j].retailPrice/100) + '</span></span>'
-								html += '<span class="b-money"> 返 <span> '+ formatCurrency(data.message[i].items[j].retailBacLimit/100) +'</span></span>' //*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
-								html += '<span class="numbox">数量：<span>' + data.message[i].items[j].num + '</span></span>'
-								html += '</div>'
-								html += '</div>'
-								html += '</div></div>'
-									totalnum += parseInt(data.message[i].items[j].retailBacLimit*data.message[i].items[j].num);
-							};
-							html += '</div>'
-							html += '<div class="opt-box">'
-							html += '<div class="cd-box" data-type="1">'
-							html += '<input type="hidden" value="' + data.message[i].dateline + '" class="buytime">' //dateline是付款时间
-							html += '<input type="hidden" value="' + parseInt(parseInt(data.message[i].dateline) + 259200) + '" class="endtime">' //付款时间加三天（三天返款）
-							html += '<p><span class="grey">获取订单状态中...</span></p>'
-							html += '</div>'
-							html += '</div>'
+						localStorage.setItem(b.encode(data.message[i].orderCode), JSON.stringify(data.message[i]));
+						html += '<div class="order-list-unit" data-statu="' + data.message[i].orderState + '">'
+						html += '<div class="shoptop mui-table-view-cell">'
+						html += '<a href="${ctx}/wechat/myorder/'+b.encode(data.message[i].orderCode)+'.htm" class="mui-navigate-right">'
+						var totalBacLimit = 0;
+						for(var j = 0; j < data.message[i].items.length; j++) {
+							totalBacLimit += data.message[i].items[j].cashbackTotal;
+						} 
+						html += '<span class="mui-pull-left spt">订单号：' + data.message[i].orderCode + '</span>'
+						html += '<span class="mui-pull-right odt">待返现：<span>¥ ' + formatCurrency(totalBacLimit) + '</span></span>'
+						html += '</a>'
+						html += '</div>'
+						html += '<div class="mui-input-group">'
+						var totalnum = 0;
+						for(j = 0; j < data.message[i].items.length; j++) {
+							var goodsQsmm = data.message[i].items[j].goodsQsmm;
+							var strs = new Array();
+							// 根据逗号获取图片后缀
+							strs = goodsQsmm.split(".");
+							html += '<div class="mui-input-row mui-left">'
+							html += '<input type="hidden" name="goodsId" value="' + data.message[i].items[j].onlineId + '">'
+							html += '<div class="car-inner-box">'
+							html += '<div class="car-inner-box-img">';
+							html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '">';
+							html += '		<img src="${goodsImgUrl}' + goodsQsmm + '_187_187.' + strs[1] + '" alt="" class="goodspic">';
+							html += '	</a>';
 							html += '</div>';
+							html += '<div class="car-inner-body">'
+							html += '<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '">'+ data.message[i].items[j].onlineTitle +'</a></h5>'
+							html += '<p>规格:' + data.message[i].items[j].specName + '</p><br/>'
+							html += '<div class="price-area">'
+							html += '<span class="m-price">¥<span>' + formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>'
+							html += '<span class="b-money"> 返 <span> '+ formatCurrency(data.message[i].items[j].cashbackAmount) +'</span></span>' //*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
+							html += '<span class="numbox">数量：<span>' + data.message[i].items[j].buyCount + '</span></span>'
+							html += '</div>'
+							html += '</div>'
+							html += '</div></div>'
+								totalnum += parseInt(data.message[i].items[j].retailBacLimit*data.message[i].items[j].num);
+						};
+						html += '</div>'
+						html += '<div class="opt-box">'
+						html += '<div class="cd-box" data-type="1">'
+						html += '<input type="hidden" value="' + data.message[i].dateline + '" class="buytime">' //dateline计划返现时间
+						html += '<input type="hidden" value="' + parseInt(parseInt(data.message[i].dateline)) + '" class="endtime">' //
+						html += '<p><span class="grey">获取订单状态中...</span></p>'
+						html += '</div>'
+						html += '</div>'
+						html += '</div>';
 					};
 				
 					var htmls = document.createElement("div");
@@ -253,14 +252,14 @@
 			if(flushtype == 0) {
 				document.getElementById("item1_inner").innerHTML = "<a class='loading'><span class='mui-spinner'></span></a>";
 			}
-			start = 0;
-			limit = 10;
-			mui.ajax('${ctx }/wechat/order/getOrders.htm', { 
+			pageNum = 0;
+			pageSize = 10;
+			mui.ajax('${ctx }/wechat/order/getCashBackOrders.htm', { 
 				data: {
-					"state":state,//排序方式标识
+					"orderState":state,//排序方式标识
 					"key":"59c23bdde5603ef993cf03fe64e448f1",
-					"limit":limit,
-					"start":start
+					"pageNum":pageNum,
+					"pageSize":pageSize
 				},
 				dataType: 'json', //测试用，正式应为JSON
 				type: 'post',
@@ -271,41 +270,40 @@
 					}
 					var html = "";
 					for(var i=0;i<data.message.length;i++){
-							localStorage.setItem(b.encode(data.message[i].orderId), JSON.stringify(data.message[i]));
-							html += '<div class="order-list-unit" data-statu="' + data.message[i].state + '">'
+							localStorage.setItem(b.encode(data.message[i].orderCode), JSON.stringify(data.message[i]));
+							html += '<div class="order-list-unit" data-statu="' + data.message[i].orderState + '">'
 							html += '<div class="shoptop mui-table-view-cell">'
-							html += '<a href="${ctx}/wechat/myorder/'+b.encode(data.message[i].orderId)+'.htm" class="mui-navigate-right">'
+							html += '<a href="${ctx}/wechat/myorder/'+b.encode(data.message[i].orderCode)+'.htm" class="mui-navigate-right">'
 							var totalBacLimit = 0;
-							for(j = 0; j < data.message[i].items.length; j++) {
-								totalBacLimit += parseInt(data.message[i].items[j].retailBacLimit*data.message[i].items[j].num);
+							for(var j = 0; j < data.message[i].items.length; j++) {
+								totalBacLimit += data.message[i].items[j].cashbackTotal;
 							} 
-							html += '<span class="mui-pull-left spt">订单号：' + data.message[i].orderId + '</span>'
-							html += '<span class="mui-pull-right odt">待返现：<span>¥ ' + formatCurrency(totalBacLimit/100) + '</span></span>'
+							html += '<span class="mui-pull-left spt">订单号：' + data.message[i].orderCode + '</span>'
+							html += '<span class="mui-pull-right odt">待返现：<span>¥ ' + formatCurrency(totalBacLimit) + '</span></span>'
 							html += '</a>'
 							html += '</div>'
 							html += '<div class="mui-input-group">'
 							var totalnum = 0;
 							for(j = 0; j < data.message[i].items.length; j++) {
+								var goodsQsmm = data.message[i].items[j].goodsQsmm;
+								var strs = new Array();
+								// 根据逗号获取图片后缀
+								strs = goodsQsmm.split(".");
 								html += '<div class="mui-input-row mui-left">'
-								html += '<input type="hidden" name="goodsId" value="' + data.message[i].items[j].goodsId + '">'
+								html += '<input type="hidden" name="goodsId" value="' + data.message[i].items[j].onlineId + '">'
 								html += '<div class="car-inner-box">'
-								// --限购
-								if(data.message[i].items[j].ruleNum==""){
-									html+='<div class="car-inner-box-img">'
-									html+='<img src="http://img.wboly.com/goods/'+data.message[i].items[j].faceimg+'_187_187.jpg" alt="" class="goodspic">'
-									html+='</div>'
-								}else{
-									html+='<div class="car-inner-box-img limit">'
-									html+='<img src="http://img.wboly.com/goods/'+data.message[i].items[j].faceimg+'_187_187.jpg" alt="" class="goodspic">'
-									html+='</div>'
-								}
+								html += '<div class="car-inner-box-img">';
+								html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '">';
+								html += '		<img src="${goodsImgUrl}' + goodsQsmm + '_187_187.' + strs[1] + '" alt="" class="goodspic">';
+								html += '	</a>';
+								html += '</div>';
 								html += '<div class="car-inner-body">'
-								html += '<h5><a href="${ctx}/wechat/goods/'+data.message[i].items[j].shopid+'/'+data.message[i].items[j].supplierUid+'/'+data.message[i].items[j].goodsId+'/'+data.message[i].items[j].activityId+'.htm">' + data.message[i].items[j].goodsTitle + '</a></h5>'
-								html += '<p>规格:' + data.message[i].items[j].attrval + '</p>'
+								html += '<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '">'+ data.message[i].items[j].onlineTitle +'</a></h5>'
+								html += '<p>规格:' + data.message[i].items[j].specName + '</p><br/>'
 								html += '<div class="price-area">'
-								html += '<span class="m-price">¥<span>' + formatCurrency(data.message[i].items[j].retailPrice/100) + '</span></span>'
-								html += '<span class="b-money"> 返 <span> '+ formatCurrency(data.message[i].items[j].retailBacLimit/100) +'</span></span>' //*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
-								html += '<span class="numbox">数量：<span>' + data.message[i].items[j].num + '</span></span>'
+								html += '<span class="m-price">¥<span>' + formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>'
+								html += '<span class="b-money"> 返 <span> '+ formatCurrency(data.message[i].items[j].cashbackAmount) +'</span></span>' //*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
+								html += '<span class="numbox">数量：<span>' + data.message[i].items[j].buyCount + '</span></span>'
 								html += '</div>'
 								html += '</div>'
 								html += '</div></div>'
@@ -314,8 +312,8 @@
 							html += '</div>'
 							html += '<div class="opt-box">'
 							html += '<div class="cd-box" data-type="1">'
-							html += '<input type="hidden" value="' + data.message[i].dateline + '" class="buytime">' //dateline是付款时间
-							html += '<input type="hidden" value="' + parseInt(parseInt(data.message[i].dateline) + 259200) + '" class="endtime">' //付款时间加三天（三天返款）
+							html += '<input type="hidden" value="' + data.message[i].dateline + '" class="buytime">' //dateline返现任务执行时间
+							html += '<input type="hidden" value="' + parseInt(parseInt(data.message[i].dateline)) + '" class="endtime">' //付款时间加三天（三天返款）
 							html += '<p><span class="grey">获取订单状态中...</span></p>'
 							html += '</div>'
 							html += '</div>'
@@ -344,94 +342,6 @@
 					console.log(type);
 				}
 			});
-		}
-		
-		//获取推广收益数据
-		function AjaxGetData_2(){
-			document.getElementById("inner_data_2").innerHTML = "<a class='loading'><span class='mui-spinner'></span></a>";
-			start=0;
-			limit=1000;
-			mui.ajax('${ctx }/wechat/user/getGainList.htm', {
-				data: {
-					"key": "59c23bdde5603ef993cf03fe64e448f1",
-					"start":start,
-					"limit":limit
-				},
-				dataType: 'json',
-				type: 'post',
-				success: function(data) {
-					if(data.flag){
-						var html = "";
-						for(var i = 0; i < data.message.length; i++) {
-							html += '<li>'
-							html += '<span>'+data.message[i].userName+'</span>'
-							html += '<span>'+data.message[i].regTime+'</span>'
-							html += '<span>¥ '+formatCurrency(data.message[i].brokerage/100)+'</span>'
-							html += '</li>'
-						};
-						setTimeout(function() {
-							document.getElementById("inner_data_2").innerHTML = html;
-							mui('#item2.mui-scroll-wrapper').scroll({ bounce: false });
-						}, 200);
-						if(data.message.length<1){
-							mui.toast("没有推广收益信息");
-						}
-						return ;
-					}
-					mui.toast(data.message);
-				},
-				error: function(xhr, type, errorThrown) {
-					console.log(type);
-				}
-			});				
-		}
-		
-		//获取推广关系数据
-		function AjaxGetData_3(){
-			document.getElementById("inner_data_3").innerHTML = "<a class='loading'><span class='mui-spinner'></span></a>";
-			start=0;
-			limit=10000;
-			mui.ajax('${ctx }/wechat/user/getRelatedList.htm', { //测试用,模拟数据
-				data: {
-					"key": "59c23bdde5603ef993cf03fe64e448f1",
-					"start":start,
-					"limit":limit
-				},
-				dataType: 'json',
-				type: 'post',
-				success: function(data) {
-					if(data.flag){
-						var html = "";
-						for(var i = 0; i < data.message.length; i++) {
-							html += '<li>'
-							if(data.message[i].userName!=null){
-								html += '<span>'+data.message[i].userName+'</span>'
-							}else{
-								html += '<span> --- </span>'
-							}
-							html += '<span>'+getTime(data.message[i].dateLine)+'</span>'
-							if(!data.message[i].type){// false 有效
-								html += '<span>是</span>'
-							}else{
-								html += '<span>否</span>'
-							}
-							html += '</li>'
-						};
-						setTimeout(function() {
-							document.getElementById("inner_data_3").innerHTML = html;
-							mui('#item3.mui-scroll-wrapper').scroll({ bounce: false });
-						}, 200);
-						if(data.message.length<1){
-							mui.toast("没有推广关系信息");
-						}
-						return ;
-					}
-					mui.toast(data.message);
-				},
-				error: function(xhr, type, errorThrown) {
-					console.log(type);
-				}
-			});				
 		}
 
 		//倒计时
