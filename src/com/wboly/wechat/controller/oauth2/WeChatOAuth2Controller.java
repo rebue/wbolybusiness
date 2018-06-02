@@ -187,7 +187,7 @@ public class WeChatOAuth2Controller extends SysController {
 			throws JsonParseException, JsonMappingException, IOException {
 		SignUtils.sign1(map, SysContext.LOGINSIGNKEY);
 		String wechatLoginUrl = SysContext.USERCENTERURL + "/user/login/by/wx";
-		String wechatLoginResults = OkhttpUtils.postByFormParams(wechatLoginUrl, map) /*"{\"userId\":451273803712954379,\"result\":1}"*/ ;
+		String wechatLoginResults = OkhttpUtils.postByJsonParams(wechatLoginUrl, map) /*"{\"userId\":451273803712954379,\"result\":1}"*/ ;
 		Map<String, Object> m = new HashMap<String, Object>();
 		if (!wechatLoginResults.equals("") && !wechatLoginResults.equals("null") && wechatLoginResults != null) {
 			String wechatLoginResult = JsonUtil.GetJsonValue(wechatLoginResults, "result");
@@ -344,7 +344,7 @@ public class WeChatOAuth2Controller extends SysController {
 		maps.put("lastLoninType", 1);
 		maps.put("userSource", "");
 		maps.put("regTime", currentTime);
-		maps.put("lastLoginMarket", "123");
+		maps.put("lastLoginMarket", NetUtils.getFirstIpOfLocalHost());
 
 		// 根据用户编号查询用户是否存在
 		String userIds = weChatUserService.selectUserInformation(maps);
