@@ -374,7 +374,7 @@ public class WeChatOrderController extends SysController {
 		}
 		map.put("start", start);
 		map.put("limit", limit);
-		map.put("accountId", userId);
+		map.put("userId", userId);
 		System.out.println("获取用户订单的参数为：" + String.valueOf(map));
 		String results = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/info", map);
 		System.out.println("获取用户订单的返回值为：" + results);

@@ -188,9 +188,13 @@
 							html += '</div>';
 							html += '<div class="opt-box">';
 							if (data.message[i].orderState == 1) {
-								html += '<div class="cd-box" data-type="0">';
-								html += '	<input type="hidden" value="' + data.message[i].dateline + '" class="buytime">'; //dateline是订单生成时间
-								html += '	<input type="hidden" value="'+ data.message[i].finishDate + '" class="endtime">'; //订单生成24小时后
+								// 下单时间戳
+								var orderTimes = data.message[i].orderTimes;
+								// 取消订单时间
+								var automaticCancel = parseInt(orderTimes) + 86400;
+								html += '<div class="cd-box" data-type="0">'
+								html += '	<input type="hidden" value="' + orderTimes + '" class="buytime">'; //订单生成时间戳
+								html += '	<input type="hidden" value="'+ automaticCancel + '" class="endtime">'; //订单生成24小时后
 								html += '	<p><span class="grey">获取订单状态中...</span></p>';
 								html += '</div>';
 								html += '<div class="unit-pay">';
@@ -198,14 +202,28 @@
 								html += '	<a class="mui-pull-right mui-btn bg" href="javascript:giveupOrder(\'' + data.message[i].orderCode + '\',1)">取消订单</a>';
 								html += '</div>';
 							} else if (data.message[i].orderState == 3){
+								// 发货时间戳
+								var sendTimes = data.message[i].sendTimes;
+								// 自动签收时间
+								var automaticSignIn = parseInt(sendTimes) + 86400 * 10;
 								html += '<div class="cd-box" data-type="1">';
-								html += '	<input type="hidden" value="' + data.message[i].dateline + '" class="buytime">'; //付款时间
-								html += '	<input type="hidden" value="' + parseInt(parseInt(data.message[i].dateline) + 259200)+'" class="endtime">'; //付款时间加三天（三天返款）
+								html += '	<input type="hidden" value="' + sendTimes + '" class="buytime">'; // 发货时间戳
+								html += '	<input type="hidden" value="' + automaticSignIn +'" class="endtime">'; // 发货时间加十天（十天签收）
 								html += '	<p><span class="grey">获取订单状态中...</span></p>';
 								html += '</div>';
-								html += '<div class="unit-pay">';                                                      
-								html += '	<a class="mui-pull-right mui-btn bg" href="javascript:queryLogistics(\'' + data.message[i].orderCode + '\')">查看物流</a>';
+								html += '<div class="unit-pay">';
+								html += '	<a class="mui-pull-left mui-btn bg" href="javascript:queryLogistics(\'' + data.message[i].orderCode + '\')">查看物流</a>';
 								html += '	<a class="mui-pull-right mui-btn bg" href="javascript:aboutCinfirmReceipt(\'' + data.message[i].orderCode + '\')">确认收货</a>';
+								html += '</div>';
+							} else if (data.message[i].orderState == 4) {
+								// 签收时间戳
+								var receivedTimes = data.message[i].receivedTimes;
+								// 自动结算时间
+								var automaticSettlement = parseInt(receivedTimes) + 86400 * 7;
+								html += '<div class="cd-box" data-type="2">';
+								html += '	<input type="hidden" value="' + receivedTimes + '" class="buytime">'; // 签收时间戳
+								html += '	<input type="hidden" value="' + automaticSettlement + '" class="endtime">'; // 签收时间加七天（七天返款）
+								html += '	<p><span class="grey">获取订单状态中...</span></p>';
 								html += '</div>';
 							};
 							html += '	</div>'
@@ -249,14 +267,18 @@
 					var ss = parseInt(ts / 1000 % 60, 10);//计算剩余的秒数   
 					content = dd + "天" + hh + "时" + mm + "分" + ss + "秒";
 					if(mui("div.cd-box")[i].getAttribute("data-type")=="1"){
-						var label = "返款倒计时：";							
+						var label = "签收倒计时：";					
+					} else if(mui("div.cd-box")[i].getAttribute("data-type")=="2") {
+						var label = "返现倒计时：";
 					}else{
 						var label = "剩余支付时间：";	
 					};
 					mui("div.cd-box p")[i].innerHTML= label+content;
 				} else {
-					if(mui("div.cd-box")[i].getAttribute("data-type")=="1"){
-						mui("div.cd-box p")[i].innerHTML="已返现";  
+					if(mui("div.cd-box")[i].getAttribute("data-type") == "1"){
+						mui("div.cd-box p")[i].innerHTML="已签收";  
+					} else if (mui("div.cd-box")[i].getAttribute("data-type") == "2") {
+						mui("div.cd-box p")[i].innerHTML="已结算";  
 					}else{
 						mui("div.cd-box p")[i].innerHTML="<span>订单超时未付款</span>"; 
 						mui("div.unit-pay")[i].innerHTML='<button class="mui-pull-right mui-btn">已关闭</button>'; 
@@ -382,25 +404,43 @@
 							html += '</div>'
 							html += '<div class="opt-box">'
 							if (data.message[i].orderState == 1) {
+								// 下单时间戳
+								var orderTimes = data.message[i].orderTimes;
+								// 取消订单时间
+								var automaticCancel = parseInt(orderTimes) + 86400;
 								html += '<div class="cd-box" data-type="0">'
-								html += '	<input type="hidden" value="' + data.message[i].dateline + '" class="buytime">' //dateline是订单生成时间
-								html += '	<input type="hidden" value="'+ data.message[i].finishDate + '" class="endtime">' //订单生成24小时后
-								html += '	<p><span class="grey">获取订单状态中...</span></p>'
-								html += '</div>'
-								html += '<div class="unit-pay">'
-								html += '	<a class="mui-pull-left mui-btn bg" href="javascript:payPage(\'' + data.message[i].orderCode + '\')">立即付款</a>'
+								html += '	<input type="hidden" value="' + orderTimes + '" class="buytime">'; //订单生成时间戳
+								html += '	<input type="hidden" value="'+ automaticCancel + '" class="endtime">'; //订单生成24小时后
+								html += '	<p><span class="grey">获取订单状态中...</span></p>';
+								html += '</div>';
+								html += '<div class="unit-pay">';
+								html += '	<a class="mui-pull-left mui-btn bg" href="javascript:payPage(\'' + data.message[i].orderCode + '\')">立即付款</a>';
 								html += '	<a class="mui-pull-right mui-btn bg" href="javascript:giveupOrder(\'' + data.message[i].orderCode + '\',1)">取消订单</a>';
 								html += '</div>';
 							} else if (data.message[i].orderState == 3){
-								html += '<div class="cd-box" data-type="1">'
-								html += '	<input type="hidden" value="' + data.message[i].dateline + '" class="buytime">' //付款时间
-								html += '	<input type="hidden" value="' + parseInt(parseInt(data.message[i].dateline) + 259200)+'" class="endtime">' //付款时间加三天（三天返款）
-								html += '	<p><span class="grey">获取订单状态中...</span></p>'
-								html += '</div>'
-								html += '<div class="unit-pay">'
+								// 发货时间戳
+								var sendTimes = data.message[i].sendTimes;
+								// 自动签收时间
+								var automaticSignIn = parseInt(sendTimes) + 86400 * 10;
+								html += '<div class="cd-box" data-type="1">';
+								html += '	<input type="hidden" value="' + sendTimes + '" class="buytime">'; // 发货时间戳
+								html += '	<input type="hidden" value="' + automaticSignIn +'" class="endtime">'; // 发货时间加十天（十天签收）
+								html += '	<p><span class="grey">获取订单状态中...</span></p>';
+								html += '</div>';
+								html += '<div class="unit-pay">';
 								html += '	<a class="mui-pull-left mui-btn bg" href="javascript:queryLogistics(\'' + data.message[i].orderCode + '\')">查看物流</a>';
 								html += '	<a class="mui-pull-right mui-btn bg" href="javascript:aboutCinfirmReceipt(\'' + data.message[i].orderCode + '\')">确认收货</a>';
-								html += '</div>'
+								html += '</div>';
+							} else if (data.message[i].orderState == 4) {
+								// 签收时间戳
+								var receivedTimes = data.message[i].receivedTimes;
+								// 自动结算时间
+								var automaticSettlement = parseInt(receivedTimes) + 86400 * 7;
+								html += '<div class="cd-box" data-type="2">';
+								html += '	<input type="hidden" value="' + receivedTimes + '" class="buytime">'; // 签收时间戳
+								html += '	<input type="hidden" value="' + automaticSettlement + '" class="endtime">'; // 签收时间加七天（七天返款）
+								html += '	<p><span class="grey">获取订单状态中...</span></p>';
+								html += '</div>';
 							};
 							html += '</div>'
 							html += '</div>';
