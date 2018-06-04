@@ -100,7 +100,7 @@
 	<script type="text/javascript" charset="utf-8">
 		var userId = 12345;
 		var state = 2;
-		var pageNum = 0;
+		var pageNum = 1;
 		var pageSize = 10;
 		
 		var b = new Base64();
@@ -161,7 +161,6 @@
 		function AjaxAppendData() {
 			var obj = this;
 			pageNum += 1;
-			pageSize += 10;
 			mui.ajax('${ctx }/wechat/order/getCashBackOrders.htm', { 
 				data: {
 					"orderState":state,//排序方式标识
@@ -249,10 +248,11 @@
 		};
 		//常规ajax载入
 		function AjaxGetData(flushtype, object) {
+			var obj = this;
 			if(flushtype == 0) {
 				document.getElementById("item1_inner").innerHTML = "<a class='loading'><span class='mui-spinner'></span></a>";
 			}
-			pageNum = 0;
+			pageNum = 1;
 			pageSize = 10;
 			mui.ajax('${ctx }/wechat/order/getCashBackOrders.htm', { 
 				data: {
