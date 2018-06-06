@@ -3,6 +3,9 @@ package com.wboly.wechat.controller.oauth2;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -34,6 +37,7 @@ import com.wboly.wechat.service.user.WeChatUserService;
 
 import rebue.wheel.NetUtils;
 import rebue.wheel.OkhttpUtils;
+import rebue.wheel.turing.JwtUtils;
 import rebue.wheel.turing.SignUtils;
 
 /**
@@ -94,34 +98,30 @@ public class WeChatOAuth2Controller extends SysController {
 	 */
 	@RequestMapping(value = { "myPreReg" })
 	@ResponseBody
-	public ModelAndView wechatBackss(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, Object> wxMaps)
-			throws JsonParseException, JsonMappingException, IOException {
+	public ModelAndView wechatBackss(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam Map<String, Object> wxMaps) throws JsonParseException, JsonMappingException, IOException {
 		System.out.println("微信授权回调地址的请求参数为：" + wxMaps.toString());
 		ModelAndView andView = new ModelAndView();
-		/*// 本地
-		String code = request.getParameter("code");
-		// 微信授权登陆获取到的用户信息
-		String userData = getUserData(code, response);
-		System.err.println("微信授权登陆返回的用户信息:" + userData);
-		ObjectMapper mapper = new ObjectMapper();
-		Map userMap = mapper.readValue(userData, Map.class); //
-		// 微信授权登陆获取到的用户信息
-		String openid = String.valueOf(userMap.get("openid"));
-		String unionid = String.valueOf(userMap.get("unionid"));
-		String nickname = String.valueOf(userMap.get("nickname"));
-		String headimgurl = String.valueOf(userMap.get("headimgurl"));
-		
-		System.out.println("微信回调解码之前的参数为：" + String.valueOf(wxMaps));*/
-		/*// 对微信回调参数进行解码
-		MapUtils.decodeUrl(wxMaps);
-		// 微信回调登录校验
-		if (!SignUtils.verify1(wxMaps, SysContext.WXLOGINKEY)) {
-			System.out.println("========微信校验出错=======");
-			andView.addObject("errormsg", "微信校验出错");
-			andView.setViewName("/htm/wechat/prompt/errors");
-			return andView;
-		}*/
-		
+		/*
+		 * // 本地 String code = request.getParameter("code"); // 微信授权登陆获取到的用户信息 String
+		 * userData = getUserData(code, response); System.err.println("微信授权登陆返回的用户信息:" +
+		 * userData); ObjectMapper mapper = new ObjectMapper(); Map userMap =
+		 * mapper.readValue(userData, Map.class); // // 微信授权登陆获取到的用户信息 String openid =
+		 * String.valueOf(userMap.get("openid")); String unionid =
+		 * String.valueOf(userMap.get("unionid")); String nickname =
+		 * String.valueOf(userMap.get("nickname")); String headimgurl =
+		 * String.valueOf(userMap.get("headimgurl"));
+		 * 
+		 * System.out.println("微信回调解码之前的参数为：" + String.valueOf(wxMaps));
+		 */
+		/*
+		 * // 对微信回调参数进行解码 MapUtils.decodeUrl(wxMaps); // 微信回调登录校验 if
+		 * (!SignUtils.verify1(wxMaps, SysContext.WXLOGINKEY)) {
+		 * System.out.println("========微信校验出错======="); andView.addObject("errormsg",
+		 * "微信校验出错"); andView.setViewName("/htm/wechat/prompt/errors"); return andView;
+		 * }
+		 */
+
 		// 线上
 		String openid = String.valueOf(wxMaps.get("openid"));
 		String unionid = String.valueOf(wxMaps.get("unionid"));
@@ -138,7 +138,7 @@ public class WeChatOAuth2Controller extends SysController {
 		if (openid != null && !openid.equals("") && !openid.equals("null") && !openid.equals("[]")) {
 			// 缓存openid到cookie
 			CookiesUtil.setCookie(openid, response);
-			
+
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("wxId", wxId);// 微信openid或微信unionid
 			map.put("openid", openid);
@@ -150,7 +150,7 @@ public class WeChatOAuth2Controller extends SysController {
 			map.put("ip", NetUtils.getFirstIpOfLocalHost());// 登录用户ip
 			System.err.println("微信登录的参数为：" + map.toString());
 			// 微信用户登录
-			Map<String, Object> wechatLoginResult = wechatLogin(request, map);
+			Map<String, Object> wechatLoginResult = wechatLogin(request, response, map);
 			System.out.println("微信用户登录的返回值为：" + String.valueOf(wechatLoginResult));
 			long result = Long.parseLong(String.valueOf(wechatLoginResult.get("result")));
 			System.out.println("微信用户登录的result的值为：" + result);
@@ -183,19 +183,32 @@ public class WeChatOAuth2Controller extends SysController {
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
 	 */
-	public Map<String, Object> wechatLogin(HttpServletRequest request, Map<String, Object> map)
-			throws JsonParseException, JsonMappingException, IOException {
+	public Map<String, Object> wechatLogin(HttpServletRequest request, HttpServletResponse response,
+			Map<String, Object> map) throws JsonParseException, JsonMappingException, IOException {
 		SignUtils.sign1(map, SysContext.LOGINSIGNKEY);
 		String wechatLoginUrl = SysContext.USERCENTERURL + "/user/login/by/wx";
-		String wechatLoginResults = OkhttpUtils.postByJsonParams(wechatLoginUrl, map) /*"{\"userId\":451273803712954379,\"result\":1}"*/ ;
+		String wechatLoginResults = OkhttpUtils.postByJsonParams(wechatLoginUrl,
+				map) /* "{\"userId\":451273803712954379,\"result\":1}" */ ;
 		Map<String, Object> m = new HashMap<String, Object>();
 		if (!wechatLoginResults.equals("") && !wechatLoginResults.equals("null") && wechatLoginResults != null) {
+			ObjectMapper objectMapper = new ObjectMapper();
+			@SuppressWarnings("unchecked")
+			Map<String, Object> resultMap = objectMapper.readValue(wechatLoginResults, Map.class);
 			String wechatLoginResult = JsonUtil.GetJsonValue(wechatLoginResults, "result");
 			System.err.println("微信登录返回值为：" + wechatLoginResults);
 			// 返回值说明 1：登录成功 0：缓存失败
 			// -1：参数不正确(没有填写用户名称/QQ的ID/QQ昵称/QQ头像/微信的ID/微信昵称/微信头像/密码/应用ID/浏览器类型/MAC/IP)
 			// -2：找不到用户信息 -3：密码错误 -4：账户被锁定 -5：用户用Email登录，但Email尚未通过验证 -6：用户用手机号登录，但手机号尚未通过验证
 			if (wechatLoginResult.equals("1")) {
+
+				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+				Date ExpiryTime = new Date();
+				try {
+					ExpiryTime = format.parse(String.valueOf(resultMap.get("expirationTime")));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				JwtUtils.addCookie(resultMap.get("sign").toString(), ExpiryTime, response);
 				System.err.println(map.get("wxNickname") + "：登录成功");
 				String userId = JsonUtil.GetJsonValue(wechatLoginResults, "userId");
 				map.put("userId", userId);
