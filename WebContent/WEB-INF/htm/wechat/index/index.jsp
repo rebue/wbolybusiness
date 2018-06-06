@@ -226,7 +226,7 @@
 						// 根据逗号获取图片后缀
 						strs = data[i].picPath.split(".");
 						html += '<div class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">';
-						html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data[i].onlineId + '" class="imghref"><img src="${goodsImgUrl}' + data[i].picPath + '_187_187.' + strs[1] + '">' + '</a>';
+						html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data[i].onlineId + '" class="imghref"><img src="${goodsImgUrl}' + data[i].picPath + '">' + '</a>';
 						html += '	<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data[i].onlineId + '">' + data[i].onlineTitle + '</a></h5>';
 						html += '	<p>';
 						html +=	'		<span class="price">￥<em>' + formatCurrency(data[i].salePrice) + '</em></span>';

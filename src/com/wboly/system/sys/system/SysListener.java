@@ -93,7 +93,7 @@ public class SysListener implements ServletContextListener {
 		SysContext.LOGINSIGNKEY = loginSignKey;
 		
 		// 商品轮播图和商品主图路径
-		sc.setAttribute("goodsImgUrl", imgUrl + "goods/");
+		sc.setAttribute("goodsImgUrl", imgUrl);
 		// 保存图片路径进Session
 		sc.setAttribute("imgUrl", imgUrl);
 

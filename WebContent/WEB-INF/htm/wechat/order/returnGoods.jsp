@@ -114,7 +114,7 @@
 		var NumLimit = 3;
 		var SizeLimit = 9 * 1024 * 1024; // 15 M     
 		var SingleSizeLimit = 3 * 1024 * 1024; // 3 M 
-		var serverUrl = '${ctx}/app/Util/fileUpload.htm?key=59c23bdde5603ef993cf03fe64e448f1&configName=returnGoodsSavePath'; //测试
+		var serverUrl = 'https://www.duamai.com/ise-svr/ise/upload'; //测试
 
 		(function($, doc) {
 			mui.init();

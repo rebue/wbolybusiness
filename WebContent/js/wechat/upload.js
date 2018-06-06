@@ -40,14 +40,14 @@
 			})(),
 
 			// 实例化
-			uploader = WebUploader
-			.create({
+			uploader = WebUploader.create({
 				pick: {
 					id: '#filePicker',
 					label: label
 				},
-				formData: {
-					flag: "wechat"
+				fileVal : 'multipartFile',
+				formData : {
+					moduleName : 'orderReturn'
 				},
 				chunked: false, // 开起分片上传
 				chunkSize: 512 * 1024, // 默认大小为5M     

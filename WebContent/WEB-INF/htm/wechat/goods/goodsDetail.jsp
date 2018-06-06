@@ -497,7 +497,7 @@
 						strs = data[i].picPath.split("."); 
 						html += '<div class="swiper-slide">';
 						html += '	<div class="swiper-zoom-container">';
-						html += '		<img src="${goodsImgUrl}' + data[i].picPath + '_187_187.' + strs[1] + '">';
+						html += '		<img src="${goodsImgUrl}' + data[i].picPath + '">';
 						html += '	</div>';
 						html += '</div>';
 					}
@@ -558,7 +558,7 @@
 						var strs = new Array();
 						// 根据逗号获取图片后缀
 						strs = data[0].picPath.split("."); 
-						document.body.querySelector("#selectBox_titlebar .mui-col-xs-3").innerHTML='<img src="${goodsImgUrl}' + data[0].picPath + '_278_278.' + strs[1] + '" alt="" />';
+						document.body.querySelector("#selectBox_titlebar .mui-col-xs-3").innerHTML='<img src="${goodsImgUrl}' + data[0].picPath + '" alt="" />';
 						var html="";
 						document.body.querySelector("#sku_box .sku_unit").innerHTML=html;
 						html += '<ul class="sku_list">';

@@ -68,7 +68,7 @@
 				html += '	<div class="mui-input-row mui-left">';
 				html += '		<div class="car-inner-box">';
 				html += '			<div class="car-inner-box-img">';
-				html += '				<img src="${goodsImgUrl}' + item.goodsQsmm + '_187_187.' + strs[1] + '" alt="" class="goodspic">';
+				html += '				<img src="${goodsImgUrl}' + item.goodsQsmm + '" alt="" class="goodspic">';
 				html += '			</div>';
 				html += '			<div class="car-inner-body">';
 				html += '				<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + item.onlineId + '">' + item.onlineTitle + '</a></h5>';
