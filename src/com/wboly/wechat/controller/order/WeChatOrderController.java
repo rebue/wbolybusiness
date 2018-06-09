@@ -476,7 +476,7 @@ public class WeChatOrderController extends SysController {
 	}
 	
 	/**
-	 * @Name: 用户订单列表
+	 * @Name: 用户待返现订单列表
 	 * @Author: nick
 	 */
 	@RequestMapping(value = "/wechat/order/getCashBackOrders")
