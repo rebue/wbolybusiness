@@ -14,11 +14,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.wboly.system.sys.spring.SysController;
 import com.wboly.system.sys.system.SysCache;
+import com.wboly.system.sys.system.SysContext;
 import com.wboly.system.sys.util.Base64EnOut;
 import com.wboly.system.sys.util.JsonUtil;
 import com.wboly.wechat.service.order.WeChatOrderService;
 import com.wboly.wechat.service.order.WeChatShopAftersaleService;
 import com.wboly.wechat.service.shop.WeChatShopService;
+
+import rebue.wheel.OkhttpUtils;
 
 @Controller
 public class WeChatShopAftersaleController extends SysController {
@@ -217,5 +220,40 @@ public class WeChatShopAftersaleController extends SysController {
 		}
 		this.render(response, "{\"message\":\"成功提交<br/>请耐心等待结果\",\"flag\":true}");
 		return;
+	}
+	
+	/**
+	 * @Name: 查找用户退货订单
+	 * @Author: 
+	 */
+	@RequestMapping(value = "/wechat/order/getReturnOrders")
+	public void getCashBackOrders(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		System.out.println("查找用户退货订单");
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+		if (userId.equals("")) {
+			this.render(response, "{\"message\":\"您没有登录\",\"flag\":false}");
+			return;
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		// 开始条数
+		String limit = request.getParameter("limit");
+		// 结束条数
+		String start = request.getParameter("start");
+		// 标签选择状态
+		String state = request.getParameter("state");
+		map.put("limit", limit);
+		map.put("start", start);
+		map.put("userId", userId);
+		System.out.println("获取用户订单的参数为：" + String.valueOf(map));
+		if(state.equals("100")) {
+			String results = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/returningInfo", map);
+			System.out.println("获取用户订单的返回值为：" + results);
+			this.render(response, "{\"message\":" + results + ",\"flag\":true}");
+		}else if(state.equals("101")) {
+			String results = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/returnInfo", map);
+			System.out.println("获取用户订单的返回值为：" + results);
+			this.render(response, "{\"message\":" + results + ",\"flag\":true}");
+		}
+		
 	}
 }
