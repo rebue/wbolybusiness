@@ -31,6 +31,7 @@ import com.wboly.wechat.service.user.WeChatUserService;
 import net.sf.json.JSONArray;
 import rebue.wheel.NetUtils;
 import rebue.wheel.OkhttpUtils;
+import rebue.wheel.RegexUtils;
 
 /**
  * @Name: 微信 用户 .java
@@ -679,5 +680,79 @@ public class WeChatUserController extends SysController {
 	@RequestMapping(value = { "/wechat/user/updateLoginPwdNextPage" })
 	public ModelAndView updateLoginPwdNextPage() {
 		return new ModelAndView("/htm/wechat/user/updateLoginPwdNextWalk");
+	}
+	
+	/**
+	 * 跳转至实名认证页面
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException 
+	 */
+	@RequestMapping("/wechat/user/verifyRealNamePage")
+	public ModelAndView setVerifyRealNamePage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		ModelAndView andView = new ModelAndView();
+		// 获取当前登录用户编号
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+		if (userId != null && !userId.equals("") && !userId.equals("null")) {
+			andView.setViewName("/htm/wechat/user/verifyRealName");
+			return andView;
+		} else {
+			andView.setViewName("redirect:/wechat/oauth2/checkSignature/login.htm");
+			return andView;
+		}
+	}
+	
+	/**
+	 * 实名认证申请
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException 
+	 */
+	@RequestMapping("/wechat/user/verifyRealNameApply")
+	public void verifyRealNameApply(HttpServletRequest request,HttpServletResponse response, @RequestParam Map<String, Object> map) throws IOException{
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+		if (userId.equals("")) {
+			this.render(response, "{\"msg\":\"您没有登录\",\"result\":-11}");
+			return;
+		}
+		String idCard = (String)map.get("idCard");
+		boolean flag = RegexUtils.matchIdcard(idCard);
+		if(flag==false) {
+			this.render(response, "{\"msg\":\"身份证输入有误\",\"result\":-11}");
+			return;
+		}
+		String[] pics = ((String)map.get("pic")).split(",");
+		String picOne="";
+		String picTwo="";
+		String picThree="";
+		String picFour="";
+		if(pics.length>3) {
+			 picFour = pics[3];
+		}
+		if(pics.length>2) {
+			 picThree = pics[2];
+		}
+		if(pics.length>1) {
+			 picTwo = pics[1];
+		}
+		if(pics.length>0) {
+			 picOne = pics[0];
+		}
+		map.put("userId", userId);
+		map.put("picOne",picOne);
+		map.put("picTwo", picTwo);
+		map.put("picThree", picThree);
+		map.put("picFour", picFour);
+		System.err.println("申请实名认证的参数为：" + String.valueOf(map));
+		// 添加用户实名认证申请
+		String results = HttpUtil.postUrl(SysContext.RNAURL + "/verifyRealName/apply", map);
+		System.err.println("申请实名认证的返回值为：" + results);
+		if (results == null || results.equals("") || results.equals("[]")) {
+			this.render(response, "{\"msg\":\"提交失败\",\"result\":-10}");
+			return ;
+		}
+		this.render(response, results);
 	}
 }

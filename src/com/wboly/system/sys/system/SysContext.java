@@ -103,4 +103,7 @@ public class SysContext {
 	
 	/**微信登录校验key**/
 	public static String LOGINSIGNKEY;
+	
+	/**实名认证微服务地址**/
+	public static String RNAURL;
 }
