@@ -88,6 +88,10 @@ public class SysListener implements ServletContextListener {
 		String imgUrl = PropertiesUtil.getPropertiesValue("system.properties", "IMGURL").toString();
 		SysContext.IMGURL = imgUrl;
 		
+		//实名认证微服务地址
+		String rnaUrl = PropertiesUtil.getPropertiesValue("system.properties", "RNAURL").toString();
+		SysContext.RNAURL = rnaUrl;
+		
 		/** 微信登录校验key **/
 		String loginSignKey =  PropertiesUtil.getPropertiesValue("system.properties", "LOGINSIGNKEY").toString();
 		SysContext.LOGINSIGNKEY = loginSignKey;
