@@ -2,6 +2,7 @@ package com.wboly.wechat.controller.user;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -724,6 +725,7 @@ public class WeChatUserController extends SysController {
 			return;
 		}
 		String[] pics = ((String)map.get("pic")).split(",");
+		System.err.println("申请实名认证的图片参数为：" + Arrays.toString(pics));
 		String picOne="";
 		String picTwo="";
 		String picThree="";
@@ -754,5 +756,27 @@ public class WeChatUserController extends SysController {
 			return ;
 		}
 		this.render(response, results);
+	}
+	
+	
+	/**
+	 * 跳转至实名认证页面结果页面
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException 
+	 */
+	@RequestMapping("/wechat/user/verifyResult")
+	public ModelAndView verifyResult(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		ModelAndView andView = new ModelAndView();
+		// 获取当前登录用户编号
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+		if (userId != null && !userId.equals("") && !userId.equals("null")) {
+			andView.setViewName("/htm/wechat/user/verifyResult");
+			return andView;
+		} else {
+			andView.setViewName("redirect:/wechat/oauth2/checkSignature/login.htm");
+			return andView;
+		}
 	}
 }

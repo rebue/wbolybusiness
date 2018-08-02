@@ -95,12 +95,14 @@
 
 		uploader.on('uploadFinished', function(file, response) {	
 			if(uploader.getStats().uploadFailNum==0){ //上传失败的文件数=0时，才执行提交
+
 				ajaxupdate();
 			}
 		});
 		
 		uploader.on('uploadSuccess', function(file, response) {	
-			arr.push(response.path);
+
+			arr.push(response.filePaths);
 		});
 		
 		// 当有文件添加进来时执行，负责view的创建
