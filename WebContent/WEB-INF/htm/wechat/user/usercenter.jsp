@@ -24,20 +24,20 @@
 <body>
 	<input type="hidden" id="verifyUserId" value="${centerData.userId}" / >
 	<nav class="mui-bar mui-bar-tab">
-		<a class="mui-tab-item-wboly" href="${ctx }/wechat/index/indexInfo.htm"> 
+		<a class="mui-tab-item-wboly" href="${ctx }/wechat/index/indexInfo.htm?userId=${userId}"> 
 			<span class="mui-icon mui-icon-home"></span> 
 			<span class="mui-tab-label">首页</span>
 		</a> 
-		<a class="mui-tab-item-wboly" href="${ctx }/wechat/goods/allGoodsList.htm"> 
+		<a class="mui-tab-item-wboly" href="${ctx }/wechat/goods/allGoodsList.htm?userId=${userId}"> 
 			<span class="mui-icon mui-icon-extra mui-icon-extra-class"></span> 
 			<span class="mui-tab-label">全部商品</span>
 		</a>
-		<a class="mui-tab-item-wboly" href="${ctx }/wechat/cart/shoppingcart.htm"> 
+		<a class="mui-tab-item-wboly" href="${ctx }/wechat/cart/shoppingcart.htm?userId=${userId}"> 
 			<span id="cartnum" class="mui-badge mui-badge-danger">0</span> 
 			<span class="mui-icon mui-icon-extra mui-icon-extra-cart"></span> 
 			<span class="mui-tab-label">购物车</span>
 		</a> 
-		<a class="mui-tab-item-wboly" href="${ctx }/wechat/user/userCenter.htm"> 
+		<a class="mui-tab-item-wboly" href="${ctx }/wechat/user/userCenter.htm?userId=${userId}"> 
 			<span class="mui-icon mui-icon-person"></span> 
 			<span class="mui-tab-label">个人中心</span>
 		</a>
@@ -66,25 +66,25 @@
 					<li class="mui-table-view-cell no-padding">
 						<ul id="icon-grid-91" class="icon-grid mui-table-view mui-grid-view mui-grid-9">
 							<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
-								<a href="${ctx }/wechat/order/myOrders.htm?type=stayPay"> 
+								<a href="${ctx }/wechat/order/myOrders.htm?type=stayPay&userId=${userId}"> 
 									<span class="icon mui-icon-extra mui-icon-extra-card"></span>
 									<div class="mui-media-body">待付款</div>
 								</a>
 							</li>
 							<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
-								<a href="${ctx }/wechat/order/myOrders.htm?type=stayTake"> 
+								<a href="${ctx }/wechat/order/myOrders.htm?type=stayTake&userId=${userId}"> 
 									<span class="icon mui-icon-extra mui-icon-extra-express"></span>
 									<div class="mui-media-body">待收货</div>
 								</a>
 							</li>
 							<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
-								<a href="${ctx }/wechat/order/myOrders.htm?type=stayReturn"> 
+								<a href="${ctx }/wechat/order/myOrders.htm?type=stayReturn&userId=${userId}"> 
 									<span class="icon mui-icon-extra mui-icon-extra-gift"></span>
 									<div class="mui-media-body">待返款</div>
 								</a>
 							</li>
 							<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
-								<a href="${ctx }/wechat/order/allAfterSalePage.htm">
+								<a href="${ctx }/wechat/order/allAfterSalePage.htm?userId=${userId}">
 									<span class="icon mui-icon-extra mui-icon-extra-custom"></span>
 									<div class="mui-media-body">售后</div>
 								</a>
@@ -92,7 +92,7 @@
 						</ul>
 					</li>
 					<li class="mui-table-view-cell">
-						<a href="${ctx }/wechat/user/myWalletPage.htm" class="mui-navigate-right notshare"> 
+						<a href="${ctx }/wechat/user/myWalletPage.htm?userId=${userId}" class="mui-navigate-right notshare"> 
 							<span class="mui-icon-extra mui-icon-extra-gold mui-pull-left"></span>我的钱包 </a>
 					</li>
 					<li class="mui-table-view-cell no-padding">
@@ -124,17 +124,17 @@
 						</ul>
 					</li>
 					<li class="mui-table-view-cell">
-						<a href="${ctx }/wechat/user/updateloginpwdpage.htm" class="mui-navigate-right notshare"> 
+						<a href="${ctx }/wechat/user/updateloginpwdpage.htm?userId=${userId}" class="mui-navigate-right notshare"> 
 							<span class="mui-icon mui-icon-compose mui-pull-left"></span> 修改或设置登录密码
 						</a>
 					</li>
 					<li  class="mui-table-view-cell">
-						<a href="${ctx }/wechat/user/setLoninNamePage.htm" class="mui-navigate-right notshare"> 
+						<a href="${ctx }/wechat/user/setLoninNamePage.htm?userId=${userId}" class="mui-navigate-right notshare"> 
 							<span class="mui-icon mui-icon-compose mui-pull-left"></span> 修改或设置登录名称
 						</a>
 					</li>
 					<li class="mui-table-view-cell">
-						<a href="${ctx }/wechat/user/newAddressPage.htm" class="mui-navigate-right notshare"> 
+						<a href="${ctx }/wechat/user/newAddressPage.htm?userId=${userId}" class="mui-navigate-right notshare"> 
 							<span class="mui-icon mui-icon-map mui-pull-left"></span> 收货地址
 						</a>
 					</li>
@@ -173,7 +173,7 @@
 					tixian.addEventListener('tap', function(event) {
 						var exist = "${exist}";
 						if ("${exist}" == "true") {
-							document.location.href= "${ctx }/wechat/user/wechatWithdraw.htm";// 跳转至提现页面
+							document.location.href= "${ctx }/wechat/user/wechatWithdraw.htm?userId=${userId}";// 跳转至提现页面
 						} else {
 							mui.alert("没有发现提现账号"," ");
 						}
@@ -201,7 +201,7 @@
 						if(data.applyState==null){
 							return;
 						}else{
-							verify.href="${ctx }/wechat/user/verifyResult.htm";
+							verify.href="${ctx }/wechat/user/verifyResult.htm?userId=${userId}";
 						    setCookie("applyState", data.applyState);
 						    setCookie("rejectReason", data.rejectReason);
 

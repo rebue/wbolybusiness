@@ -190,7 +190,7 @@
 				success: function(msg) {
 					if(msg.flag){
 						mui.alert(msg.message,' ', function() {
-							window.location.href="${ctx}/wechat/order/myOrders.htm"
+							window.location.href="${ctx}/wechat/order/myOrders.htm?promoterId=${userId}"
 						});
 						return ;
 					};

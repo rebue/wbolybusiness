@@ -18,7 +18,7 @@
 </head>
 
 <body>
-	<div id="home_index" class="weixin" style="color: #c0c0c0;" onclick="window.location.href='${ctx}/wechat/index/indexInfo.htm'">
+	<div id="home_index" class="weixin" style="color: #c0c0c0;" onclick="window.location.href='${ctx}/wechat/index/indexInfo.htm?promoterId=${userId}'">
 		<span class="mui-icon mui-icon-home"></span> <span class="text">首页</span>
 	</div>
 	<div id="offCanvasWrapper" class="mui-off-canvas-wrap mui-draggable mui-slide-in">
@@ -53,7 +53,7 @@
 		<!-- 主页面容器 -->
 		<div class="mui-inner-wrap">
 			<header class="mui-bar mui-bar-nav goods-list-head">
-				<a class="mui-icon mui-icon-left-nav mui-pull-left" href="${ctx }/wechat/goods/goodsNav.htm"></a>
+				<a class="mui-icon mui-icon-left-nav mui-pull-left" href="${ctx }/wechat/goods/goodsNav.htm?promoterId=${userId}"></a>
 				<form class="mui-input-row mui-search" id="form">
 					<input type="search" class="mui-input-clear" id="searchbar" value="${serach}" placeholder="搜索您想要的商品">
 				</form>
@@ -72,7 +72,7 @@
 			</div>
 			<div id="shoppingcart" class="shoppingcart">
 				<span id="cartnum" class="mui-badge mui-badge-danger"></span> 
-				<a href="${ctx }/wechat/cart/shoppingcart.htm"> 
+				<a href="${ctx }/wechat/cart/shoppingcart.htm?promoterId=${userId}"> 
 					<img src="${ctx }/images/wechat/shopping_cart_float.png" alt="" />
 				</a>
 			</div>
@@ -294,11 +294,11 @@
 							// 根据逗号获取图片后缀
 							strs = data[i].picPath.split("."); 
 							html+='<div class="view-cell mui-col-xs-6 mui-col-sm-6">';
-							html+='	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data[i].onlineId + '" class="imghref">';
+							html+='	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data[i].onlineId + '&promoterId=${userId}' + '" class="imghref">';
 							html+='		<img src="${goodsImgUrl}' + data[i].picPath + '">';
 							html+='	</a>';
 							html+='	<div class="goods-list-body">';
-							html+='		<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data[i].onlineId + '">' + data[i].onlineTitle + '</a></h5>';
+							html+='		<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data[i].onlineId + '&promoterId=${userId}' + '">' + data[i].onlineTitle + '</a></h5>';
 							html+='		<p>';
 							html+='			<span class="price">￥<em>'+formatCurrency(data[i].salePrice)+'</em></span>';
 							html+=' 		<span class="back-money">返<em>'+formatCurrency(data[i].cashbackAmount)+'</em></span>';
@@ -358,11 +358,11 @@
 							// 根据逗号获取图片后缀
 							strs = data[i].picPath.split("."); 
 							html+='<div class="view-cell mui-col-xs-6 mui-col-sm-6">';
-							html+='	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data[i].onlineId + '" class="imghref">';
+							html+='	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data[i].onlineId + '&promoterId=${userId}' + '" class="imghref">';
 							html+='		<img src="${goodsImgUrl}' + data[i].picPath + '">';
 							html+='	</a>';
 							html+='	<div class="goods-list-body">';
-							html+='		<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data[i].onlineId + '">' + data[i].onlineTitle + '</a></h5>';
+							html+='		<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data[i].onlineId + '&promoterId=${userId}' + '">' + data[i].onlineTitle + '</a></h5>';
 							html+='		<p>';
 							html+='			<span class="price">￥<em>' + formatCurrency(data[i].salePrice) + '</em></span>';
 							html+=' 		<span class="back-money">返<em>' + formatCurrency(data[i].cashbackAmount) + '</em></span>';

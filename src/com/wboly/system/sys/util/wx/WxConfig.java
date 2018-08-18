@@ -9,7 +9,7 @@ public class WxConfig {
 	/**
 	 * 项目本地URL
 	 */
-	public static String onLineURL = "http://tmzkue.natappfree.cc/wbolybusiness";
+	public static String onLineURL = "http://596038980.mynatapp.cc/wbolybusiness";
 
 	/**
 	 * 项目线上URL

@@ -201,12 +201,12 @@
 							html += '<input type="hidden" name="goodsId" value="' + data.message[i].items[j].onlineId + '">'
 							html += '<div class="car-inner-box">'
 							html += '<div class="car-inner-box-img">';
-							html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '">';
+							html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '&promoterId=${userId}' + '">';
 							html += '		<img src="${goodsImgUrl}' + goodsQsmm + '_187_187.' + strs[1] + '" alt="" class="goodspic">';
 							html += '	</a>';
 							html += '</div>';
 							html += '<div class="car-inner-body">'
-							html += '<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '">'+ data.message[i].items[j].onlineTitle +'</a></h5>'
+							html += '<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '&promoterId=${userId}' + '">'+ data.message[i].items[j].onlineTitle +'</a></h5>'
 							html += '<p>规格:' + data.message[i].items[j].specName + '</p><br/>'
 							html += '<div class="price-area">'
 							html += '<span class="m-price">¥<span>' + formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>'
@@ -273,7 +273,7 @@
 							localStorage.setItem(b.encode(data.message[i].orderCode), JSON.stringify(data.message[i]));
 							html += '<div class="order-list-unit" data-statu="' + data.message[i].orderState + '">'
 							html += '<div class="shoptop mui-table-view-cell">'
-							html += '<a href="${ctx}/wechat/myorder/'+b.encode(data.message[i].orderCode)+'.htm" class="mui-navigate-right">'
+							html += '<a href="${ctx}/wechat/myorder/'+b.encode(data.message[i].orderCode)+'.htm?promoterId=${userId}" class="mui-navigate-right">'
 							var totalBacLimit = 0;
 							for(var j = 0; j < data.message[i].items.length; j++) {
 								totalBacLimit += data.message[i].items[j].cashbackTotal;
@@ -293,12 +293,12 @@
 								html += '<input type="hidden" name="goodsId" value="' + data.message[i].items[j].onlineId + '">'
 								html += '<div class="car-inner-box">'
 								html += '<div class="car-inner-box-img">';
-								html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '">';
+								html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '&promoterId=${userId}' + '">';
 								html += '		<img src="${goodsImgUrl}' + goodsQsmm + '_187_187.' + strs[1] + '" alt="" class="goodspic">';
 								html += '	</a>';
 								html += '</div>';
 								html += '<div class="car-inner-body">'
-								html += '<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '">'+ data.message[i].items[j].onlineTitle +'</a></h5>'
+								html += '<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '&promoterId=${userId}' + '">'+ data.message[i].items[j].onlineTitle +'</a></h5>'
 								html += '<p>规格:' + data.message[i].items[j].specName + '</p><br/>'
 								html += '<div class="price-area">'
 								html += '<span class="m-price">¥<span>' + formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>'

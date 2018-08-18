@@ -51,7 +51,7 @@
 					success : function(data) {
 						if (data.result == 1) {
 							mui.toast(data.msg);
-							window.location.href = "${ctx }/wechat/user/userCenter.htm";
+							window.location.href = "${ctx }/wechat/user/userCenter.htm?promoterId=${userId}";
 						} else {
 							mui.toast(data.msg);
 						}

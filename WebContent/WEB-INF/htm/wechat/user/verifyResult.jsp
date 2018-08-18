@@ -112,7 +112,7 @@
 						uploadBtn.style.display="none";
 					}
 					uploadBtn.addEventListener('tap',function(){
-						document.location.href= "${ctx }/wechat/user/verifyRealNamePage.htm";// 跳转至申请页面
+						document.location.href= "${ctx }/wechat/user/verifyRealNamePage.htm?promoterId=${userId}";// 跳转至申请页面
 		            });
  
 		})(mui, document);

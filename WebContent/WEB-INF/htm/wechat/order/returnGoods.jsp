@@ -28,13 +28,13 @@
 			<div class="info-bar order-num mui-table-view-cell">订单号：${returnData['orderCode'] }</div>
 			<div class="order-detail-box mui-table-view-cell">
 				<div class="order-img-box">
-					<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=${returnData['onlineId'] }">
+					<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=${returnData['onlineId'] }&promoterId=${userId}">
 						<img src="${returnData['goodsQsmm'] }" alt="" />
 					</a>
 				</div>
 				<div class="order-info-box">
 					<h5>
-						<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=${returnData['onlineId'] }">${returnData['onlineTitle'] }</a>
+						<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=${returnData['onlineId'] }&promoterId=${userId}">${returnData['onlineTitle'] }</a>
 					</h5>
 					<h6>规格： ${returnData['specName'] }</h6><br/>
 					<div class="price-box">
@@ -210,7 +210,7 @@
 					console.log(data);
 					if (data.result == 1) {
 						mui.alert(data.msg, ' ', function() {
-							window.location.href = "${ctx}/wechat/order/myOrders.htm"
+							window.location.href = "${ctx}/wechat/order/myOrders.htm?promoterId=${userId}"
 						});
 						return;
 					};

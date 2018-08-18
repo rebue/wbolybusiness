@@ -58,8 +58,13 @@ public class WeChatGoodsController extends SysController {
 	@RequestMapping(value = "/wechat/goods/goodsDetail")
 	public ModelAndView GoodsDetail(HttpServletRequest request) throws Exception {
 		ModelAndView mav = new ModelAndView();
+		// 上线id
 		String onlineId = request.getParameter("onlineId");
+		// 规格id
+		String specId = request.getParameter("specId");
+		// 推广者id
 		mav.addObject("onlineId", onlineId);
+		mav.addObject("specId", specId);
 		mav.setViewName("/htm/wechat/goods/goodsDetail");// 商品详情
 		return mav;
 	}

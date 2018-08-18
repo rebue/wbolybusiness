@@ -1,6 +1,7 @@
 package com.wboly.system.sys.system;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -10,6 +11,11 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.wboly.system.sys.util.wx.WxConfig;
+import com.wboly.system.sys.util.wx.WeixinUtil.SITE;
+
+import rebue.wheel.turing.JwtUtils;
 
 public class SysAuth implements Filter {
 
@@ -35,7 +41,7 @@ public class SysAuth implements Filter {
 			+ "/wechat/goods/goodsCarouselPic.htm,/wechat/goods/selectGoodsDetails.htm,/wechat/goods/selectGoodsSpecDetails.htm,"
 			+ "/wechat/cart/batchdelete.htm,/wechat/order/aboutCinfirmReceipt.htm,/wechat/order/queryLogistics.htm,/wechat/order/returnGoods.htm,"
 			+ "/wechat/user/setLoginName.htm,/wechat/user/setLoninNamePage.htm,/wechat/user/setLoginPassword.htm,/wechat/user/changeLogonPassword.htm,/wechat/user/updateloginpwdpage.htm,"
-			+"/wechat/user/verifyRealNamePage.htm,/wechat/user/verifyRealName.htm,/wechat/user/verifyRealNameApply.htm,/wechat/user/verifyResult.htm";
+			+ "/wechat/user/verifyRealNamePage.htm,/wechat/user/verifyRealName.htm,/wechat/user/verifyRealNameApply.htm,/wechat/user/verifyResult.htm";
 
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
 			throws IOException, ServletException {
@@ -51,9 +57,32 @@ public class SysAuth implements Filter {
 		resp.setHeader("Access-Control-Allow-Headers", "x-requested-with,content-type");
 		resp.setContentType("application/json");
 		resp.setCharacterEncoding("utf-8");
-
+		// 推广者id
+		String promoterId = request.getParameter("promoterId");
+		System.out.println("拦截器获取到的推广者id为：" + promoterId);
 		if (urlDoFilter(servletRequest)) {
-			chain.doFilter(servletRequest, servletResponse);
+			if (requestUrlss.contains("/wechat/oauth2/myPreReg.htm")
+					|| requestUrlss.contains("/wechat/oauth2/checkSignature.htm")) {
+				chain.doFilter(servletRequest, servletResponse);
+			} else {
+				String sign = JwtUtils.getSignInCookies(request);
+				if (sign == null) {
+					// 上线id
+					String onlineId = request.getParameter("onlineId");
+					// 规格id
+					String specId = request.getParameter("specId");
+					System.out.println("拦截器获取到的上线id为：" + onlineId);
+					String backUrl = SysContext.WXXURL + "/wxx/response/authorizecode";// 微信回调地址
+					String encodeUrl = URLEncoder.encode(backUrl, "UTF-8");// 对url进行编码
+					String state = requestUrlss + "," + promoterId + "," + onlineId + "," + specId;
+					String url = SITE.AUTHORIZE.getMessage() + "?appid=" + SysContext.wxAppId + "&redirect_uri=" + encodeUrl
+							+ "&response_type=code&scope=snsapi_userinfo&state=" + state;
+					System.out.println(url);
+					resp.sendRedirect(url);
+				} else {
+					chain.doFilter(servletRequest, servletResponse);
+				}
+			}
 		}
 	}
 
@@ -68,13 +97,8 @@ public class SysAuth implements Filter {
 			System.out.println("=========访问公共接口:" + url);
 			return true;
 		} else {
-			if (SysContext.SYS_KEY.equals(SYS_KEY)) {
-				System.out.println("==========访问私有接口通过:" + url);
-				return true;
-			} else {
-				System.out.println("==========访问私有接口失败:" + url);
-				return false;
-			}
+			System.out.println("==========访问私有接口通过:" + url);
+			return true;
 		}
 	}
 

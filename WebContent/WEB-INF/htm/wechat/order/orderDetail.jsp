@@ -50,7 +50,7 @@
 			if (json == null || json == "") {
 				mui.confirm("无法获取您的订单，现在去看看？", " ", [ '取消', '确定' ], function(e) {
 					if (e.index == 1) {
-						window.location.href = "${ctx }/wechat/order/myOrders.htm";
+						window.location.href = "${ctx }/wechat/order/myOrders.htm?promoterId=${userId}";
 					};
 				})
 				return;
@@ -71,7 +71,7 @@
 				html += '				<img src="${goodsImgUrl}' + item.goodsQsmm + '" alt="" class="goodspic">';
 				html += '			</div>';
 				html += '			<div class="car-inner-body">';
-				html += '				<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + item.onlineId + '">' + item.onlineTitle + '</a></h5>';
+				html += '				<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + item.onlineId + '&promoterId=${userId}' + '">' + item.onlineTitle + '</a></h5>';
 				html += '				<p>规格：' + item.specName + '</p><br/>';
 				html += '				<div class="price-area">';
 				html += '					<span class="m-price">¥ <span>' + formatCurrency(item.buyPrice) + '</span></span>';

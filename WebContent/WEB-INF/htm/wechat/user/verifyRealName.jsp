@@ -181,7 +181,7 @@
 					console.log(data);
 					if (data.result == 1) {
 						mui.alert(data.msg, ' ', function() {
-							window.location.href = "${ctx}/wechat/user/userCenter.htm"
+							window.location.href = "${ctx}/wechat/user/userCenter.htm?promoterId=${userId}"
 						});
 						return;
 					};

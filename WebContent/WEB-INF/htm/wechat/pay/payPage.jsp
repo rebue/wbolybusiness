@@ -31,15 +31,15 @@
 				function(res) {
 					// 使用以下方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。 
 					if (res.err_msg == "get_brand_wcpay_request:ok") {
-						window.location.href = "${ctx }/wechat/success/wxpay/${orderId}.htm";
+						window.location.href = "${ctx }/wechat/success/wxpay/${orderId}.htm?promoterId=${userId}";
 					} else if (res.err_msg == "get_brand_wcpay_request:fail") {
 						alert("微信支付失败");
-						window.location.href = "${ctx}/web/order/updateorderno/${orderId}.htm";
+						window.location.href = "${ctx}/web/order/updateorderno/${orderId}.htm?promoterId=${userId}";
 					} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
 						if (confirm("您的订单已生成了,去支付?")) {
-							window.location.href = "${ctx}/wechat/order/myOrders.htm";
+							window.location.href = "${ctx}/wechat/order/myOrders.htm?promoterId=${userId}";
 						} else {
-							window.location.href = "${ctx}/wechat/cart/shoppingcart.htm"
+							window.location.href = "${ctx}/wechat/cart/shoppingcart.htm?promoterId=${userId}"
 						}
 					}
 				});
