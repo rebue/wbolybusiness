@@ -153,11 +153,11 @@ public class WeChatOAuth2Controller extends SysController {
 			map.put("wxOpenid", openid);
 			map.put("wxNickname", nickname);// 微信昵称
 			map.put("wxFace", headimgurl);// 微信头像
-			map.put("appId", 11);// 应用编号
+			map.put("sysId", "damai-wx");// 应用编号
 			map.put("userAgent", request.getHeader("User-Agent").replaceAll("-", ""));// ；浏览器信息
 			map.put("mac", NetUtils.getFirstMacAddrOfLocalHost());
 			map.put("ip", NetUtils.getFirstIpOfLocalHost());// 登录用户ip
-			map.put("buyRelationship", wxMaps.get("state"));
+			map.put("state", wxMaps.get("state"));
 			System.err.println("微信登录的参数为：" + map.toString());
 			// 微信用户登录
 			Map<String, Object> wechatLoginResult = wechatLogin(request, response, map);
@@ -202,7 +202,7 @@ public class WeChatOAuth2Controller extends SysController {
 			Map<String, Object> map) throws JsonParseException, JsonMappingException, IOException, ParseException {
 		SignUtils.sign1(map, SysContext.LOGINSIGNKEY);
 		Map<String, Object> m = new HashMap<String, Object>();
-		String state = String.valueOf(map.get("buyRelationship"));
+		String state = String.valueOf(map.get("state"));
 		String msg = "/htm/wechat/index/index";
 		String promoterId = "";
 		String onlineId = "";
