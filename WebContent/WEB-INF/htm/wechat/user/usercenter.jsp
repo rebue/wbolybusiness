@@ -14,24 +14,30 @@
 <link rel="stylesheet" href="${ctx }/css/wechat/usercenter.css">
 <script src="${ctx }/js/wechat/mui.min.js"></script>
 <script src="${ctx }/js/util/commonUtil.js"></script>
+
+<script>
+
+</script>
+
 </head>
 
 <body>
+	<input type="hidden" id="verifyUserId" value="${centerData.userId}" / >
 	<nav class="mui-bar mui-bar-tab">
-		<a class="mui-tab-item-wboly" href="${ctx }/wechat/index/indexInfo.htm"> 
+		<a class="mui-tab-item-wboly" href="${ctx }/wechat/index/indexInfo.htm?userId=${userId}"> 
 			<span class="mui-icon mui-icon-home"></span> 
 			<span class="mui-tab-label">首页</span>
 		</a> 
-		<a class="mui-tab-item-wboly" href="${ctx }/wechat/goods/allGoodsList.htm"> 
+		<a class="mui-tab-item-wboly" href="${ctx }/wechat/goods/allGoodsList.htm?userId=${userId}"> 
 			<span class="mui-icon mui-icon-extra mui-icon-extra-class"></span> 
 			<span class="mui-tab-label">全部商品</span>
 		</a>
-		<a class="mui-tab-item-wboly" href="${ctx }/wechat/cart/shoppingcart.htm"> 
+		<a class="mui-tab-item-wboly" href="${ctx }/wechat/cart/shoppingcart.htm?userId=${userId}"> 
 			<span id="cartnum" class="mui-badge mui-badge-danger">0</span> 
 			<span class="mui-icon mui-icon-extra mui-icon-extra-cart"></span> 
 			<span class="mui-tab-label">购物车</span>
 		</a> 
-		<a class="mui-tab-item-wboly" href="${ctx }/wechat/user/userCenter.htm"> 
+		<a class="mui-tab-item-wboly" href="${ctx }/wechat/user/userCenter.htm?userId=${userId}"> 
 			<span class="mui-icon mui-icon-person"></span> 
 			<span class="mui-tab-label">个人中心</span>
 		</a>
@@ -60,25 +66,25 @@
 					<li class="mui-table-view-cell no-padding">
 						<ul id="icon-grid-91" class="icon-grid mui-table-view mui-grid-view mui-grid-9">
 							<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
-								<a href="${ctx }/wechat/order/myOrders.htm?type=stayPay"> 
+								<a href="${ctx }/wechat/order/myOrders.htm?type=stayPay&userId=${userId}"> 
 									<span class="icon mui-icon-extra mui-icon-extra-card"></span>
 									<div class="mui-media-body">待付款</div>
 								</a>
 							</li>
 							<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
-								<a href="${ctx }/wechat/order/myOrders.htm?type=stayTake"> 
+								<a href="${ctx }/wechat/order/myOrders.htm?type=stayTake&userId=${userId}"> 
 									<span class="icon mui-icon-extra mui-icon-extra-express"></span>
 									<div class="mui-media-body">待收货</div>
 								</a>
 							</li>
 							<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
-								<a href="${ctx }/wechat/order/myOrders.htm?type=stayReturn"> 
+								<a href="${ctx }/wechat/order/myOrders.htm?type=stayReturn&userId=${userId}"> 
 									<span class="icon mui-icon-extra mui-icon-extra-gift"></span>
 									<div class="mui-media-body">待返款</div>
 								</a>
 							</li>
 							<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
-								<a href="${ctx }/wechat/order/allAfterSalePage.htm">
+								<a href="${ctx }/wechat/order/allAfterSalePage.htm?userId=${userId}">
 									<span class="icon mui-icon-extra mui-icon-extra-custom"></span>
 									<div class="mui-media-body">售后</div>
 								</a>
@@ -86,7 +92,7 @@
 						</ul>
 					</li>
 					<li class="mui-table-view-cell">
-						<a href="${ctx }/wechat/user/myWalletPage.htm" class="mui-navigate-right notshare"> 
+						<a href="${ctx }/wechat/user/myWalletPage.htm?userId=${userId}" class="mui-navigate-right notshare"> 
 							<span class="mui-icon-extra mui-icon-extra-gold mui-pull-left"></span>我的钱包 </a>
 					</li>
 					<li class="mui-table-view-cell no-padding">
@@ -118,22 +124,22 @@
 						</ul>
 					</li>
 					<li class="mui-table-view-cell">
-						<a href="${ctx }/wechat/user/updateloginpwdpage.htm" class="mui-navigate-right notshare"> 
+						<a href="${ctx }/wechat/user/updateloginpwdpage.htm?userId=${userId}" class="mui-navigate-right notshare"> 
 							<span class="mui-icon mui-icon-compose mui-pull-left"></span> 修改或设置登录密码
 						</a>
 					</li>
-					<li class="mui-table-view-cell">
-						<a href="${ctx }/wechat/user/setLoninNamePage.htm" class="mui-navigate-right notshare"> 
+					<li  class="mui-table-view-cell">
+						<a href="${ctx }/wechat/user/setLoninNamePage.htm?userId=${userId}" class="mui-navigate-right notshare"> 
 							<span class="mui-icon mui-icon-compose mui-pull-left"></span> 修改或设置登录名称
 						</a>
 					</li>
 					<li class="mui-table-view-cell">
-						<a href="${ctx }/wechat/user/newAddressPage.htm" class="mui-navigate-right notshare"> 
+						<a href="${ctx }/wechat/user/newAddressPage.htm?userId=${userId}" class="mui-navigate-right notshare"> 
 							<span class="mui-icon mui-icon-map mui-pull-left"></span> 收货地址
 						</a>
 					</li>
 					<li class="mui-table-view-cell">
-						<a href="${ctx }/wechat/user/verifyRealNamePage.htm" class="mui-navigate-right notshare"> 
+						<a id="verify" href="${ctx }/wechat/user/verifyRealNamePage.htm"  class="mui-navigate-right notshare"> 
 							<span class="mui-icon mui-icon-paperplane mui-pull-left"></span> 申请实名认证
 						</a>
 					</li>
@@ -148,10 +154,11 @@
 	</div>
 
 	<script type="text/javascript" charset="utf-8"> 
+	
+
 		(function($, doc) {
 			$.init([LoadCartNum()]);
 			$.ready(function() {
-				
 				mui('body').on('tap','a',function(){document.location.href=this.href;});
 				mui(".mui-tab-item-wboly")[3].classList.add('mui-active');
 				mui('#usercenter_main.mui-scroll-wrapper').scroll({bounce: false});
@@ -166,15 +173,49 @@
 					tixian.addEventListener('tap', function(event) {
 						var exist = "${exist}";
 						if ("${exist}" == "true") {
-							document.location.href= "${ctx }/wechat/user/wechatWithdraw.htm";// 跳转至提现页面
+							document.location.href= "${ctx }/wechat/user/wechatWithdraw.htm?userId=${userId}";// 跳转至提现页面
 						} else {
 							mui.alert("没有发现提现账号"," ");
 						}
 					});
 				}
 				getMoney();
+				
+			    function setCookie(name, value) {
+			        var exp = new Date();
+			        exp.setTime(exp.getTime() + 60 * 60 * 1000);
+			        document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString() + ";path=/";
+			    }
+				
+				function verifyRealName(){
+					var userId=document.getElementById("verifyUserId");
+					var url="http://192.168.1.16:20088/rna/getbyuserid";
+					$.get(url,{'userId':userId.value},function(data){
+						console.log("返回的值"+data);
+						if(data==null || data ==""){
+							return;
+						}
+						data = JSON.parse(data)
+						var verify=document.getElementById("verify");
+						var html='';
+						if(data.applyState==null){
+							return;
+						}else{
+							verify.href="${ctx }/wechat/user/verifyResult.htm?userId=${userId}";
+						    setCookie("applyState", data.applyState);
+						    setCookie("rejectReason", data.rejectReason);
+
+						}
+
+					})
+					
+				}
+				verifyRealName();
 			});
 		})(mui, document);
+		
+
+		
 	</script>
 </body>
 </html>

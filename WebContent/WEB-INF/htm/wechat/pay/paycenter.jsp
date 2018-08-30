@@ -20,7 +20,7 @@
 
 <body>
 	<header class="mui-bar mui-bar-nav not-border">
-		<a class="mui-icon mui-icon-left-nav mui-pull-left" href="${ctx }/wechat/goods/allGoodsList.htm" id="action_back"></a>
+		<a class="mui-icon mui-icon-left-nav mui-pull-left" href="${ctx }/wechat/goods/allGoodsList.htm?promoterId=${userId}" id="action_back"></a>
 		<h1 class="mui-title">支付中心</h1>
 	</header>
 
@@ -138,7 +138,7 @@
 					}
 
 					if (payby == 1) {
-						window.location.href = "${ctx }/wechat/pay/toPay.htm?orderId=${payOrderId}"
+						window.location.href = "${ctx }/wechat/pay/toPay.htm?orderId=${payOrderId}&promoterId=${userId}"
 						return;
 					}
 
@@ -195,7 +195,7 @@
 												loading(2);
 												flag = true;
 												if (data.flag == true) {
-													window.location.href = "${ctx }/wechat/success/vpay/${payOrderId}.htm";
+													window.location.href = "${ctx }/wechat/success/vpay/${payOrderId}.htm?promoterId=${userId}";
 													return;
 												};
 												
@@ -235,7 +235,7 @@
 										console.log(data.message);
 										flag = true;
 										if (data.flag == true) {
-											window.location.href = "${ctx }/wechat/success/vpay/${payOrderId}.htm";
+											window.location.href = "${ctx }/wechat/success/vpay/${payOrderId}.htm?promoterId=${userId}";
 											return;
 										};
 										mui.toast(data.message);

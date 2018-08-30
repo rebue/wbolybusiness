@@ -384,6 +384,39 @@ public class SysCache extends Base64EnOut {
 		CacheUtil.putObject(key, 60 * 60 * 24 * 20, Encode(value));
 		System.err.println(openid + "：已缓存成功授权数据：" + value);
 	}
+	
+	/**
+	 * 保存用户购买关系
+	 * @param userId
+	 * @param value
+	 */
+	public static void setBuyRelationship(String userId, String value) {
+		if (userId == null || userId.equals("")) {
+			return;
+		}
+		String key = "wechat:buyrelationship:" + userId;
+		CacheUtil.putObject(key, 60, value);
+		System.err.println(userId + "：成功已缓存用户购买关系：" + value);
+	}
+	
+	/**
+	 * 获取用户购买关系
+	 * @param userId
+	 * @return
+	 */
+	public static String getBuyRelationship(String userId) {
+		if (userId == null || userId.equals("")) {
+			return null;
+		}
+		String key = "wechat:buyrelationship:" + userId;
+		Object obj = CacheUtil.getObject(key);
+		if (obj != null) {
+			System.err.println(userId + "：已获取到授权信息：" + obj.toString());
+			return obj.toString();
+		} else {
+			return null;
+		}
+	}
 
 	/**
 	 * @Name: 获取微信用户授权信息

@@ -114,7 +114,7 @@
 							html += '<div class="order-list-unit" data-statu="'+data.message[i].state+'">'
 							html += '<div class="shoptop mui-table-view-cell">'
 							localStorage.setItem(b.encode(data.message[i].orderId), JSON.stringify(data.message[i]));
-							html +='<a href="${ctx}/wechat/myorder/'+b.encode(data.message[i].orderId)+'.htm" class="mui-navigate-right">'						
+							html +='<a href="${ctx}/wechat/myorder/'+b.encode(data.message[i].orderId)+'.htm?promoterId=${userId}" class="mui-navigate-right">'						
 						
 							html += '<span class="mui-pull-left spt">订单号：'+ data.message[i].orderId+'</span>'		
 							html += '</a>'
@@ -133,7 +133,7 @@
 								html += '			<img src="${goodsImgUrl}'+goodsQsmm+'_187_187.' + strs[1] + '" alt="" class="goodspic">';
 								html += '		</div>'
 								html += '	<div class="car-inner-body">'
-								html += '<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '">'+ data.message[i].items[j].onlineTitle +'</a></h5>'
+								html += '<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '&promoterId=${userId}' + '">'+ data.message[i].items[j].onlineTitle +'</a></h5>'
 								html += '	<p>规格：'+ data.message[i].items[j].specName+'</p><br/>'
 								html += '	<div class="price-area">'
 								html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) +'</span></span>'
@@ -288,7 +288,7 @@
 							html += '<div class="order-list-unit" data-statu="'+data.message[i].state+'">'
 							html += '<div class="shoptop mui-table-view-cell">'
 							localStorage.setItem(b.encode(data.message[i].orderId), JSON.stringify(data.message[i]));
-							html +='<a href="${ctx}/wechat/myorder/'+b.encode(data.message[i].orderId)+'.htm" class="mui-navigate-right">'						
+							html +='<a href="${ctx}/wechat/myorder/'+b.encode(data.message[i].orderId)+'.htm?promoterId=${userId}" class="mui-navigate-right">'						
 						
 							html += '<span class="mui-pull-left spt">订单号：'+ data.message[i].orderId+'</span>'		
 							html += '</a>'
@@ -307,7 +307,7 @@
 								html += '			<img src="${goodsImgUrl}'+goodsQsmm+'_187_187.' + strs[1] + '" alt="" class="goodspic">';
 								html += '		</div>'
 								html += '	<div class="car-inner-body">'
-								html += '<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '">'+ data.message[i].items[j].onlineTitle +'</a></h5>'
+								html += '<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '&promoterId=${userId}' + '">'+ data.message[i].items[j].onlineTitle +'</a></h5>'
 								html += '	<p>规格：'+ data.message[i].items[j].specName+'</p><br/>'
 								html += '	<div class="price-area">'
 								html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) +'</span></span>'

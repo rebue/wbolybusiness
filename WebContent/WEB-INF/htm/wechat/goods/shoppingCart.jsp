@@ -24,20 +24,20 @@
 	</header>
 
 	<nav class="mui-bar mui-bar-tab">
-		<a class="mui-tab-item-wboly" href="${ctx }/wechat/index/indexInfo.htm"> 
+		<a class="mui-tab-item-wboly" href="${ctx }/wechat/index/indexInfo.htm?promoterId=${userId}"> 
 			<span class="mui-icon mui-icon-home"></span> 
 			<span class="mui-tab-label">首页</span>
 		</a> 
-		<a class="mui-tab-item-wboly" href="${ctx }/wechat/goods/allGoodsList.htm"> 
+		<a class="mui-tab-item-wboly" href="${ctx }/wechat/goods/allGoodsList.htm?promoterId=${userId}"> 
 			<span class="mui-icon mui-icon-extra mui-icon-extra-class"></span> 
 			<span class="mui-tab-label">全部商品</span>
 		</a> 
-		<a class="mui-tab-item-wboly" href="${ctx }/wechat/cart/shoppingcart.htm"> 
+		<a class="mui-tab-item-wboly" href="${ctx }/wechat/cart/shoppingcart.htm?promoterId=${userId}"> 
 			<span id="cartnum" class="mui-badge mui-badge-danger">0</span> 
 			<span class="mui-icon mui-icon-extra mui-icon-extra-cart"></span> 
 			<span class="mui-tab-label">购物车</span>
 		</a> 
-		<a class="mui-tab-item-wboly" href="${ctx }/wechat/user/userCenter.htm"> 
+		<a class="mui-tab-item-wboly" href="${ctx }/wechat/user/userCenter.htm?promoterId=${userId}"> 
 			<span class="mui-icon mui-icon-person"></span>
 			<span class="mui-tab-label">个人中心</span>
 		</a>
@@ -427,12 +427,12 @@
 							html += '		</div>';
 							html += '		<div class="car-inner-box">';
 							html += '			<div class="car-inner-box-img">';
-							html += '				<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].onlineId + '">';
+							html += '				<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].onlineId + '&promoterId=${userId}' + '">';
 							html += '					<img src="${goodsImgUrl}' + data.message[i].picPath + '" alt="" class="goodspic"/>';
 							html += '				</a>';
 							html += '			</div>';
 							html += '			<div class="car-inner-body">';
-							html += '				<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].onlineId + '" name="goodsTitle">' + data.message[i].onlineTitle + '</a></h5>';
+							html += '				<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].onlineId + '&promoterId=${userId}' + '" name="goodsTitle">' + data.message[i].onlineTitle + '</a></h5>';
 							html += '				<p name="onlineSpec">' + data.message[i].onlineSpec + '&nbsp;&nbsp;&nbsp;</p><br/>';
 							html += '				<div class="price-area">';
 							html += '					<span class="m-price">¥<span>' + formatCurrency(data.message[i].salePrice) + '</span></span>';

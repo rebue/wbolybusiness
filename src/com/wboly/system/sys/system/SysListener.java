@@ -96,6 +96,12 @@ public class SysListener implements ServletContextListener {
 		String loginSignKey =  PropertiesUtil.getPropertiesValue("system.properties", "LOGINSIGNKEY").toString();
 		SysContext.LOGINSIGNKEY = loginSignKey;
 		
+		/**
+		 * 微信appid
+		 */
+		String wxAppid = PropertiesUtil.getPropertiesValue("system.properties", "WXAPPID").toString();
+		SysContext.wxAppId = wxAppid;
+		
 		// 商品轮播图和商品主图路径
 		sc.setAttribute("goodsImgUrl", imgUrl);
 		// 保存图片路径进Session

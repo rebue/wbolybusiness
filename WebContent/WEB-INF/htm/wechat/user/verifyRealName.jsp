@@ -30,9 +30,11 @@
 	type="text/javascript"></script>
 <script src="${ctx }/js/util/commonUtil.js"></script>
 
+
 </head>
 
 <body class="account-page">
+	<input type="hidden" id="verifyUserId" value="${userId}" / >
 	<header class="mui-bar mui-bar-nav">
 		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"
 			id="action_back"></a>
@@ -41,13 +43,13 @@
 	<div class="mui-content">
 		<div class="mui-input-group">
 			<div class="mui-input-row phone-row">
-				<label>名字</label> <input id='realName' type="text"
+				<label>名字</label> <input id='realName' type="text" style="margin-top:-0.3rem;"
 					class="mui-input-clear mui-input" placeholder="请输入您的真实名字">
 			</div>
 		</div>
 		<div class="mui-input-group">
 			<div class="mui-input-row phone-row">
-				<label>身份证</label> <input id='idCard' type="text"
+				<label style="width:22%;padding-right:0rem;" >身份证</label> <input id='idCard' style="margin-top:-0.3rem;" type="text"
 					class="mui-input-clear mui-input" placeholder="请输入您的身份证号码">
 			</div>
 		</div>
@@ -86,15 +88,16 @@
 	<script src="${ctx }/js/wechat/mui.min.js"></script>
 	<script src="${ctx }/js/wechat/mui.enterfocus.js"></script>
 	<script src="${ctx }/js/util/commonUtil.js"></script>
+	<script type="text/javascript" src="${ctx }/js/wechat/upload.js"></script>
 	<script type="text/javascript">
-		var label = "点击上传身份证正反面照片";
-		var NumLimit = 2;
+		var label = "点击上传手持身份证正反面以及身份证正反面照片";
+		var NumLimit = 4;
 		var SizeLimit = 9 * 1024 * 1024; // 15 M     
 		var SingleSizeLimit = 3 * 1024 * 1024; // 3 M 
 		// 上传图片
 		var arr = new Array();
 		var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
-		var serverUrl = 'http://127.0.0.1:20280/ise/upload';
+		var serverUrl = 'http://192.168.1.16:20280/ise/upload'; 
 		(function($, doc) {
 			mui.init();
 			$.ready(function() {
@@ -165,7 +168,6 @@
 			mask.show();
 			var realName = mui("#realName")[0].value;
 			var idCard = mui("#idCard")[0].value;
-			
 			mui.ajax('${ctx}/wechat/user/verifyRealNameApply.htm', { //url测试的
 				type : 'post',
 				dataType : 'json',
@@ -179,7 +181,7 @@
 					console.log(data);
 					if (data.result == 1) {
 						mui.alert(data.msg, ' ', function() {
-							window.location.href = "${ctx}/wechat/user/userCenter.htm"
+							window.location.href = "${ctx}/wechat/user/userCenter.htm?promoterId=${userId}"
 						});
 						return;
 					};
@@ -192,7 +194,7 @@
 			});
 		};
 	</script>
-	<script type="text/javascript" src="${ctx }/js/wechat/upload.js"></script>
+
 </body>
 
 </html>

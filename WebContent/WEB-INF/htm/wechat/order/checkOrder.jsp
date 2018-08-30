@@ -71,7 +71,7 @@
 				commonAddress();
 				//点击地址栏，转到地址设置页面
 				mui("#AddList")[0].addEventListener("tap",function(e){
-					window.location.href = "${ctx}/wechat/user/newAddressPage.htm";
+					window.location.href = "${ctx}/wechat/user/newAddressPage.htm?promoterId=${userId}";
 				});
 
 				//订单商品的详细信息，在点击去付款按钮时会整理成一个JSON，详见控制台
@@ -129,7 +129,7 @@
 							console.log(data);
 							loading(2);
 							if (data.flag) {
-								window.location.href = "${ctx}/wechat/pay/center/" + data.orderId + ".htm";
+								window.location.href = "${ctx}/wechat/pay/center/" + data.orderId + ".htm?promoterId=${userId}";
 								return;
 							}
 							mui.toast(data.message);
@@ -206,7 +206,7 @@
 					html += '		<div class="car-inner-body">';
 					html += '			<input type="hidden" name="cartId" value="' + item.cartId + '"/>';
 					html += '			<h5>';
-					html += '				<a href="${ctx}/wechat/goods/' + item.parm + '.htm">' + item.onlineTitle + '</a>';
+					html += '				<a href="${ctx}/wechat/goods/' + item.parm + '.htm?promoterId=${userId}">' + item.onlineTitle + '</a>';
 					html += '			</h5>';
 					html += '			<p>' + item.onlineSpec + '</p><br/>';
 					html += '			<div class="price-area">';

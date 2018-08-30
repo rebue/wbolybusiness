@@ -20,8 +20,8 @@
 		<p>您的宝贝就要飞向您的怀抱啦，请保持电话畅通</p>
 	</div>
 	<div class="btn-box">
-		<button type="button" class="mui-btn" onclick="window.location.href='${ctx }/wechat/goods/allGoodsList.htm'">继续购物</button>
-		<button type="button" class="mui-btn" onclick="window.location.href='${ctx }/wechat/order/myOrders.htm'">返回</button>
+		<button type="button" class="mui-btn" onclick="window.location.href='${ctx }/wechat/goods/allGoodsList.htm?promoterId=${userId }'">继续购物</button>
+		<button type="button" class="mui-btn" onclick="window.location.href='${ctx }/wechat/order/myOrders.htm?promoterId=${userId }'">返回</button>
 	</div>
 </body>
 </html>

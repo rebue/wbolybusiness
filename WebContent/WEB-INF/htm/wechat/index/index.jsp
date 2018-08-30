@@ -23,7 +23,7 @@
 			<h5 class="mui-content-padded wboly-title-bar">
 				每日热门
 				<div class="wboly-bar-more">
-					<a href="${ctx }/wechat/goods/allGoodsList.htm">查询更多</a> 
+					<a href="${ctx }/wechat/goods/allGoodsList.htm?promoterId=${userId}">查询更多</a> 
 					<span class="mui-icon mui-icon-arrowright"></span>
 				</div>
 			</h5>
@@ -35,7 +35,7 @@
 			<!--商品列表结束-->
 
 			<h5 class="mui-text-center bottom-more">
-				<a href="${ctx }/wechat/goods/allGoodsList.htm">点击查看更多商品 <span class="mui-icon mui-icon-arrowright"></span></a>
+				<a href="${ctx }/wechat/goods/allGoodsList.htm?promoterId=${userId}">点击查看更多商品 <span class="mui-icon mui-icon-arrowright"></span></a>
 			</h5>
 		</div>
 	</div>
@@ -226,8 +226,8 @@
 						// 根据逗号获取图片后缀
 						strs = data[i].picPath.split(".");
 						html += '<div class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">';
-						html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data[i].onlineId + '" class="imghref"><img src="${goodsImgUrl}' + data[i].picPath + '">' + '</a>';
-						html += '	<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data[i].onlineId + '">' + data[i].onlineTitle + '</a></h5>';
+						html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data[i].onlineId + '&promoterId=${userId}' + '" class="imghref"><img src="${goodsImgUrl}' + data[i].picPath + '">' + '</a>';
+						html += '	<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data[i].onlineId + '&promoterId=${userId}' + '">' + data[i].onlineTitle + '</a></h5>';
 						html += '	<p>';
 						html +=	'		<span class="price">￥<em>' + formatCurrency(data[i].salePrice) + '</em></span>';
 						html +=	' 		<span class="back-money">返 <em>' + formatCurrency(data[i].cashbackAmount) + '</em></span>';

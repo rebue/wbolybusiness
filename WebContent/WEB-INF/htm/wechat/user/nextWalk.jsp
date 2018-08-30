@@ -107,7 +107,7 @@
 										mui.alert("修改成功",' ',function(){
 											var url = localStorage.getItem("payurl");
 											if(url == null || url==""){
-												url ="${ctx }/wechat/order/myOrders.htm";
+												url ="${ctx }/wechat/order/myOrders.htm?promoterId=${userId}";
 											}
 											window.location.href=url;
 										});

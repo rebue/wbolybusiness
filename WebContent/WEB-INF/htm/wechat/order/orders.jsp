@@ -111,7 +111,7 @@
 							html+='<div class="order-list-unit" data-statu="' + data.message[i].orderState + '">'
 							html+='<div class="shoptop mui-table-view-cell">'
 							localStorage.setItem(b.encode(data.message[i].orderCode), JSON.stringify(data.message[i]));
-							html+='<a href="${ctx}/wechat/myorder/'+b.encode(data.message[i].orderCode)+'.htm" class="mui-navigate-right">'	
+							html+='<a href="${ctx}/wechat/myorder/'+b.encode(data.message[i].orderCode)+'.htm?promoterId=${userId}" class="mui-navigate-right">'	
 							if (data.message[i].orderState == 1) {
 								html+='<span class="status">待支付</span>';
 							} else if (data.message[i].orderCode == 2) {
@@ -153,7 +153,7 @@
 								html += '			<img src="${goodsImgUrl}' + goodsQsmm + '" alt="" class="goodspic">';
 								html += '		</div>';
 								html += '		<div class="car-inner-body">';
-								html += '			<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId="' + data.message[i].items[j].onlineId + '>' + data.message[i].items[j].onlineTitle +'</a></h5>';
+								html += '			<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId="' + data.message[i].items[j].onlineId + '&promoterId=${userId}' + '>' + data.message[i].items[j].onlineTitle +'</a></h5>';
 								html += '			<p>规格：'+ data.message[i].items[j].specName+'</p><br/>';
 								html += '			<div class="price-area">';
 								html += '				<span class="m-price">¥ <span>' + formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
@@ -365,12 +365,12 @@
 								html += '	<input type="hidden" name="goodsId" value="' + data.message[i].items[j].onlineId + '">';
 								html += '<div class="car-inner-box">';
 								html += '<div class="car-inner-box-img">';
-								html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '">';
+								html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '&promoterId=${userId}' + '">';
 								html += '		<img src="${goodsImgUrl}' + goodsQsmm + '" alt="" class="goodspic">';
 								html += '	</a>';
 								html += '</div>';
 								html += '<div class="car-inner-body">';
-								html += '	<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '">'+ data.message[i].items[j].onlineTitle +'</a></h5>';
+								html += '	<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '&promoterId=${userId}' + '">'+ data.message[i].items[j].onlineTitle +'</a></h5>';
 								html += '	<p>规格：' + data.message[i].items[j].specName 	+ '</p><br/>';
 								html += '	<div class="price-area">';
 								html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
@@ -558,7 +558,7 @@
 				return;
 			}
 			console.log(orderId);
-			window.location.href = "${ctx}/wechat/order/queryLogistics.htm?orderId=" + orderId;
+			window.location.href = "${ctx}/wechat/order/queryLogistics.htm?promoterId=" + orderId;
 		}
 	</script>
 </body>

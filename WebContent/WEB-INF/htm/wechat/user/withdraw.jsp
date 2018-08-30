@@ -84,7 +84,7 @@
 					success:function(data){
 						if (data.flag == true) {
 							mui.toast(data.msg);
-							window.location.href="${ctx }/wechat/user/wechatWithdraw.htm";
+							window.location.href="${ctx }/wechat/user/wechatWithdraw.htm?promoterId=${userId}";
 						} else {
 							mui.toast(data.msg);
 						}
@@ -112,7 +112,7 @@
 					success:function(data){
 						if (data.flag == true) {
 							mui.toast(data.msg);
-							window.location.href="${ctx }/wechat/user/wechatWithdraw.htm";
+							window.location.href="${ctx }/wechat/user/wechatWithdraw.htm?promoterId=${userId}";
 						} else {
 							mui.toast(data.msg);
 						}
