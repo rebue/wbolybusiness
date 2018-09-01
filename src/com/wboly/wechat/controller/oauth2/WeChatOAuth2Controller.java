@@ -106,7 +106,7 @@ public class WeChatOAuth2Controller extends SysController {
 		ModelAndView andView = new ModelAndView();
 		
 		// 本地
-		/*String code = request.getParameter("code");
+		String code = request.getParameter("code");
 		// 微信授权登陆获取到的用户信息
 		String userData = getUserData(code, response);
 		System.err.println("微信授权登陆返回的用户信息:" + userData);
@@ -118,7 +118,7 @@ public class WeChatOAuth2Controller extends SysController {
 		String nickname = String.valueOf(userMap.get("nickname"));
 		String headimgurl = String.valueOf(userMap.get("headimgurl"));
 
-		System.out.println("微信回调解码之前的参数为：" + String.valueOf(wxMaps));*/
+		System.out.println("微信回调解码之前的参数为：" + String.valueOf(wxMaps));
 
 		/*
 		 * // 对微信回调参数进行解码 MapUtils.decodeUrl(wxMaps); // 微信回调登录校验 if
@@ -130,10 +130,10 @@ public class WeChatOAuth2Controller extends SysController {
 
 		// 线上
 		
-		String openid = String.valueOf(wxMaps.get("openid"));
-		String unionid = String.valueOf(wxMaps.get("unionid"));
-		String nickname = String.valueOf(wxMaps.get("nickname"));
-		String headimgurl = String.valueOf(wxMaps.get("headimgurl"));
+//		String openid = String.valueOf(wxMaps.get("openid"));
+//		String unionid = String.valueOf(wxMaps.get("unionid"));
+//		String nickname = String.valueOf(wxMaps.get("nickname"));
+//		String headimgurl = String.valueOf(wxMaps.get("headimgurl"));
 		 
 
 		System.out.println("微信登录获取到的用户 信息为：openid=" + openid + "====unionid=" + unionid + "=====nickname=" + nickname
@@ -219,9 +219,9 @@ public class WeChatOAuth2Controller extends SysController {
 		}
 		System.out.println("微信用户登录的参数为：" + String.valueOf(map));
 		String wechatLoginUrl = SysContext.USERCENTERURL + "/user/login/by/wx";
-		String wechatLoginResults = OkhttpUtils.postByJsonParams(wechatLoginUrl, map) /*
-																						 * "{\"result\":\"1\", \"msg\":\"/htm/wechat/index/index\", \"userId\":\"473013090879799297\", \"expirationTime\":\"2018-8-10\", \"sign\":\"asdaadadadadadadda\"}"
-																						 */ ;
+		String wechatLoginResults = OkhttpUtils.postByJsonParams(wechatLoginUrl, map)/*
+																						  "{\"result\":\"1\", \"msg\":\"/htm/wechat/index/index\", \"userId\":\"472984484858298368\", \"expirationTime\":\"2018-8-10 20:18:18\", \"sign\":\"asdaadadadadadadda\"}"
+																						  */;
 		if (!wechatLoginResults.equals("") && !wechatLoginResults.equals("null") && wechatLoginResults != null) {
 			ObjectMapper objectMapper = new ObjectMapper();
 			@SuppressWarnings("unchecked")

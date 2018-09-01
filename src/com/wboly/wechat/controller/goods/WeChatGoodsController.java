@@ -608,4 +608,101 @@ public class WeChatGoodsController extends SysController {
 		System.out.println("获取到的商品规格详情信息的返回值为：" + results);
 		this.render(response, results);
 	}
+	
+	/**
+	 * 获取全部全返商品列表
+	 */
+	
+	@RequestMapping(value = "/wechat/goods/fullReturnGoodsList")
+	public ModelAndView allfullReturnGoodsList(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+		System.out.println("开始获取全返商品列表");
+		ModelAndView mav = new ModelAndView();
+		Object shopByColumn = SessionUtil.getShopData(request);
+		if (shopByColumn != null) {
+			mav.addObject("shop", (Map<String, Object>) shopByColumn);
+		} else {
+			mav.addObject("shop", retuenShop());
+		}
+		String classId = request.getParameter("c");
+		if (classId != null) {
+			String method = request.getMethod();
+			if (method.equals("GET")) {
+				byte[] bytes = classId.getBytes("iso-8859-1");
+
+				classId = new String(bytes, "UTF-8");
+
+				String regex = "\u4e00-\u9fa5";
+
+				Pattern pat = Pattern.compile(regex);
+
+				Matcher mat = pat.matcher(classId);
+
+				classId = mat.replaceAll("");
+			}
+			mav.addObject("goodsclass", classId);
+		} else {
+			mav.addObject("goodsclass", 0);
+		}
+		String serach = request.getParameter("searchbar");
+		if (serach != null) {
+			String method = request.getMethod();
+			if (method.equals("GET")) {
+				byte[] bytes = serach.getBytes("iso-8859-1");
+
+				serach = new String(bytes, "UTF-8");
+			}
+			mav.addObject("serach", serach);
+		} else {
+			mav.addObject("serach", "");
+		}
+		mav.setViewName("/htm/wechat/goods/fullReturnGoodsList");
+		return mav;
+	}
+	
+	/**
+	 * @Name: 获取全返商品列表
+	 * @throws TException
+	 * @throws IOException 
+	 * @Author: nick
+	 */
+	@RequestMapping(value = "/wechat/goods/getFullReturnGoodsList")
+	public void getFullReturnGoodsList(HttpServletRequest request, HttpServletResponse response) throws TException, IOException {
+		// 排序方式标识,0:综合; ;2:价格
+		String sortIde = request.getParameter("type");
+		// 排序字段
+		String sortField = "";
+		if (sortIde != null && sortIde.equals("2")) {
+			sortField = "oos.SALE_PRICE";
+		} else {
+			sortField = "oo.ONLINE_TIME";
+		}
+		
+		// 升序降序标识,1:升序;0:降序
+		String sortType = request.getParameter("sortType");
+		if (sortType != null && sortType.equals("1")) {
+			sortType = "asc";
+		} else {
+			sortType = "desc";
+		}
+		// 起始条数
+		String start = request.getParameter("start");
+		// 每页条数
+		String limit = request.getParameter("limit");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("sortname", sortField);
+		map.put("sortOrder", sortType);
+		map.put("start", start);
+		map.put("size", limit);
+		// 搜索关键字
+		String keywords = request.getParameter("keywords");
+		if (keywords != null && !keywords.equals("") && !keywords.equals("null")) {
+			map.put("onlineTitle", keywords);
+		}
+		System.out.println("获取已上线商品列表信息的参数为：" + String.valueOf(map));
+		// 获取已上线商品列表
+		String result = OkhttpUtils.get(SysContext.ONLINEURL + "/onl/online/list", map);
+		System.err.println("获取到的已上线商品列表参数为：" + result);
+		this.render(response, result);
+	}
 }

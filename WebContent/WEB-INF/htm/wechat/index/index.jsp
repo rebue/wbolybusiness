@@ -29,7 +29,7 @@
 				</a>
 				</li>
 				<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3"><a
-					href="${ctx }/wechat/collect/collectPage.htm"> <span
+					href="${ctx }/wechat/goods/fullReturnGoodsList.htm"> <span
 						class="wboly-icon"> <img
 							src="${ctx }/images/wechat/concern.png" alt="" />
 					</span>
