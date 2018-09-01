@@ -19,7 +19,42 @@
 				<div class="swiper-pagination"></div>
 			</div>
 			<!--轮播结束-->
-
+			<!--中导航开始-->
+			<ul id="icon-grid-9" class="mui-table-view mui-grid-view mui-grid-9">
+				<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
+					<a href="#" id="scanQRCode"> <span class="wboly-icon"> <img
+							src="${ctx }/images/wechat/richScan.png" alt="" />
+					</span>
+						<div class="mui-media-body">扫一扫</div>
+				</a>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3"><a
+					href="${ctx }/wechat/collect/collectPage.htm"> <span
+						class="wboly-icon"> <img
+							src="${ctx }/images/wechat/concern.png" alt="" />
+					</span>
+						<div class="mui-media-body">全返商品</div></a></li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3"><a
+					href="${ctx }/wechat/goods/allGoodsList.htm?promoterId=${userId}"> <span
+						class="wboly-icon"> <img
+							src="${ctx }/images/wechat/my_wallet.png" alt="" />
+					</span>
+						<div class="mui-media-body">我的钱包</div></a></li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3"><a
+					href="${ctx }/wechat/collect/collectPage.htm"> <span
+						class="wboly-icon"> <img
+							src="${ctx }/images/wechat/concern.png" alt="" />
+					</span>
+						<div class="mui-media-body">我的关注</div></a></li>
+<!-- 				<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3"><a -->
+<!-- 					href="http://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzIwOTI0MjAxMg==#wechat_redirect"> -->
+<!-- 						<span class="wboly-icon"> <img -->
+<%-- 							src="${ctx }/images/wechat/wechat.png" alt="" /> --%>
+<!-- 					</span> -->
+<!-- 						<div class="mui-media-body">公众号</div> -->
+<!-- 				</a></li> -->
+			</ul>
+			<!--中导航开始-->
 			<h5 class="mui-content-padded wboly-title-bar">
 				每日热门
 				<div class="wboly-bar-more">
