@@ -688,12 +688,15 @@ public class WeChatGoodsController extends SysController {
 		String start = request.getParameter("start");
 		// 每页条数
 		String limit = request.getParameter("limit");
+		//板块类型
+		String subjectType = request.getParameter("subjectType");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("sortname", sortField);
 		map.put("sortOrder", sortType);
 		map.put("start", start);
 		map.put("size", limit);
+		map.put("subjectType", subjectType);
 		// 搜索关键字
 		String keywords = request.getParameter("keywords");
 		if (keywords != null && !keywords.equals("") && !keywords.equals("null")) {
