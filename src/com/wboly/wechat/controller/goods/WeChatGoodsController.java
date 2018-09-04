@@ -50,6 +50,7 @@ public class WeChatGoodsController extends SysController {
 	private VblGoodsService vblgoodsService;
 	@Autowired
 	private VblOrderService vblorderService;
+
 	/**
 	 * @Name: 商品详情页面
 	 * @throws Exception
@@ -223,11 +224,12 @@ public class WeChatGoodsController extends SysController {
 	/**
 	 * @Name: 获取全部商品列表
 	 * @throws TException
-	 * @throws IOException 
+	 * @throws IOException
 	 * @Author: nick
 	 */
 	@RequestMapping(value = "/wechat/goods/getAllGoodsList")
-	public void getAllGoodsList(HttpServletRequest request, HttpServletResponse response) throws TException, IOException {
+	public void getAllGoodsList(HttpServletRequest request, HttpServletResponse response)
+			throws TException, IOException {
 		// 排序方式标识,0:综合; ;2:价格
 		String sortIde = request.getParameter("type");
 		// 排序字段
@@ -237,7 +239,7 @@ public class WeChatGoodsController extends SysController {
 		} else {
 			sortField = "oo.ONLINE_TIME";
 		}
-		
+
 		// 升序降序标识,1:升序;0:降序
 		String sortType = request.getParameter("sortType");
 		if (sortType != null && sortType.equals("1")) {
@@ -249,12 +251,27 @@ public class WeChatGoodsController extends SysController {
 		String start = request.getParameter("start");
 		// 每页条数
 		String limit = request.getParameter("limit");
-		
+		// 最低价
+		String lowPrice = request.getParameter("lowPrice");
+		// 最高价
+		String hignPrice = request.getParameter("hignPrice");
+		// 商品类型
+		String subjectType = request.getParameter("subjectType");
+		System.out.println("商品类型为：" + subjectType);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("sortname", sortField);
 		map.put("sortOrder", sortType);
 		map.put("start", start);
 		map.put("size", limit);
+		if (lowPrice != null && !lowPrice.equals("") && !lowPrice.equals("null")) {
+			map.put("lowPrice", lowPrice);
+		}
+		if (hignPrice != null && !hignPrice.equals("") && !hignPrice.equals("null")) {
+			map.put("hignPrice", hignPrice);
+		}
+		if (subjectType != null && !subjectType.equals("") && !subjectType.equals("null")) {
+			map.put("subjectType", subjectType);
+		}
 		// 搜索关键字
 		String keywords = request.getParameter("keywords");
 		if (keywords != null && !keywords.equals("") && !keywords.equals("null")) {
@@ -300,7 +317,7 @@ public class WeChatGoodsController extends SysController {
 	/**
 	 * @Name: 上拉获取商品列表
 	 * @throws TException
-	 * @throws IOException 
+	 * @throws IOException
 	 * @Author: nick
 	 */
 	@RequestMapping(value = "/wechat/goods/getGoodsList")
@@ -314,7 +331,7 @@ public class WeChatGoodsController extends SysController {
 		} else {
 			sortField = "oo.ONLINE_TIME";
 		}
-		
+
 		// 升序降序标识,1:升序;0:降序
 		String sortType = request.getParameter("sortType");
 		if (sortType != null && sortType.equals("1")) {
@@ -326,7 +343,7 @@ public class WeChatGoodsController extends SysController {
 		String start = request.getParameter("start");
 		// 每页条数
 		String limit = request.getParameter("limit");
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("sortname", sortField);
 		map.put("sortOrder", sortType);
@@ -523,7 +540,8 @@ public class WeChatGoodsController extends SysController {
 		if (classId != null && !classId.equals("null") && !classId.equals("0")) {
 			Object id = classId.substring(classId.lastIndexOf("_") + 1);
 			if (id instanceof Integer) {
-				List<Map<String, Object>> BrandList = vblindexService.listBrandByClassId(Integer.parseInt(id.toString()));
+				List<Map<String, Object>> BrandList = vblindexService
+						.listBrandByClassId(Integer.parseInt(id.toString()));
 				WriterJsonUtil.writerJson(response, BrandList);
 			}
 		} else {
@@ -531,12 +549,11 @@ public class WeChatGoodsController extends SysController {
 			WriterJsonUtil.writerJson(response, BrandList);
 		}
 	}
-	
+
 	/**
-	 * 获取商品轮播图
-	 * Title: goodsCarouselPic
-	 * Description: 
-	 * @throws IOException 
+	 * 获取商品轮播图 Title: goodsCarouselPic Description:
+	 * 
+	 * @throws IOException
 	 * @date 2018年4月1日 下午2:40:12
 	 */
 	@RequestMapping("/wechat/goods/goodsCarouselPic")
@@ -555,11 +572,10 @@ public class WeChatGoodsController extends SysController {
 		System.err.println("获取到的上线商品轮播图的返回值为：" + results);
 		this.render(response, results);
 	}
-	
+
 	/**
-	 * 获取商品详情信息
-	 * Title: selectGoodsDetails
-	 * Description: 
+	 * 获取商品详情信息 Title: selectGoodsDetails Description:
+	 * 
 	 * @param request
 	 * @param response
 	 * @throws IOException
@@ -570,21 +586,21 @@ public class WeChatGoodsController extends SysController {
 		// 获取商品详情信息
 		String results = "";
 		try {
-			results = OkhttpUtils.get(SysContext.ONLINEURL + "/onl/online/list?id=" + request.getParameter("onlineId").trim());
+			results = OkhttpUtils
+					.get(SysContext.ONLINEURL + "/onl/online/list?id=" + request.getParameter("onlineId").trim());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		System.out.println("获取到的商品详情信息为：" + results);
 		this.render(response, results);
 	}
-	
+
 	/**
-	 * 获取上线商品规格详情信息
-	 * Title: selectGoodsSpecDetails
-	 * Description: 
+	 * 获取上线商品规格详情信息 Title: selectGoodsSpecDetails Description:
+	 * 
 	 * @param request
 	 * @param response
-	 * @throws IOException 
+	 * @throws IOException
 	 * @date 2018年4月1日 下午4:38:15
 	 */
 	@RequestMapping("/wechat/goods/selectGoodsSpecDetails")
@@ -608,13 +624,14 @@ public class WeChatGoodsController extends SysController {
 		System.out.println("获取到的商品规格详情信息的返回值为：" + results);
 		this.render(response, results);
 	}
-	
+
 	/**
 	 * 获取全部全返商品列表
 	 */
-	
+
 	@RequestMapping(value = "/wechat/goods/fullReturnGoodsList")
-	public ModelAndView allfullReturnGoodsList(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+	public ModelAndView allfullReturnGoodsList(HttpServletRequest request, HttpServletResponse response)
+			throws UnsupportedEncodingException {
 		System.out.println("开始获取全返商品列表");
 		ModelAndView mav = new ModelAndView();
 		Object shopByColumn = SessionUtil.getShopData(request);
@@ -658,15 +675,16 @@ public class WeChatGoodsController extends SysController {
 		mav.setViewName("/htm/wechat/goods/fullReturnGoodsList");
 		return mav;
 	}
-	
+
 	/**
 	 * @Name: 获取全返商品列表
 	 * @throws TException
-	 * @throws IOException 
+	 * @throws IOException
 	 * @Author: nick
 	 */
 	@RequestMapping(value = "/wechat/goods/getFullReturnGoodsList")
-	public void getFullReturnGoodsList(HttpServletRequest request, HttpServletResponse response) throws TException, IOException {
+	public void getFullReturnGoodsList(HttpServletRequest request, HttpServletResponse response)
+			throws TException, IOException {
 		// 排序方式标识,0:综合; ;2:价格
 		String sortIde = request.getParameter("type");
 		// 排序字段
@@ -676,7 +694,7 @@ public class WeChatGoodsController extends SysController {
 		} else {
 			sortField = "oo.ONLINE_TIME";
 		}
-		
+
 		// 升序降序标识,1:升序;0:降序
 		String sortType = request.getParameter("sortType");
 		if (sortType != null && sortType.equals("1")) {
@@ -688,9 +706,9 @@ public class WeChatGoodsController extends SysController {
 		String start = request.getParameter("start");
 		// 每页条数
 		String limit = request.getParameter("limit");
-		//板块类型
+		// 板块类型
 		String subjectType = request.getParameter("subjectType");
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("sortname", sortField);
 		map.put("sortOrder", sortType);
