@@ -494,7 +494,7 @@
 			limit += 10;
 			mui
 					.ajax(
-							'${ctx}/wechat/goods/getGoodsList.htm',
+							'${ctx}/wechat/goods/getAllGoodsList.htm',
 							{ //测试用,模拟数据
 								data : {
 									key : '59c23bdde5603ef993cf03fe64e448f1',
@@ -506,7 +506,8 @@
 									keywords : keywords,//搜索关键词
 									limit : limit,
 									start : start,
-									classId : classId
+									classId : classId,
+									subjectType:subjectTypeValue
 								},
 								dataType : 'json',//测试用，正式应为JSON
 								type : 'post',

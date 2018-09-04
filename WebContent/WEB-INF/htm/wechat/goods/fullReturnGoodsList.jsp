@@ -265,7 +265,7 @@
 				classId ="0";
 			} 
 			//console.log("排序类型:"+type+" 升降序:"+sort+" 最低价:"+lowPrice+" 最高价:"+hignPrice+" 品牌:"+brandId+" 搜索词:"+keywords);//测试
-			mui.ajax('${ctx}/wechat/goods/getFullReturnGoodsList.htm',{ //测试用,模拟数据
+			mui.ajax('${ctx}/wechat/goods/getAllGoodsList.htm',{ //测试用,模拟数据
 				data:{
 					key :'59c23bdde5603ef993cf03fe64e448f1',
 					type : type,//排序方式标识
@@ -334,7 +334,7 @@
 			var obj = this;
 			start += 10;
 			limit += 10;
-			mui.ajax('${ctx}/wechat/goods/fullReturnGoodsList.htm',{ //测试用,模拟数据
+			mui.ajax('${ctx}/wechat/goods/getAllGoodsList.htm',{ //测试用,模拟数据
 				data:{
 					key :'59c23bdde5603ef993cf03fe64e448f1',
 					type : type,//排序方式标识
@@ -345,7 +345,8 @@
 					keywords : keywords ,//搜索关键词
 					limit : limit,
 					start : start,
-					classId : classId
+					classId : classId,
+					subjectType:1  //板块类型，1为全返商品
 				},
 				dataType:'json',//测试用，正式应为JSON
 				type:'post', 
