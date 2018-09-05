@@ -300,8 +300,8 @@
 							html+='	<div class="goods-list-body">';
 							html+='		<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data[i].onlineId + '&promoterId=${userId}' + '">' + data[i].onlineTitle + '</a></h5>';
 							html+='		<p>';
-							html+='			<span class="price">￥<em>'+formatCurrency(data[i].salePrice)+'</em></span>';
-							html+=' 		<span class="back-money">返<em>'+formatCurrency(data[i].cashbackAmount)+'</em></span>';
+							html+='			<span class="full-return-price">￥<em>'+formatCurrency(data[i].salePrice)+'</em></span>';
+							html+=' 		<span class="now-price">￥<em>0元'+'</em></span>';
 							html+='			<span class="mui-icon-extra mui-icon-extra-cart" id="cart" data-specId="' + data[i].specId + '" data-onlineId="' + data[i].onlineId + '"></span>';
 							html+='		</p>';
 							html+='	</div>';
@@ -365,7 +365,7 @@
 							html+='	<div class="goods-list-body">';
 							html+='		<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data[i].onlineId + '&promoterId=${userId}' + '">' + data[i].onlineTitle + '</a></h5>';
 							html+='		<p>';
-							html+='			<span class="price">￥<em>' + formatCurrency(data[i].salePrice) + '</em></span>';
+							html+='			<span class="full-return-price">￥<em>' + formatCurrency(data[i].salePrice) + '</em></span>';
 							html+=' 		<span class="back-money">返<em>' + formatCurrency(data[i].cashbackAmount) + '</em></span>';
 							html+='			<span class="mui-icon-extra mui-icon-extra-cart" id="cart" data-specId="' + data[i].specId + '" data-onlineId="' + data[i].onlineId + '"></span>';
 							html+='		</p>';

@@ -361,6 +361,18 @@ disc
 	font-size: 1.2em;
 }
 
+#goods-list-area .view-cell p .full-return-price {
+	color: #777;
+	font-size: .8em;
+	text-decoration:line-through
+}
+
+#goods-list-area .view-cell p .now-price {
+	padding-left: .2em;
+	color: #FE3000;
+	font-size: 1.2em;
+}
+
 #goods-list-area .view-cell p .back-money {
 	padding-left: .2em;
 	color: #777;

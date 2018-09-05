@@ -216,7 +216,7 @@ a, a:active {
 
 #index-goods-list .mui-table-view-cell p .price {
 	color: #FE3000;
-	font-size: .9em
+	font-size: .9em;
 }
 
 #index-goods-list .mui-table-view-cell p .back-money {
@@ -527,7 +527,7 @@ a.imghref.fullReturn:before {
 	top: 3%;
 	left: 35%;
 	z-index: 999;
-	font-size: 20px;
+	font-size: 16px;
 	color: #fff;
 	text-align: center;
 	transform: rotate(45deg);
