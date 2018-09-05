@@ -294,7 +294,7 @@
 							// 根据逗号获取图片后缀
 							strs = data[i].picPath.split("."); 
 							html+='<div class="view-cell mui-col-xs-6 mui-col-sm-6">';
-							html+='	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data[i].onlineId + '&promoterId=${userId}' + '" class="imghref">';
+							html+='	<a style="position:relative;" href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data[i].onlineId + '&promoterId=${userId}' + '" class="imghref fullReturn">';
 							html+='		<img src="${goodsImgUrl}' + data[i].picPath + '">';
 							html+='	</a>';
 							html+='	<div class="goods-list-body">';
@@ -359,7 +359,7 @@
 							// 根据逗号获取图片后缀
 							strs = data[i].picPath.split("."); 
 							html+='<div class="view-cell mui-col-xs-6 mui-col-sm-6">';
-							html+='	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data[i].onlineId + '&promoterId=${userId}' + '" class="imghref">';
+							html+='	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data[i].onlineId + '&promoterId=${userId}' + '" class="imghref fullReturn">';
 							html+='		<img src="${goodsImgUrl}' + data[i].picPath + '">';
 							html+='	</a>';
 							html+='	<div class="goods-list-body">';
