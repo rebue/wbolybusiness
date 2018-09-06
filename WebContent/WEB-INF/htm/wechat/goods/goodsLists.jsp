@@ -245,7 +245,6 @@
 													subjectTypeValue = subjectTypeObject[i].defaultValue;
 												}
 											}
-											console.log(subjectTypeValue);
 											brandId = String(brandlist);//选中的品牌ID,用逗号隔开 
 											lowPrice = document
 													.querySelector(".priceselect input[name='low']").value;//价格区间，最低价
@@ -414,6 +413,7 @@
 								dataType : 'json',//测试用，正式应为JSON
 								type : 'post',
 								success : function(data) {
+									console.log(data);
 									var html = "";
 									if (data == null || data == "[]"
 											|| data == "") {
@@ -430,26 +430,25 @@
 											// 根据逗号获取图片后缀
 											strs = data[i].picPath.split(".");
 											html += '<div class="view-cell mui-col-xs-6 mui-col-sm-6">';
-											html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId='
-													+ data[i].onlineId
-													+ '&promoterId=${userId}'
-													+ '" class="imghref">';
-											html += '		<img src="${goodsImgUrl}' + data[i].picPath + '">';
-											html += '	</a>';
+											if(data[i].subjectType==0){
+												html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId='+ data[i].onlineId+ '&promoterId=${userId}'+ '" class="imghref">';
+												html += '		<img src="${goodsImgUrl}' + data[i].picPath + '">';
+												html += '	</a>';
+											}else{
+												html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId='+ data[i].onlineId+ '&promoterId=${userId}'+ '" class="imghref fullReturn">';
+												html += '		<img src="${goodsImgUrl}' + data[i].picPath + '">';
+												html += '	</a>';
+											}
 											html += '	<div class="goods-list-body">';
-											html += '		<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId='
-													+ data[i].onlineId
-													+ '&promoterId=${userId}'
-													+ '">'
-													+ data[i].onlineTitle
-													+ '</a></h5>';
+											html += '		<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId='+ data[i].onlineId+ '&promoterId=${userId}'+ '">'+ data[i].onlineTitle+ '</a></h5>';
 											html += '		<p>';
-											html += '			<span class="price">￥<em>'
-													+ formatCurrency(data[i].salePrice)
-													+ '</em></span>';
-											html += ' 		<span class="back-money">返<em>'
-													+ formatCurrency(data[i].cashbackAmount)
-													+ '</em></span>';
+											if(data[i].subjectType==0){
+												html += '			<span class="price">￥<em>'+ formatCurrency(data[i].salePrice)+ '</em></span>';
+												html += ' 		<span class="back-money">返<em>'+ formatCurrency(data[i].cashbackAmount)+ '</em></span>';
+											}else{
+												html += '			<span class="full-return-price">￥<em>'+ formatCurrency(data[i].salePrice)+ '</em></span>';
+												html += ' 		<span class="now-price">￥<em>0元'+ '</em></span>';
+											}
 											html += '			<span class="mui-icon-extra mui-icon-extra-cart" id="cart" data-specId="' + data[i].specId + '" data-onlineId="' + data[i].onlineId + '"></span>';
 											html += '		</p>';
 											html += '	</div>';
@@ -521,29 +520,16 @@
 													&& data[i].cashbackAmount != undefined) {
 												var strs = new Array();
 												// 根据逗号获取图片后缀
-												strs = data[i].picPath
-														.split(".");
+												strs = data[i].picPath.split(".");
 												html += '<div class="view-cell mui-col-xs-6 mui-col-sm-6">';
-												html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId='
-														+ data[i].onlineId
-														+ '&promoterId=${userId}'
-														+ '" class="imghref">';
+												html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId='+ data[i].onlineId+ '&promoterId=${userId}'+ '" class="imghref">';
 												html += '		<img src="${goodsImgUrl}' + data[i].picPath + '">';
 												html += '	</a>';
 												html += '	<div class="goods-list-body">';
-												html += '		<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId='
-														+ data[i].onlineId
-														+ '&promoterId=${userId}'
-														+ '">'
-														+ data[i].onlineTitle
-														+ '</a></h5>';
+												html += '		<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId='+ data[i].onlineId+ '&promoterId=${userId}'+ '">'+ data[i].onlineTitle+ '</a></h5>';
 												html += '		<p>';
-												html += '			<span class="price">￥<em>'
-														+ formatCurrency(data[i].salePrice)
-														+ '</em></span>';
-												html += ' 		<span class="back-money">返<em>'
-														+ formatCurrency(data[i].cashbackAmount)
-														+ '</em></span>';
+												html += '			<span class="price">￥<em>'+ formatCurrency(data[i].salePrice)+ '</em></span>';
+												html += ' 		<span class="back-money">返<em>'+ formatCurrency(data[i].cashbackAmount)+ '</em></span>';
 												html += '			<span class="mui-icon-extra mui-icon-extra-cart" id="cart" data-specId="' + data[i].specId + '" data-onlineId="' + data[i].onlineId + '"></span>';
 												html += '		</p>';
 												html += '	</div>';
