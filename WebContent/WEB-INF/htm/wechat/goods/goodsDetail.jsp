@@ -537,7 +537,6 @@
 					html += '</li>';
 					console.log(data[0].subjectType);
 					if(data[0].subjectType==0){
-						console.log(00);
 						html += '<li class="mui-table-view-cell price-bar">';
 						html += '	<span class="price">¥<em>' + formatCurrency(data[0].salePrice) + '</em></span>';
 						html += ' 	<span class="back-money">返<em>' + formatCurrency(data[0].cashbackAmount) + '</em>元</span>';
@@ -546,7 +545,6 @@
 						sboxHtml +='<span class="ss_back">返<span id="ss_back"></span>元</span>';
 						sboxHtml +='<span class="goodsnum" id="stock">库存：<span></span></span>';
 					}else{
-						console.log(11);
 						html += '<li class="mui-table-view-cell price-bar">';
 						html += '	<span class="full-return-price">¥<em>' + formatCurrency(data[0].salePrice) + '</em></span>';
 						html += ' 	<span class="now-price">￥<em>0元'  + '</em></span>';
