@@ -247,6 +247,7 @@
 		//下拉刷新事件
 		function pulldownRefresh() {
 			AjaxGetData(1);
+			this.endPullupToRefresh(false)
 		};
 		
 		// 常规ajax载入商品列表页
@@ -352,6 +353,12 @@
 				type:'post', 
 				success:function(data){
 					var html = "";
+// 					if(data == null || data == "[]" || data == "") {
+// 						mui.toast("没有数据哦");
+// 						document.getElementById("loading").innerText="已载入全部数据";
+// 						return ;
+// 					}
+				
 					if(data!=null)
 					for(var i=0;i<data.length;i++){
 						if(data[i].onlineTitle != undefined && data[i].salePrice != undefined && data[i].picPath != undefined && data[i].cashbackAmount != undefined){
@@ -383,7 +390,11 @@
 						var list_img_width =mui("#goods-list-area .view-cell img")[i].clientWidth;
 						mui("#goods-list-area .view-cell img")[i].style.height = list_img_width+"px";
 					};
-					obj.endPullupToRefresh(true)
+					if(data.length == 0){
+						obj.endPullupToRefresh(true)
+					}else{
+						obj.endPullupToRefresh(false);//已加载全部数据则传入true，还有剩下的数据则传入false，加个判断
+					}
 				},
 				error:function(xhr,type,errorThrown){
 					console.log(type);

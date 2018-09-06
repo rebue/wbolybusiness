@@ -374,6 +374,7 @@
 		//下拉刷新事件
 		function pulldownRefresh() {
 			AjaxGetData(1);
+			this.endPullupToRefresh(false)
 		};
 
 		// 常规ajax载入商品列表页
@@ -393,34 +394,110 @@
 				classId = "0";
 			}
 			console.log("排序类型:"+type+" 板块类型："+subjectTypeValue+" 升降序:"+sort+" 最低价:"+lowPrice+" 最高价:"+hignPrice+" 品牌:"+brandId+" 搜索词:"+keywords);//测试
-			mui
-					.ajax(
-							'${ctx}/wechat/goods/getAllGoodsList.htm',
-							{ //测试用,模拟数据
-								data : {
-									key : '59c23bdde5603ef993cf03fe64e448f1',
-									type : type,//排序方式标识
-									sortType : sort,//升序降序标识
-									lowPrice : lowPrice,//价格区间，最低价
-									hignPrice : hignPrice,//价格区间，最高价
-									brandId : brandId,//品牌标识，多个用逗号隔开
-									keywords : keywords,//搜索关键词
-									limit : 10,
-									start : 0,
-									classId : classId,
-									subjectType:subjectTypeValue
-								},
-								dataType : 'json',//测试用，正式应为JSON
-								type : 'post',
-								success : function(data) {
-									console.log(data);
-									var html = "";
-									if (data == null || data == "[]"
-											|| data == "") {
-										mui.toast("没有数据哦");
-										document.getElementById("loading").innerText = "已载入全部数据";
-										return;
+			mui.ajax(
+						'${ctx}/wechat/goods/getAllGoodsList.htm',
+						{ //测试用,模拟数据
+							data : {
+								key : '59c23bdde5603ef993cf03fe64e448f1',
+								type : type,//排序方式标识
+								sortType : sort,//升序降序标识
+								lowPrice : lowPrice,//价格区间，最低价
+								hignPrice : hignPrice,//价格区间，最高价
+								brandId : brandId,//品牌标识，多个用逗号隔开
+								keywords : keywords,//搜索关键词
+								limit : 10,
+								start : 0,
+								classId : classId,
+								subjectType:subjectTypeValue
+							},
+							dataType : 'json',//测试用，正式应为JSON
+							type : 'post',
+							success : function(data) {
+								console.log(data);
+								var html = "";
+								if (data == null || data == "[]"|| data == "") {
+									mui.toast("没有数据哦");
+									document.getElementById("loading").innerText = "已载入全部数据";
+									return;
+								}
+								for (var i = 0; i < data.length; i++) {
+									if (data[i].onlineTitle != undefined&& data[i].salePrice != undefined&& data[i].picPath != undefined&& data[i].cashbackAmount != undefined) {
+										var strs = new Array();
+										// 根据逗号获取图片后缀
+										strs = data[i].picPath.split(".");
+										html += '<div class="view-cell mui-col-xs-6 mui-col-sm-6">';
+										if(data[i].subjectType==0){
+											html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId='+ data[i].onlineId+ '&promoterId=${userId}'+ '" class="imghref">';
+											html += '		<img src="${goodsImgUrl}' + data[i].picPath + '">';
+											html += '	</a>';
+										}else{
+											html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId='+ data[i].onlineId+ '&promoterId=${userId}'+ '" class="imghref fullReturn">';
+											html += '		<img src="${goodsImgUrl}' + data[i].picPath + '">';
+											html += '	</a>';
+										}
+										html += '	<div class="goods-list-body">';
+										html += '		<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId='+ data[i].onlineId+ '&promoterId=${userId}'+ '">'+ data[i].onlineTitle+ '</a></h5>';
+										html += '		<p>';
+										if(data[i].subjectType==0){
+											html += '			<span class="price">￥<em>'+ formatCurrency(data[i].salePrice)+ '</em></span>';
+											html += ' 		<span class="back-money">返<em>'+ formatCurrency(data[i].cashbackAmount)+ '</em></span>';
+										}else{
+											html += '			<span class="full-return-price">￥<em>'+ formatCurrency(data[i].salePrice)+ '</em></span>';
+											html += ' 		<span class="now-price">￥<em>0元'+ '</em></span>';
+										}
+										html += '			<span class="mui-icon-extra mui-icon-extra-cart" id="cart" data-specId="' + data[i].specId + '" data-onlineId="' + data[i].onlineId + '"></span>';
+										html += '		</p>';
+										html += '	</div>';
+										html += '</div>';
 									}
+								};
+								setTimeout(
+										function() {document.getElementById("goods-list-area").innerHTML = html;
+											if (flushtype = 1) {
+												mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
+											};
+											for (var i = 0; i < mui("#goods-list-area .view-cell img").length; i++) {
+												var list_img_width = mui("#goods-list-area .view-cell img")[i].clientWidth;
+												mui("#goods-list-area .view-cell img")[i].style.height = list_img_width+ "px";
+											};
+										}, 200);
+								// 返回 top
+								mui("#refreshContainer.mui-scroll-wrapper").pullRefresh().scrollTo(0, 0);
+								mui('#refreshContainer').pullRefresh().refresh(true);
+								// end
+							},
+							error : function(xhr, type, errorThrown) {
+								console.log(type);
+							}
+						});
+		}
+
+		//ajax上滑添加（滑动到最底部时插入新数据，如果已全部加载完，则会有相应提示）
+		function AjaxAppendData() {
+			var obj = this;
+			start += 10;
+			limit = 10;
+			mui.ajax(
+						'${ctx}/wechat/goods/getAllGoodsList.htm',
+						{ //测试用,模拟数据
+							data : {
+								key : '59c23bdde5603ef993cf03fe64e448f1',
+								type : type,//排序方式标识
+								sortType : sort,//升序降序标识
+								lowPrice : lowPrice,//价格区间，最低价
+								hignPrice : hignPrice,//价格区间，最高价
+								brandId : brandId,//品牌标识，多个用逗号隔开
+								keywords : keywords,//搜索关键词
+								limit : limit,
+								start : start,
+								classId : classId,
+								subjectType:subjectTypeValue
+							},
+							dataType : 'json',//测试用，正式应为JSON
+							type : 'post',
+							success : function(data) {
+								var html = "";
+								if (data != null)
 									for (var i = 0; i < data.length; i++) {
 										if (data[i].onlineTitle != undefined
 												&& data[i].salePrice != undefined
@@ -454,110 +531,27 @@
 											html += '	</div>';
 											html += '</div>';
 										}
-									}
-									;
-									setTimeout(
-											function() {
-												document
-														.getElementById("goods-list-area").innerHTML = html;
-												if (flushtype = 1) {
-													mui('#refreshContainer')
-															.pullRefresh()
-															.endPulldownToRefresh();
-												}
-												;
-												for (var i = 0; i < mui("#goods-list-area .view-cell img").length; i++) {
-													var list_img_width = mui("#goods-list-area .view-cell img")[i].clientWidth;
-													mui("#goods-list-area .view-cell img")[i].style.height = list_img_width
-															+ "px";
-												}
-												;
-											}, 200);
-									// 返回 top
-									mui("#refreshContainer.mui-scroll-wrapper")
-											.pullRefresh().scrollTo(0, 0);
-									mui('#refreshContainer').pullRefresh()
-											.refresh(true);
-									// end
-								},
-								error : function(xhr, type, errorThrown) {
-									console.log(type);
-								}
-							});
-		}
-
-		//ajax上滑添加（滑动到最底部时插入新数据，如果已全部加载完，则会有相应提示）
-		function AjaxAppendData() {
-			var obj = this;
-			start += 10;
-			limit += 10;
-			mui
-					.ajax(
-							'${ctx}/wechat/goods/getAllGoodsList.htm',
-							{ //测试用,模拟数据
-								data : {
-									key : '59c23bdde5603ef993cf03fe64e448f1',
-									type : type,//排序方式标识
-									sortType : sort,//升序降序标识
-									lowPrice : lowPrice,//价格区间，最低价
-									hignPrice : hignPrice,//价格区间，最高价
-									brandId : brandId,//品牌标识，多个用逗号隔开
-									keywords : keywords,//搜索关键词
-									limit : limit,
-									start : start,
-									classId : classId,
-									subjectType:subjectTypeValue
-								},
-								dataType : 'json',//测试用，正式应为JSON
-								type : 'post',
-								success : function(data) {
-									var html = "";
-									if (data != null)
-										for (var i = 0; i < data.length; i++) {
-											if (data[i].onlineTitle != undefined
-													&& data[i].salePrice != undefined
-													&& data[i].picPath != undefined
-													&& data[i].cashbackAmount != undefined) {
-												var strs = new Array();
-												// 根据逗号获取图片后缀
-												strs = data[i].picPath.split(".");
-												html += '<div class="view-cell mui-col-xs-6 mui-col-sm-6">';
-												html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId='+ data[i].onlineId+ '&promoterId=${userId}'+ '" class="imghref">';
-												html += '		<img src="${goodsImgUrl}' + data[i].picPath + '">';
-												html += '	</a>';
-												html += '	<div class="goods-list-body">';
-												html += '		<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId='+ data[i].onlineId+ '&promoterId=${userId}'+ '">'+ data[i].onlineTitle+ '</a></h5>';
-												html += '		<p>';
-												html += '			<span class="price">￥<em>'+ formatCurrency(data[i].salePrice)+ '</em></span>';
-												html += ' 		<span class="back-money">返<em>'+ formatCurrency(data[i].cashbackAmount)+ '</em></span>';
-												html += '			<span class="mui-icon-extra mui-icon-extra-cart" id="cart" data-specId="' + data[i].specId + '" data-onlineId="' + data[i].onlineId + '"></span>';
-												html += '		</p>';
-												html += '	</div>';
-												html += '</div>';
-											}
-										}
-									;
-									var htmls = document.createElement("div");
+									};
+								var htmls = document.createElement("div");
+								htmls.innerHTML = html;
+								for (var i = 0; i < htmls.childNodes.length; i++) {
+									document.getElementById("goods-list-area").appendChild(htmls.childNodes[i]);
 									htmls.innerHTML = html;
-									for (var i = 0; i < htmls.childNodes.length; i++) {
-										document.getElementById(
-												"goods-list-area").appendChild(
-												htmls.childNodes[i]);
-										htmls.innerHTML = html;
-									}
-									;
-									for (var i = 0; i < mui("#goods-list-area .view-cell img").length; i++) {
-										var list_img_width = mui("#goods-list-area .view-cell img")[i].clientWidth;
-										mui("#goods-list-area .view-cell img")[i].style.height = list_img_width
-												+ "px";
-									}
-									;
+								};
+								for (var i = 0; i < mui("#goods-list-area .view-cell img").length; i++) {
+									var list_img_width = mui("#goods-list-area .view-cell img")[i].clientWidth;
+									mui("#goods-list-area .view-cell img")[i].style.height = list_img_width+ "px";
+								};
+								if(data.length == 0){
 									obj.endPullupToRefresh(true)
-								},
-								error : function(xhr, type, errorThrown) {
-									console.log(type);
+								}else{
+									obj.endPullupToRefresh(false);//已加载全部数据则传入true，还有剩下的数据则传入false，加个判断
 								}
-							});
+							},
+							error : function(xhr, type, errorThrown) {
+								console.log(type);
+							}
+						});
 		}
 	</script>
 </body>
