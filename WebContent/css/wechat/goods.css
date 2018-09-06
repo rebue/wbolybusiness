@@ -881,6 +881,7 @@ padding
 	display: inline-block;
 	color: #FE3000;
 	font-size: 1.3em;
+
 }
 
 .detail-content .mui-table-view-cell.price-bar .back-money {
@@ -889,6 +890,21 @@ padding
 	display: inline-block;
 	color: #555;
 	font-size: .7em;
+}
+
+.detail-content .mui-table-view-cell.price-bar .full-return-price {
+	display: inline-block;
+	color: #777;
+	font-size: .7em;
+	text-decoration:line-through
+}
+
+.detail-content .mui-table-view-cell.price-bar .now-price {
+	position: relative;
+	top: -2px;
+	display: inline-block;
+	color: #FE3000;
+	font-size: 1.3em;
 }
 
 #selectBox {
@@ -961,6 +977,22 @@ padding
 	left: 1px;
 	color: #555;
 	font-size: 0.875rem;
+}
+
+#selectBox .selectBox_titlebar .selectBox_titlebar_con .sbox_price_bar .ss_full_return_price
+	{
+	color: #555;
+	font-size: 0.875rem;
+	text-decoration:line-through
+}
+
+#selectBox .selectBox_titlebar .selectBox_titlebar_con .sbox_price_bar .ss_now_price
+	{
+	position: relative;
+	top: -1px;
+	left: 1px;
+	color: #FE3000;
+	font-size: 1rem;
 }
 
 #selectBox .selectBox_titlebar .selectBox_titlebar_con .goodsnum {

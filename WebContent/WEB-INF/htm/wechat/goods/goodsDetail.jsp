@@ -129,9 +129,7 @@
 				<h5>${goodsBase['goodsName']}</h5>
 				<div class="sbox_price_bar">
 					<!--以下三个数字是在弹出窗口后,通过AJAX方法【AjaxUpdate()】获取并设值-->
-					<span class="ss_price">¥<span id="ss_price"></span></span> 
-					<span class="ss_back">返<span id="ss_back"></span>元</span>
-					<span class="goodsnum" id="stock">库存：<span></span></span>
+					
 				</div>
 				<div class="skuNameShow">请选择商品规格、购买数量</div>
 			</div>
@@ -524,8 +522,11 @@
 				dataType : 'json',//服务器返回json格式数据
 				type : 'post',//HTTP请求类型
 				success : function(data) {
+					console.log(data);
 					var html = "";
+					var sboxHtml = "";
 					document.body.querySelector("#detail-content-ul").innerHTML = html;
+					document.body.querySelector(".sbox_price_bar").innerHTML = sboxHtml;
 					html += '<li class="mui-table-view-cell mui-row title-bar">';
 					html += '	<div class="mui-col-xs-11 mui-col-sm-11" id="title-bar">';
 					html += '		<h5>' + data[0].onlineTitle + '</h5>';
@@ -534,14 +535,31 @@
 					html += '		<div id="collection" class="collection"></div>';
 					html += '	</div>';
 					html += '</li>';
-					html += '<li class="mui-table-view-cell price-bar">';
-					html += '	<span class="price">¥<em>' + formatCurrency(data[0].salePrice) + '</em></span>';
-					html += ' 	<span class="back-money">返<em>' + formatCurrency(data[0].cashbackAmount) + '</em>元</span>';
-					html += '</li>';
+					console.log(data[0].subjectType);
+					if(data[0].subjectType==0){
+						console.log(00);
+						html += '<li class="mui-table-view-cell price-bar">';
+						html += '	<span class="price">¥<em>' + formatCurrency(data[0].salePrice) + '</em></span>';
+						html += ' 	<span class="back-money">返<em>' + formatCurrency(data[0].cashbackAmount) + '</em>元</span>';
+						html += '</li>';
+						sboxHtml +='<span class="ss_price">¥<span id="ss_price"></span></span> ';
+						sboxHtml +='<span class="ss_back">返<span id="ss_back"></span>元</span>';
+						sboxHtml +='<span class="goodsnum" id="stock">库存：<span></span></span>';
+					}else{
+						console.log(11);
+						html += '<li class="mui-table-view-cell price-bar">';
+						html += '	<span class="full-return-price">¥<em>' + formatCurrency(data[0].salePrice) + '</em></span>';
+						html += ' 	<span class="now-price">￥<em>0元'  + '</em></span>';
+						html += '</li>';
+						sboxHtml +='<span class="ss_full_return_price">¥<span id="ss_price"></span></span> ';
+						sboxHtml +='<span class="ss_now_price">￥<em>0元</span>';
+						sboxHtml +='<span class="goodsnum" id="stock">库存：<span></span></span>';
+					}
 					html += '<li class="mui-table-view-cell selectbar">';
 					html += '	<a href="#selectBox" class="mui-navigate-right" id="toSelect"><span>点击选择商品规格</span></a>';
 					html += '</li>';
 					document.body.querySelector("#detail-content-ul").innerHTML = html;
+					document.body.querySelector(".sbox_price_bar").innerHTML = sboxHtml;
 
 					// 商品详情图片
 					//第二个参数中的 g 表示全部匹配,i表示忽略大小写
