@@ -201,7 +201,15 @@
 					html += '	<input type="hidden" name="onlineId" value="' + item.onlineId + '"/>';
 					html += '	<div class="car-inner-box">';
 					html += '		<div class="car-inner-box-img">';
-					html += '			<img src="' + item.picPath + '" alt="" class="goodspic"/>';
+					if(item.subjectType==1){
+						html += '				<a  class="full-return">';
+						html += '			<img src="' + item.picPath + '" alt="" class="goodspic"/>';
+						html += '				</a>';
+					}else{
+						html += '				<a  class="">';
+						html += '			<img src="' + item.picPath + '" alt="" class="goodspic"/>';
+						html += '				</a>';
+					}
 					html += '		</div>';
 					html += '		<div class="car-inner-body">';
 					html += '			<input type="hidden" name="cartId" value="' + item.cartId + '"/>';
@@ -210,8 +218,13 @@
 					html += '			</h5>';
 					html += '			<p>' + item.onlineSpec + '</p><br/>';
 					html += '			<div class="price-area">';
-					html += '				<span class="m-price">¥<span>' + formatCurrency(item.salePrice) + '</span></span>';
-					html += '  				<span class="b-money"> 返 <span>' + formatCurrency(item.cashbackAmount) + '</span> 元</span>';
+					if(item.subjectType==1){
+						html += '				<span class="m-price">¥<span>' + formatCurrency(item.salePrice) + '</span></span>';
+						html += '  				<span class="b-money"><span>'+ '</span></span>';
+					}else{
+						html += '				<span class="m-price">¥<span>' + formatCurrency(item.salePrice) + '</span></span>';
+						html += '  				<span class="b-money"> 返 <span>' + formatCurrency(item.cashbackAmount) + '</span> 元</span>';
+					}
 					html += '			</div>';
 					html += '			<div class="numbox">数量：<span>' + item.number + '</span></div>';
 					html += '		</div>';
