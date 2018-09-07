@@ -427,16 +427,27 @@
 							html += '		</div>';
 							html += '		<div class="car-inner-box">';
 							html += '			<div class="car-inner-box-img">';
-							html += '				<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].onlineId + '&promoterId=${userId}' + '">';
-							html += '					<img src="${goodsImgUrl}' + data.message[i].picPath + '" alt="" class="goodspic"/>';
-							html += '				</a>';
+							if(data.message[i].subjectType==1){
+								html += '				<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].onlineId + '&promoterId=${userId}' + '" class="full-return">';
+								html += '					<img src="${goodsImgUrl}' + data.message[i].picPath + '" alt="" class="goodspic"/>';
+								html += '				</a>';
+							}else{
+								html += '				<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].onlineId + '&promoterId=${userId}' + '" class="">';
+								html += '					<img src="${goodsImgUrl}' + data.message[i].picPath + '" alt="" class="goodspic"/>';
+								html += '				</a>';
+							}
 							html += '			</div>';
 							html += '			<div class="car-inner-body">';
 							html += '				<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].onlineId + '&promoterId=${userId}' + '" name="goodsTitle">' + data.message[i].onlineTitle + '</a></h5>';
 							html += '				<p name="onlineSpec">' + data.message[i].onlineSpec + '&nbsp;&nbsp;&nbsp;</p><br/>';
 							html += '				<div class="price-area">';
-							html += '					<span class="m-price">¥<span>' + formatCurrency(data.message[i].salePrice) + '</span></span>';
-							html += '					<span class="b-money">返 <span>' + formatCurrency(data.message[i].cashbackAmount) + '</span> 元</span>';
+							if(data.message[i].subjectType==1){
+								html += '					<span class="m-price">¥<span>' + formatCurrency(data.message[i].salePrice) + '</span></span>';
+								html += '					<span class="b-money"><span>'  + '</span></span>';
+							}else{
+								html += '					<span class="m-price">¥<span>' + formatCurrency(data.message[i].salePrice) + '</span></span>';
+								html += '					<span class="b-money">返 <span>' + formatCurrency(data.message[i].cashbackAmount) + '</span> 元</span>';
+							}
 							html += '				</div>';
 							html += '				<div class="mui-numbox" data-numbox-min="1"">';
 							html += '					<button class="mui-btn mui-numbox-btn-minus" type="button">-</button>';
