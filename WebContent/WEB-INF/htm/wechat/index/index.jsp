@@ -253,6 +253,7 @@
 				dataType:'json',// 服务器返回json格式数据
 				type:'post',// HTTP请求类型
 				success:function(data){
+					console.log(data);
 					html="";
 					// 首页商品信息
 					document.getElementById("index-goods-list").innerHTML=html;
@@ -261,11 +262,20 @@
 						// 根据逗号获取图片后缀
 						strs = data[i].picPath.split(".");
 						html += '<div class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">';
-						html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data[i].onlineId + '&promoterId=${userId}' + '" class="imghref"><img src="${goodsImgUrl}' + data[i].picPath + '">' + '</a>';
+						if(data[i].subjectType==1){
+							html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data[i].onlineId + '&promoterId=${userId}' + '" class="imghref full-Return"><img src="${goodsImgUrl}' + data[i].picPath + '">' + '</a>';
+						}else{
+							html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data[i].onlineId + '&promoterId=${userId}' + '" class="imghref"><img src="${goodsImgUrl}' + data[i].picPath + '">' + '</a>';
+						}
 						html += '	<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data[i].onlineId + '&promoterId=${userId}' + '">' + data[i].onlineTitle + '</a></h5>';
 						html += '	<p>';
-						html +=	'		<span class="price">￥<em>' + formatCurrency(data[i].salePrice) + '</em></span>';
-						html +=	' 		<span class="back-money">返 <em>' + formatCurrency(data[i].cashbackAmount) + '</em></span>';
+						if(data[i].subjectType==1){
+							html +=	'		<span class="full-return-price">￥<em>' + formatCurrency(data[i].salePrice) + '</em></span>';
+							html +=	' 		<span class="now-price">￥<em>0元'  + '</em></span>';
+						}else{
+							html +=	'		<span class="price">￥<em>' + formatCurrency(data[i].salePrice) + '</em></span>';
+							html +=	' 		<span class="back-money">返 <em>' + formatCurrency(data[i].cashbackAmount) + '</em></span>';
+						}
 						html +=	' 		<span class="mui-icon-extra mui-icon-extra-cart" id="cart" data-specId="' + data[i].specId + '" data-onlineId="' + data[i].onlineId + '"></span>';
 						html +=	'	</p>';
 						html +=	'</div>';

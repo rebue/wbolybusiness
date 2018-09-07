@@ -219,9 +219,20 @@ a, a:active {
 	font-size: .9em;
 }
 
+#index-goods-list .mui-table-view-cell p .full-return-price {
+	color: #777;
+	font-size: .65em;
+	text-decoration:line-through
+}
+
 #index-goods-list .mui-table-view-cell p .back-money {
 	color: #777;
 	font-size: .65em
+}
+
+#index-goods-list .mui-table-view-cell p .now-price {
+	color: #FE3000;
+	font-size: .9em
 }
 
 #index-goods-list .mui-table-view-cell p em {
@@ -343,6 +354,22 @@ padding
 #index-goods-list .mui-table-view-cell a.imghref {
 	display: block;
 	background: #fff
+}
+
+#index-goods-list .mui-table-view-cell a.imghref.full-Return:after {
+	content: '全返';
+	width: 170%;
+	line-height: 150%;
+	background: #fe3000;
+	position: absolute;
+	top: 5%;
+	left: 0;
+	z-index: 999;
+	font-size: 0.75rem;
+	color: #fff;
+	text-align: center;
+	transform: rotate(45deg);
+	-webkit-transform: rotate(45deg);
 }
 
 #index-goods-list a {
