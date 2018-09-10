@@ -84,6 +84,9 @@
 					bounce : false
 				});
 				
+				//生成订单
+				
+				
 				var cartIds = "";
 				//点击去付款按钮
 				doc.getElementById('goPay').addEventListener('tap', function(event) {
@@ -98,10 +101,10 @@
 					if (document.querySelector("input[name='addressId']") != null) {
 						addressId = document.querySelector("input[name='addressId']").value;
 					}
-					if (addressId == 0) {
-						mui.toast("收货地址不能为空");
-						return ;
-					}
+// 					if (addressId == 0) {
+// 						mui.toast("收货地址不能为空");
+// 						return ;
+// 					}
 
 					// 订单留言
 					mui("#user-message")[0].blur();
@@ -115,6 +118,7 @@
 					var jsons = JSON.parse('[{"totalPrice":"' + json.totalPrice + '","totalBack":"' + json.totalBack + '","totalNumber":"' + json.totalNumber + '", "address":"' + addressId + '","orderMessages":"' + message + '"}]')
 					jsonData.push(jsons[0]);
 					console.log(jsonData);
+					console.log(json.info);
 					loading(1);
 					mui.ajax('${ctx}/wechat/order/createOrder.htm', {
 						data : {

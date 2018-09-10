@@ -204,7 +204,7 @@
 						// 上线标题
 						var onlineTitle = this.parentNode.querySelector("input[name='onlineTitle']").value;
 						// 产品ID
-						var produceId = this.parentNode.querySelector("input[name='produceId']").value;
+						var productId = this.parentNode.querySelector("input[name='productId']").value;
 						// 产品类型
 						var subjectType = this.parentNode.querySelector("input[name='subjectType']").value;
 						// 商品主图 
@@ -217,7 +217,7 @@
 								+ '","number":"' + number
 								+ '","onlineTitle":"' + onlineTitle
 								+ '","onlineSpec":"' + onlineSpec
-								+ '","produceId":"' + produceId
+								+ '","productId":"' + productId
 								+ '","subjectType":"' + subjectType
 								+ '","picPath":"' + picPath + '"}';
 						arr.push(unitJson);
@@ -425,7 +425,7 @@
 							html += '			<input type="text" name="onlineSpecId" value="' + data.message[i].onlineSpecId + '"/>';
 							html += '			<input type="text" name="onlineSpec" value="' + data.message[i].onlineSpec + '"/>';
 							html += '			<input type="text" name="onlineTitle" value="' + data.message[i].onlineTitle + '"/>';
-							html += '			<input type="text" name="produceId" value="' + data.message[i].produceId + '"/>';
+							html += '			<input type="text" name="productId" value="' + data.message[i].productId + '"/>';
 							html += '			<input type="text" name="subjectType" value="' + data.message[i].subjectType + '"/>';
 							html += '			<input type="text" name="cartCount" id="cartCount' + data.message[i].id + '" value="' + data.message[i].cartCount + '"/>';
 							html += '		</div>';
