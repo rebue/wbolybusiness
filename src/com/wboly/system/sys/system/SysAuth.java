@@ -41,7 +41,7 @@ public class SysAuth implements Filter {
 			+ "/wechat/cart/batchdelete.htm,/wechat/order/aboutCinfirmReceipt.htm,/wechat/order/queryLogistics.htm,/wechat/order/returnGoods.htm,"
 			+ "/wechat/user/setLoginName.htm,/wechat/user/setLoninNamePage.htm,/wechat/user/setLoginPassword.htm,/wechat/user/changeLogonPassword.htm,/wechat/user/updateloginpwdpage.htm,"
 			+ "/wechat/user/verifyRealNamePage.htm,/wechat/user/verifyRealName.htm,/wechat/user/verifyRealNameApply.htm,/wechat/user/verifyResult.htm,"
-			+"/wechat/goods/fullReturnGoodsList.htm,/wechat/goods/getFullReturnGoodsList.htm";
+			+"/wechat/goods/fullReturnGoodsList.htm,/wechat/goods/getFullReturnGoodsList.htm,/wechat/order/getOrderPrice.htm";
 
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
 			throws IOException, ServletException {

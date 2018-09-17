@@ -262,7 +262,7 @@ public class WeChatPayController extends SysController {
 			return mav;
 		} else {
 			mav.addObject("payOrderId", orderId);
-			String results = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/" + orderId);
+			String results = OkhttpUtils.get(SysContext.ORDERURL + "/ord/getByOrderCode/" + orderId);
 			System.out.println("查询订单信息的返回值为：" + results);
 			ObjectMapper mapper = new ObjectMapper();
 			Map map = mapper.readValue(results, Map.class);

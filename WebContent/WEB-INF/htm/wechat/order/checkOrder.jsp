@@ -85,8 +85,6 @@
 				});
 				
 				//生成订单
-				
-				
 				var cartIds = "";
 				//点击去付款按钮
 				doc.getElementById('goPay').addEventListener('tap', function(event) {
@@ -101,10 +99,10 @@
 					if (document.querySelector("input[name='addressId']") != null) {
 						addressId = document.querySelector("input[name='addressId']").value;
 					}
-// 					if (addressId == 0) {
-// 						mui.toast("收货地址不能为空");
-// 						return ;
-// 					}
+					if (addressId == 0) {
+						mui.toast("收货地址不能为空");
+						return ;
+					}
 
 					// 订单留言
 					mui("#user-message")[0].blur();
