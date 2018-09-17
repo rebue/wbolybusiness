@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.thrift.TException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,9 +43,11 @@ import rebue.wheel.RegexUtils;
 @Controller
 public class WeChatUserController extends SysController {
 
+	private static final Logger _log = LoggerFactory.getLogger(WeChatUserController.class);
+
 	@Autowired
 	private WeChatUserService weChatUserService;
-	
+
 	/**
 	 * @Name: 地址管理页面(新)__目前使用这个地址链接
 	 * @throws Exception
@@ -406,16 +410,18 @@ public class WeChatUserController extends SysController {
 
 		return mav;
 	}
-	
+
 	/**
 	 * 修改登录密码提交
+	 * 
 	 * @param request
 	 * @param response
 	 * @param map
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	@RequestMapping("/wechat/user/changeLogonPassword")
-	public void changeLogonPassword(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, Object> map) throws IOException {
+	public void changeLogonPassword(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam Map<String, Object> map) throws IOException {
 		System.out.println(String.valueOf(map));
 		// 获取当前登录用户编号
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
@@ -431,16 +437,18 @@ public class WeChatUserController extends SysController {
 			this.render(response, "{\"msg\":\"您未登录！\", \"result\":\"-74110\"}");
 		}
 	}
-	
+
 	/**
 	 * 设置登录密码
+	 * 
 	 * @param request
 	 * @param response
 	 * @param map
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	@RequestMapping("/wechat/user/setLoginPassword")
-	public void setLoginPassword(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, Object> map) throws IOException {
+	public void setLoginPassword(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam Map<String, Object> map) throws IOException {
 		System.out.println(String.valueOf(map));
 		// 获取当前登录用户编号
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
@@ -456,13 +464,14 @@ public class WeChatUserController extends SysController {
 			this.render(response, "{\"msg\":\"您未登录！\", \"result\":\"-74110\"}");
 		}
 	}
-	
+
 	/**
 	 * 跳转至微信设置登录名称
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	@SuppressWarnings("rawtypes")
 	@RequestMapping("/wechat/user/setLoninNamePage")
@@ -486,19 +495,21 @@ public class WeChatUserController extends SysController {
 			return andView;
 		}
 	}
-	
+
 	/**
 	 * 微信设置登录名称
+	 * 
 	 * @param request
 	 * @param response
 	 * @param loginName
-	 * @throws IOException 
-	 * @throws JsonMappingException 
-	 * @throws JsonParseException 
+	 * @throws IOException
+	 * @throws JsonMappingException
+	 * @throws JsonParseException
 	 */
 	@SuppressWarnings("rawtypes")
 	@RequestMapping("/wechat/user/setLoginName")
-	public void setLoginName(HttpServletRequest request, HttpServletResponse response, @RequestParam("loginName") String loginName) throws JsonParseException, JsonMappingException, IOException {
+	public void setLoginName(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("loginName") String loginName) throws JsonParseException, JsonMappingException, IOException {
 		// 获取当前登录用户编号
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
 		if (userId != null && !userId.equals("") && !userId.equals("null")) {
@@ -509,7 +520,8 @@ public class WeChatUserController extends SysController {
 				map.put("wxId", wxId);
 				map.put("loginName", loginName);
 				System.err.println("微信设置登录名称的参数为：" + String.valueOf(map));
-				String results = OkhttpUtils.postByFormParams(SysContext.USERCENTERURL + "/user/setloginname/bywxid", map);
+				String results = OkhttpUtils.postByFormParams(SysContext.USERCENTERURL + "/user/setloginname/bywxid",
+						map);
 				ObjectMapper mapper = new ObjectMapper();
 				Map resultMap = mapper.readValue(results, Map.class);
 				String result = String.valueOf(resultMap.get("result"));
@@ -682,16 +694,18 @@ public class WeChatUserController extends SysController {
 	public ModelAndView updateLoginPwdNextPage() {
 		return new ModelAndView("/htm/wechat/user/updateLoginPwdNextWalk");
 	}
-	
+
 	/**
 	 * 跳转至实名认证页面
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	@RequestMapping("/wechat/user/verifyRealNamePage")
-	public ModelAndView setVerifyRealNamePage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public ModelAndView setVerifyRealNamePage(HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
 		ModelAndView andView = new ModelAndView();
 		// 获取当前登录用户编号
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
@@ -703,47 +717,49 @@ public class WeChatUserController extends SysController {
 			return andView;
 		}
 	}
-	
+
 	/**
 	 * 实名认证申请
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	@RequestMapping("/wechat/user/verifyRealNameApply")
-	public void verifyRealNameApply(HttpServletRequest request,HttpServletResponse response, @RequestParam Map<String, Object> map) throws IOException{
+	public void verifyRealNameApply(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam Map<String, Object> map) throws IOException {
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
 		if (userId.equals("")) {
 			this.render(response, "{\"msg\":\"您没有登录\",\"result\":-11}");
 			return;
 		}
-		String idCard = (String)map.get("idCard");
+		String idCard = (String) map.get("idCard");
 		boolean flag = RegexUtils.matchIdcard(idCard);
-		if(flag==false) {
+		if (flag == false) {
 			this.render(response, "{\"msg\":\"身份证输入有误\",\"result\":-11}");
 			return;
 		}
-		String[] pics = ((String)map.get("pic")).split(",");
+		String[] pics = ((String) map.get("pic")).split(",");
 		System.err.println("申请实名认证的图片参数为：" + Arrays.toString(pics));
-		String picOne="";
-		String picTwo="";
-		String picThree="";
-		String picFour="";
-		if(pics.length>3) {
-			 picFour = pics[3];
+		String picOne = "";
+		String picTwo = "";
+		String picThree = "";
+		String picFour = "";
+		if (pics.length > 3) {
+			picFour = pics[3];
 		}
-		if(pics.length>2) {
-			 picThree = pics[2];
+		if (pics.length > 2) {
+			picThree = pics[2];
 		}
-		if(pics.length>1) {
-			 picTwo = pics[1];
+		if (pics.length > 1) {
+			picTwo = pics[1];
 		}
-		if(pics.length>0) {
-			 picOne = pics[0];
+		if (pics.length > 0) {
+			picOne = pics[0];
 		}
 		map.put("userId", userId);
-		map.put("picOne",picOne);
+		map.put("picOne", picOne);
 		map.put("picTwo", picTwo);
 		map.put("picThree", picThree);
 		map.put("picFour", picFour);
@@ -753,18 +769,18 @@ public class WeChatUserController extends SysController {
 		System.err.println("申请实名认证的返回值为：" + results);
 		if (results == null || results.equals("") || results.equals("[]")) {
 			this.render(response, "{\"msg\":\"提交失败\",\"result\":-10}");
-			return ;
+			return;
 		}
 		this.render(response, results);
 	}
-	
-	
+
 	/**
 	 * 跳转至实名认证页面结果页面
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	@RequestMapping("/wechat/user/verifyResult")
 	public ModelAndView verifyResult(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -778,5 +794,77 @@ public class WeChatUserController extends SysController {
 			andView.setViewName("redirect:/wechat/oauth2/checkSignature/login.htm");
 			return andView;
 		}
+	}
+
+	/**
+	 * 查询账号余额交易信息
+	 * 
+	 * @param request
+	 * @param response
+	 * @param pageNum
+	 * @param pageSize
+	 * @throws IOException
+	 */
+	@RequestMapping("/wechat/user/accountTrade")
+	public void accountTrade(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) throws IOException {
+		Map<String, Object> map = new HashMap<String, Object>();
+		// 获取当前登录用户编号
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+		map.put("pageNum", pageNum);
+		map.put("pageSize", pageSize);
+		map.put("accountId", "193201");
+		_log.info("查询账号交易信息的参数为：{}", map.toString());
+		String trades = OkhttpUtils.get(SysContext.VPAYURL + "/afc/trade/balancelist", map);
+		_log.info("查询账号交易信息的返回值为：{}", trades);
+		this.render(response, trades);
+	}
+
+	/**
+	 * 查询用户返现金交易信息
+	 * 
+	 * @param request
+	 * @param response
+	 * @param pageNum
+	 * @param pageSize
+	 * @throws IOException
+	 */
+	@RequestMapping("/wechat/user/cashbackTrade")
+	public void cashbackTrade(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) throws IOException {
+		// 获取当前登录用户编号
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("accountId", "193201");
+		map.put("pageNum", pageNum);
+		map.put("pageSize", pageSize);
+		_log.info("查询用户返现金交易记录的参数为：{}", map.toString());
+		String cashbackTrades = OkhttpUtils.get(SysContext.VPAYURL + "/afc/trade/cashbacklist", map);
+		_log.info("查询用户返现金交易记录的返回值为：{}", cashbackTrades);
+		this.render(response, cashbackTrades);
+	}
+
+	/**
+	 * 查询用户提现中数据信息
+	 * 
+	 * @param request
+	 * @param response
+	 * @param pageNum
+	 * @param pageSize
+	 * @throws IOException
+	 */
+	@RequestMapping("/wechat/user/beBeingWithdraw")
+	public void beBeingWithdraw(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) throws IOException {
+		// 获取当前登录用户编号
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("accountId", "193201");
+		map.put("pageNum", pageNum);
+		map.put("pageSize", pageSize);
+		_log.info("查询用户返现金交易记录的参数为：{}", map.toString());
+		String beBeingWithdraw = OkhttpUtils.get(SysContext.VPAYURL + "/afc/withdraw", map);
+		_log.info("查询用户返现金交易记录的返回值为：{}", beBeingWithdraw);
+		this.render(response, beBeingWithdraw);
 	}
 }
