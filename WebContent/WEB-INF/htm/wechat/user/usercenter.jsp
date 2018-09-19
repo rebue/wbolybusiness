@@ -98,26 +98,26 @@
 					<li class="mui-table-view-cell no-padding">
 						<ul id="icon-grid-9" class="icon-grid mui-table-view mui-grid-view mui-grid-9">
 							<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
-								<a href="#">
+								<a href="${ctx }/wechat/user/myWalletPage.htm?userId=${userId}">
 									<div class="mui-media-body">余额</div>
 								</a> 
 								<span class="money-show" id="yue">0.00</span>
 							</li>
 							<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
-								<a href="#">
+								<a href="${ctx }/wechat/user/myWalletPage.htm?userId=${userId}">
 									<div class="mui-media-body">返现金</div>
 								</a> 
 								<span class="money-show" id="fanxain">0.00</span>
 							</li>
 							<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
-								<a href="#">
+								<a href="${ctx }/wechat/user/myWalletPage.htm?userId=${userId}">
 									<div class="mui-media-body">待返现金</div>
 								</a> 
 								<span class="money-show" id="waitFanxian">0.00</span>
 							</li>
 							<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
-								<a href="#" id="tixian">
-									<div class="mui-media-body">提现</div>
+								<a href="${ctx }/wechat/user/myWalletPage.htm?userId=${userId}">
+									<div class="mui-media-body">提现中</div>
 									<span class="money-show" id="yue">0.00</span>
 								</a>
 							</li>
