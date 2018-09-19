@@ -149,16 +149,30 @@
 								html += '<div class="mui-input-row mui-left">';
 								html += '	<input type="hidden" name="goodsId" value="' + data.message[i].items[j].goodsId + '">';
 								html += '	<div class="car-inner-box">';
-								html += '		<div class="car-inner-box-img">';
-								html += '			<img src="${goodsImgUrl}' + goodsQsmm + '" alt="" class="goodspic">';
+								html += '<div class="car-inner-box-img">';
+								if(data.message[i].items[j].subjectType==1){
+									html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '&promoterId=${userId}' + '" class="full-return">';
+									html += '		<img src="${goodsImgUrl}' + goodsQsmm + '" alt="" class="goodspic">';
+									html += '	</a>';
+								}else{
+									html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '&promoterId=${userId}' + '">';
+									html += '		<img src="${goodsImgUrl}' + goodsQsmm + '" alt="" class="goodspic">';
+									html += '	</a>';
+								}
 								html += '		</div>';
 								html += '		<div class="car-inner-body">';
 								html += '			<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId="' + data.message[i].items[j].onlineId + '&promoterId=${userId}' + '>' + data.message[i].items[j].onlineTitle +'</a></h5>';
 								html += '			<p>规格：'+ data.message[i].items[j].specName+'</p><br/>';
 								html += '			<div class="price-area">';
-								html += '				<span class="m-price">¥ <span>' + formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
-								html += '				<span class="b-money"> 返 <span>' + formatCurrency(data.message[i].items[j].cashbackAmount) + '</span></span>';//*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
-								html += '				<span class="numbox">数量：<span>' + buyCount + '</span></span>';
+								if(data.message[i].items[j].subjectType==1){
+									html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
+									html += '		<span class="b-money"><span>'  + '</span></span>';
+									html += '		<span class="numbox">还差<span>' + data.message[i].items[j].cashbackCommissionSlot + '</span>人可全返</span>';
+								}else{
+									html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
+									html += '		<span class="b-money"> 返 <span>' + formatCurrency(data.message[i].items[j].cashbackAmount) + '</span></span>';//*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
+									html += '		<span class="numbox">数量：<span>' + buyCount + '</span></span>';
+								}
 								html += '			</div>';
 								html += '		</div>';
 								html += '	<div class="button-box">';
@@ -365,17 +379,30 @@
 								html += '	<input type="hidden" name="goodsId" value="' + data.message[i].items[j].onlineId + '">';
 								html += '<div class="car-inner-box">';
 								html += '<div class="car-inner-box-img">';
-								html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '&promoterId=${userId}' + '">';
-								html += '		<img src="${goodsImgUrl}' + goodsQsmm + '" alt="" class="goodspic">';
-								html += '	</a>';
+								if(data.message[i].items[j].subjectType==1){
+									html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '&promoterId=${userId}' + '" class="full-return">';
+									html += '		<img src="${goodsImgUrl}' + goodsQsmm + '" alt="" class="goodspic">';
+									html += '	</a>';
+								}else{
+									html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '&promoterId=${userId}' + '">';
+									html += '		<img src="${goodsImgUrl}' + goodsQsmm + '" alt="" class="goodspic">';
+									html += '	</a>';
+								}
 								html += '</div>';
 								html += '<div class="car-inner-body">';
 								html += '	<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '&promoterId=${userId}' + '">'+ data.message[i].items[j].onlineTitle +'</a></h5>';
 								html += '	<p>规格：' + data.message[i].items[j].specName 	+ '</p><br/>';
 								html += '	<div class="price-area">';
-								html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
-								html += '		<span class="b-money"> 返 <span>' + formatCurrency(data.message[i].items[j].cashbackAmount) + '</span></span>';//*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
-								html += '		<span class="numbox">数量：<span>' + buyCount + '</span></span>';
+								if(data.message[i].items[j].subjectType==1){
+									html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
+									html += '		<span class="b-money"><span>'  + '</span></span>';//*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
+									html += '		<span class="numbox">还差<span>' + data.message[i].items[j].cashbackCommissionSlot + '</span>人可全返</span>';
+								}else{
+									html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
+									html += '		<span class="b-money"> 返 <span>' + formatCurrency(data.message[i].items[j].cashbackAmount) + '</span></span>';//*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
+									html += '		<span class="numbox">数量：<span>' + buyCount + '</span></span>';
+								}
+								
 								html += '	</div>';
 								html += '</div>';
 								html += '<div class="button-box">';

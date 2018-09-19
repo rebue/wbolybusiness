@@ -305,6 +305,22 @@ px
 	height: auto;
 }
 
+.order-list-unit .car-inner-box  a.full-return:after {
+	content: '全返';
+	width: 150%;
+	line-height: 150%;
+	background: #fe3000;
+	position: absolute;
+	top: 10%;
+	left: 0;
+	z-index: 999;
+	font-size: 0.75rem;
+	color: #fff;
+	text-align: center;
+	transform: rotate(45deg);
+	-webkit-transform: rotate(45deg);
+}
+
 .order-list-unit .car-inner-box img.goodspic {
 	display: block;
 	width: 100%;
