@@ -105,20 +105,20 @@ public class WeChatOAuth2Controller extends SysController {
 		System.out.println("微信授权回调地址的请求参数为：" + wxMaps.toString());
 		ModelAndView andView = new ModelAndView();
 		
-		// 本地
-		String code = request.getParameter("code");
-		// 微信授权登陆获取到的用户信息
-		String userData = getUserData(code, response);
-		System.err.println("微信授权登陆返回的用户信息:" + userData);
-		ObjectMapper mapper = new ObjectMapper();
-		Map userMap = mapper.readValue(userData, Map.class); //
-		// 微信授权登陆获取到的用户信息
-		String openid = String.valueOf(userMap.get("openid"));
-		String unionid = String.valueOf(userMap.get("unionid"));
-		String nickname = String.valueOf(userMap.get("nickname"));
-		String headimgurl = String.valueOf(userMap.get("headimgurl"));
-
-		System.out.println("微信回调解码之前的参数为：" + String.valueOf(wxMaps));
+//		// 本地
+//		String code = request.getParameter("code");
+//		// 微信授权登陆获取到的用户信息
+//		String userData = getUserData(code, response);
+//		System.err.println("微信授权登陆返回的用户信息:" + userData);
+//		ObjectMapper mapper = new ObjectMapper();
+//		Map userMap = mapper.readValue(userData, Map.class); //
+//		// 微信授权登陆获取到的用户信息
+//		String openid = String.valueOf(userMap.get("openid"));
+//		String unionid = String.valueOf(userMap.get("unionid"));
+//		String nickname = String.valueOf(userMap.get("nickname"));
+//		String headimgurl = String.valueOf(userMap.get("headimgurl"));
+//
+//		System.out.println("微信回调解码之前的参数为：" + String.valueOf(wxMaps));
 
 		/*
 		 * // 对微信回调参数进行解码 MapUtils.decodeUrl(wxMaps); // 微信回调登录校验 if
@@ -130,10 +130,10 @@ public class WeChatOAuth2Controller extends SysController {
 
 		// 线上
 		
-//		String openid = String.valueOf(wxMaps.get("openid"));
-//		String unionid = String.valueOf(wxMaps.get("unionid"));
-//		String nickname = String.valueOf(wxMaps.get("nickname"));
-//		String headimgurl = String.valueOf(wxMaps.get("headimgurl"));
+		String openid = String.valueOf(wxMaps.get("openid"));
+		String unionid = String.valueOf(wxMaps.get("unionid"));
+		String nickname = String.valueOf(wxMaps.get("nickname"));
+		String headimgurl = String.valueOf(wxMaps.get("headimgurl"));
 		 
 
 		System.out.println("微信登录获取到的用户 信息为：openid=" + openid + "====unionid=" + unionid + "=====nickname=" + nickname

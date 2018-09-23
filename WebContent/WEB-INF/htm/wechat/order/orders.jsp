@@ -114,13 +114,13 @@
 							html+='<a href="${ctx}/wechat/myorder/'+b.encode(data.message[i].orderCode)+'.htm?promoterId=${userId}" class="mui-navigate-right">'	
 							if (data.message[i].orderState == 1) {
 								html+='<span class="status">待支付</span>';
-							} else if (data.message[i].orderCode == 2) {
+							} else if (data.message[i].orderState == 2) {
 								html+='<span class="orderState">待发货</span>';
-							} else if (data.message[i].orderCode == 3) {
+							} else if (data.message[i].orderState == 3) {
 								html+='<span class="orderState">待签收</span>';
-							} else if (data.message[i].orderCode == 4) {
+							} else if (data.message[i].orderState == 4) {
 								html+='<span class="orderState">待结算</span>';
-							} else if (data.message[i].orderCode == 5) {
+							} else if (data.message[i].orderState == 5) {
 								html+='<span class="orderState">已结算</span>';
 							} else if (data.message[i].orderState == "") {
 								html+='<span class="status">全部订单</span>';
@@ -167,7 +167,7 @@
 								if(data.message[i].items[j].subjectType==1){
 									html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
 									html += '		<span class="b-money"><span>'  + '</span></span>';
-									html += '		<span class="numbox">还差<span>' + data.message[i].items[j].cashbackCommissionSlot + '</span>人可全返</span>';
+									html += '		<span class="numbox">邀请<span>' + data.message[i].items[j].cashbackCommissionSlot + '</span>人可免单</span>';
 								}else{
 									html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
 									html += '		<span class="b-money"> 返 <span>' + formatCurrency(data.message[i].items[j].cashbackAmount) + '</span></span>';//*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
@@ -212,8 +212,8 @@
 								html += '	<p><span class="grey">获取订单状态中...</span></p>';
 								html += '</div>';
 								html += '<div class="unit-pay">';
-								html += '	<a class="mui-pull-left mui-btn bg" href="javascript:payPage(\'' + data.message[i].orderCode + '\')">立即付款</a>';
-								html += '	<a class="mui-pull-right mui-btn bg" href="javascript:giveupOrder(\'' + data.message[i].orderCode + '\',1)">取消订单</a>';
+								html += '	<a class="mui-pull-left mui-btn bg" href="javascript:payPage(\'' + data.message[i].orderId + '\')">立即付款</a>';
+								html += '	<a class="mui-pull-right mui-btn bg" href="javascript:giveupOrder(\'' + data.message[i].orderId + '\',1)">取消订单</a>';
 								html += '</div>';
 							} else if (data.message[i].orderState == 3){
 								// 发货时间戳
@@ -227,7 +227,7 @@
 								html += '</div>';
 								html += '<div class="unit-pay">';
 								html += '	<a class="mui-pull-left mui-btn bg" href="javascript:queryLogistics(\'' + data.message[i].orderCode + '\')">查看物流</a>';
-								html += '	<a class="mui-pull-right mui-btn bg" href="javascript:aboutCinfirmReceipt(\'' + data.message[i].orderCode + '\')">确认收货</a>';
+								html += '	<a class="mui-pull-right mui-btn bg" href="javascript:aboutCinfirmReceipt(\'' + data.message[i].id + '\')">确认收货</a>';
 								html += '</div>';
 							} else if (data.message[i].orderState == 4) {
 								// 签收时间戳
@@ -396,7 +396,7 @@
 								if(data.message[i].items[j].subjectType==1){
 									html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
 									html += '		<span class="b-money"><span>'  + '</span></span>';//*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
-									html += '		<span class="numbox">还差<span>' + data.message[i].items[j].cashbackCommissionSlot + '</span>人可全返</span>';
+									html += '		<span class="numbox">邀请<span>' + data.message[i].items[j].cashbackCommissionSlot + '</span>人可免单</span>';
 								}else{
 									html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
 									html += '		<span class="b-money"> 返 <span>' + formatCurrency(data.message[i].items[j].cashbackAmount) + '</span></span>';//*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
@@ -441,8 +441,8 @@
 								html += '	<p><span class="grey">获取订单状态中...</span></p>';
 								html += '</div>';
 								html += '<div class="unit-pay">';
-								html += '	<a class="mui-pull-left mui-btn bg" href="javascript:payPage(\'' + data.message[i].orderCode + '\')">立即付款</a>';
-								html += '	<a class="mui-pull-right mui-btn bg" href="javascript:giveupOrder(\'' + data.message[i].orderCode + '\',1)">取消订单</a>';
+								html += '	<a class="mui-pull-left mui-btn bg" href="javascript:payPage(\'' + data.message[i].id + '\')">立即付款</a>';
+								html += '	<a class="mui-pull-right mui-btn bg" href="javascript:giveupOrder(\'' + data.message[i].id + '\',1)">取消订单</a>';
 								html += '</div>';
 							} else if (data.message[i].orderState == 3){
 								// 发货时间戳
@@ -455,7 +455,7 @@
 								html += '	<p><span class="grey">获取订单状态中...</span></p>';
 								html += '</div>';
 								html += '<div class="unit-pay">';
-								html += '	<a class="mui-pull-left mui-btn bg" href="javascript:queryLogistics(\'' + data.message[i].orderCode + '\')">查看物流</a>';
+								html += '	<a class="mui-pull-left mui-btn bg" href="javascript:queryLogistics(\'' + data.message[i].orderID + '\')">查看物流</a>';
 								html += '	<a class="mui-pull-right mui-btn bg" href="javascript:aboutCinfirmReceipt(\'' + data.message[i].orderCode + '\')">确认收货</a>';
 								html += '</div>';
 							} else if (data.message[i].orderState == 4) {
@@ -480,7 +480,6 @@
 							if(flushtype= 1){
 								mui('#orderlist_main').pullRefresh().endPulldownToRefresh();
 							};
-
 							mui("#orderlist_main.mui-scroll-wrapper").pullRefresh().scrollTo(0,0);
 							mui('#orderlist_main').pullRefresh().refresh(true);
 						},200);

@@ -115,7 +115,7 @@ public class WeChatPayController extends SysController {
 		String orderdetail = OkhttpUtils.get(SysContext.ORDERURL + "/ord/orderdetail/info", map);
 		List<Map<String, Object>> orderdetailInfo = JsonUtil.listMaps(orderdetail);
 		Map<String, Object> ordMap = new HashMap<String, Object>();
-		ordMap.put("orderCode", orderId);
+		ordMap.put("id", orderId);
 		String order = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/info", ordMap);
 		List<Map<String, Object>> orderInfo = JsonUtil.listMaps(order);
 		if (orderdetailInfo == null || orderdetailInfo.size() < 1) {
@@ -262,7 +262,9 @@ public class WeChatPayController extends SysController {
 			return mav;
 		} else {
 			mav.addObject("payOrderId", orderId);
-			String results = OkhttpUtils.get(SysContext.ORDERURL + "/ord/getByOrderCode/" + orderId);
+			Map<String, Object> orderMap = new HashMap<String, Object>();
+			orderMap.put("id", orderId);
+			String results = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/getbyid" , orderMap);
 			System.out.println("查询订单信息的返回值为：" + results);
 			ObjectMapper mapper = new ObjectMapper();
 			Map map = mapper.readValue(results, Map.class);
@@ -311,7 +313,8 @@ public class WeChatPayController extends SysController {
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("orderCode", orderId);
+		
+		map.put("id", orderId);
 		map.put("orderId", orderId);
 		map.put("buyerUid", buyerUid);
 		map.put("tradeTitle", "大卖网络-商品购买"); // 支付交易标题
@@ -326,9 +329,10 @@ public class WeChatPayController extends SysController {
 			this.render(response, "{\"message\":\"该订单不存在\",\"flag\":false}");
 			return;
 		}
+		String orderCode = (String)orderDataList.get(0).get("orderCode");
+		map.put("orderCode", orderCode);
 		BigDecimal decimal = new BigDecimal(String.valueOf(orderDataList.get(0).get("realMoney")));
 		map.put("tradeAmount", decimal.toString());
-
 		// 获取商品订单详情
 		String orderdetail = OkhttpUtils.get(SysContext.ORDERURL + "/ord/orderdetail/info", map);
 		List<Map<String, Object>> orderInventoryList = JsonUtil.listMaps(orderdetail);

@@ -331,7 +331,7 @@ public class WeChatOrderController extends SysController {
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("orderCode", orderId);
+		map.put("id", orderId);
 		map.put("userId", userId);
 		map.put("cancelReason", "买家取消订单");
 		map.put("cancelingOrderOpId", userId);

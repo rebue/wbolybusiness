@@ -156,7 +156,7 @@ public class WeChatIndexController extends SysController {
 	@RequestMapping(value = "/wechat/index/getAllIndexData", method = RequestMethod.POST)
 	public void promotionOnlineGoodsList(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// 获取首页推广上线商品信息
-		String results = OkhttpUtils.get(SysContext.ONLINEURL + "/onl/onlinepromotion/list");
+		String results = OkhttpUtils.get(SysContext.ONLINEURL + "/onl/onlinepromotion/list?promotionType=1");
 		System.out.println("获取到的首页推广上线商品信息为：" + results);
 		this.render(response, results);
 	}

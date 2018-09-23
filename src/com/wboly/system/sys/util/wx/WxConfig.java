@@ -9,12 +9,12 @@ public class WxConfig {
 	/**
 	 * 项目本地URL
 	 */
-	public static String onLineURL = "http://596038980.mynatapp.cc/wbolybusiness";
+//	public static String onLineURL = "http://jjl.natapp1.cc/wbolybusiness";
 
 	/**
 	 * 项目线上URL
 	 */
-	//public static String onLineURL = "http://serverapp.wboly.com/wbolybusiness";
+	public static String onLineURL = "https://www.duamai.com/wbolybusiness";
 
 	/**
 	 * 公众号 token
@@ -29,14 +29,14 @@ public class WxConfig {
 	/**
 	 * appid 公众号唯一标识
 	 */
-	//public static String appid = "wx9e24a0de9e3e136c";
-	public static String appid = "wxa5f7f04a76cc41c5"; //线下
+	public static String appid = "wx75f0e29692eab341";
+//	public static String appid = "wxa5f7f04a76cc41c5"; //线下
 
 	/**
 	 * secret 公众号的应用秘钥
 	 */
-	//public static String appsecret = "9ec229c0762f57c46b2d563333541424";
-	public static String appsecret = "0b98b711e69a85c2b7303985f8a11fbb";// 线下
+	public static String appsecret = "719cf3aa7b5a1ba62149edce926c0ccf";
+//	public static String appsecret = "0b98b711e69a85c2b7303985f8a11fbb";// 线下
 
 	/**
 	 * 商户号（mch_id）
