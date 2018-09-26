@@ -107,6 +107,9 @@ public class SysContext {
 	/**实名认证微服务地址**/
 	public static String RNAURL;
 	
+	/**快递微服务地址**/
+	public static String KDIURL;
+	
 	/**
 	 * 微信appid
 	 */

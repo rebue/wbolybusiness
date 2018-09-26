@@ -63,45 +63,49 @@ public class SysListener implements ServletContextListener {
 		// 新用户中心路径
 		String userCenterUrl = PropertiesUtil.getPropertiesValue("system.properties", "USERCENTERURL").toString();
 		SysContext.USERCENTERURL = userCenterUrl;
-		
+
 		// 上线微服务地址
 		String onlineUrl = PropertiesUtil.getPropertiesValue("system.properties", "ONLINEURL").toString();
 		SysContext.ONLINEURL = onlineUrl;
-		
+
 		// 订单微服务地址
 		String orderUrl = PropertiesUtil.getPropertiesValue("system.properties", "ORDERURL").toString();
 		SysContext.ORDERURL = orderUrl;
-		
+
 		// 区域微服务地址
 		String areaUrl = PropertiesUtil.getPropertiesValue("system.properties", "AREAURL").toString();
 		SysContext.AREAURL = areaUrl;
-		
+
 		// 微信微服务地址
 		String wxxUrl = PropertiesUtil.getPropertiesValue("system.properties", "WXXURL").toString();
 		SysContext.WXXURL = wxxUrl;
-		
+
 		// 图片地址
 		String imgPath = PropertiesUtil.getPropertiesValue("system.properties", "IMGPATH").toString();
 		SysContext.IMGPATH = imgPath;
-		
+
 		// 图片路径
 		String imgUrl = PropertiesUtil.getPropertiesValue("system.properties", "IMGURL").toString();
 		SysContext.IMGURL = imgUrl;
-		
-		//实名认证微服务地址
+
+		// 实名认证微服务地址
 		String rnaUrl = PropertiesUtil.getPropertiesValue("system.properties", "RNAURL").toString();
 		SysContext.RNAURL = rnaUrl;
-		
+
+		// 快递微服务地址
+		String kdiUrl = PropertiesUtil.getPropertiesValue("system.properties", "KDIURL").toString();
+		SysContext.KDIURL = kdiUrl;
+
 		/** 微信登录校验key **/
-		String loginSignKey =  PropertiesUtil.getPropertiesValue("system.properties", "LOGINSIGNKEY").toString();
+		String loginSignKey = PropertiesUtil.getPropertiesValue("system.properties", "LOGINSIGNKEY").toString();
 		SysContext.LOGINSIGNKEY = loginSignKey;
-		
+
 		/**
 		 * 微信appid
 		 */
 		String wxAppid = PropertiesUtil.getPropertiesValue("system.properties", "WXAPPID").toString();
 		SysContext.wxAppId = wxAppid;
-		
+
 		// 商品轮播图和商品主图路径
 		sc.setAttribute("goodsImgUrl", imgUrl);
 		// 保存图片路径进Session

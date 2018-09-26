@@ -565,7 +565,7 @@ public class WeChatOrderController extends SysController {
 		String orderId = request.getParameter("orderId");
 		map.put("orderId", orderId);
 		System.out.println("获取订单物流信息参数为：" + String.valueOf(map));
-		String results = OkhttpUtils.get(SysContext.ORDERURL + "/kdi/logistic/getLogisticInfo", map);
+		String results = OkhttpUtils.get(SysContext.KDIURL + "/kdi/logistic/getLogisticInfo", map);
 		System.out.println("获取用户订单物流信息返回值为：" + results);
 		this.render(response, "{\"message\":" + results + ",\"flag\":true}");
 	}
