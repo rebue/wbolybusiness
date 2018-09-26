@@ -226,7 +226,7 @@
 								html += '	<p><span class="grey">获取订单状态中...</span></p>';
 								html += '</div>';
 								html += '<div class="unit-pay">';
-								html += '	<a class="mui-pull-left mui-btn bg" href="javascript:queryLogistics(\'' + data.message[i].orderCode + '\')">查看物流</a>';
+								html += '	<a class="mui-pull-left mui-btn bg" href="javascript:queryLogistics(\'' + data.message[i].id + '\')">查看物流</a>';
 								html += '	<a class="mui-pull-right mui-btn bg" href="javascript:aboutCinfirmReceipt(\'' + data.message[i].id + '\')">确认收货</a>';
 								html += '</div>';
 							} else if (data.message[i].orderState == 4) {
@@ -455,7 +455,7 @@
 								html += '	<p><span class="grey">获取订单状态中...</span></p>';
 								html += '</div>';
 								html += '<div class="unit-pay">';
-								html += '	<a class="mui-pull-left mui-btn bg" href="javascript:queryLogistics(\'' + data.message[i].orderID + '\')">查看物流</a>';
+								html += '	<a class="mui-pull-left mui-btn bg" href="javascript:queryLogistics(\'' + data.message[i].id + '\')">查看物流</a>';
 								html += '	<a class="mui-pull-right mui-btn bg" href="javascript:aboutCinfirmReceipt(\'' + data.message[i].orderCode + '\')">确认收货</a>';
 								html += '</div>';
 							} else if (data.message[i].orderState == 4) {
@@ -587,10 +587,11 @@
 			//根据订单号获取订单物流信息
 			mui.ajax('${ctx}/wechat/order/getOrderLogisticInfo.htm',{
 				data:{
-					orderId : orderId,
+					key:'59c23bdde5603ef993cf03fe64e448f1',
+					orderId : orderId
 				},
 				dataType:'json',//服务器返回json格式数据
-				type:'post',//HTTP请求类型
+				type:'get',//HTTP请求类型
 				success:function(data){
 					loading(2);
 					if(data.flag){

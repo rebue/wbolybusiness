@@ -552,9 +552,9 @@ public class WeChatOrderController extends SysController {
 	 * @param response
 	 * @throws IOException
 	 */
+	@RequestMapping(value = "/wechat/order/getOrderLogisticInfo")
 	public void getOrderLogisticInfo(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
-
 		if (userId.equals("")) {
 			this.render(response, "{\"message\":\"您没有登录\",\"flag\":false}");
 			return;
@@ -569,3 +569,13 @@ public class WeChatOrderController extends SysController {
 		this.render(response, "{\"message\":" + results + ",\"flag\":true}");
 	}
 }
+
+
+
+
+
+
+
+
+
+
