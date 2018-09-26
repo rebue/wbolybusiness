@@ -324,11 +324,11 @@
 				success: function(data) {
 					console.log(data)
 					var html = "";
-					for(var i = 0; i < data.list.length; i++) {
+					for(var i = 0; i < data.message.list.length; i++) {
 						html += '<li>'
-						html += '	<span>'+data.list[i].onlineTitle+'</span>'
-						html += '	<span>'+data.list[i].specName+'</span>'
-						html += '	<span>'+data.list[i].cashbackTotal+'</span>'
+						html += '	<span>'+data.message.list[i].onlineTitle+'</span>'
+						html += '	<span>'+data.message.list[i].specName+'</span>'
+						html += '	<span>'+data.message.list[i].cashbackTotal+'</span>'
 						html += '<li>'
 					};
 					if(flushtype != 2) {
@@ -446,11 +446,11 @@
 				success: function(data) {
 					console.log(data)
 					var html = "";
-					for(var i = 0; i < data.list.length; i++) {
+					for(var i = 0; i < data.message.list.length; i++) {
 						html += '<li>'
-						html += '	<span>'+data.list[i].onlineTitle+'</span>'
-						html += '	<span>'+data.list[i].specName+'</span>'
-						html += '	<span>'+data.list[i].cashbackTotal+'</span>'
+						html += '	<span>' + data.message.list[i].onlineTitle + '</span>'
+						html += '	<span>' + data.message.list[i].specName + '</span>'
+						html += '	<span>' + data.message.list[i].cashbackTotal + '</span>'
 						html += '<li>'
 					};
 					if(flushtype != 2) {
