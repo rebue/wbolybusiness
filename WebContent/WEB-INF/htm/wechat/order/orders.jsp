@@ -602,6 +602,7 @@
 					}
 				},
 				error:function(xhr,type,errorThrown){
+					mui.toast("查询订单轨迹出错");
 					//异常处理；
 					console.log(type);
 				}
