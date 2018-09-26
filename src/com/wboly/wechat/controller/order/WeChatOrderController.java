@@ -517,7 +517,7 @@ public class WeChatOrderController extends SysController {
 	 * 
 	 * @param request
 	 * @param response
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public void getCashBack(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
@@ -542,6 +542,30 @@ public class WeChatOrderController extends SysController {
 		System.out.println("获取用户返现信息的参数为：" + String.valueOf(map));
 		String results = OkhttpUtils.get(SysContext.ORDERURL + "/ord/orderdetail", map);
 		System.out.println("获取用户订单的返回值为：" + results);
+		this.render(response, "{\"message\":" + results + ",\"flag\":true}");
+	}
+
+	/**
+	 * 根据订单ID获取订单物流信息
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	public void getOrderLogisticInfo(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+
+		if (userId.equals("")) {
+			this.render(response, "{\"message\":\"您没有登录\",\"flag\":false}");
+			return;
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		// 订单
+		String orderId = request.getParameter("orderId");
+		map.put("orderId", orderId);
+		System.out.println("获取订单物流信息参数为：" + String.valueOf(map));
+		String results = OkhttpUtils.get(SysContext.ORDERURL + "/kdi/logistic/getLogisticInfo", map);
+		System.out.println("获取用户订单物流信息返回值为：" + results);
 		this.render(response, "{\"message\":" + results + ",\"flag\":true}");
 	}
 }
