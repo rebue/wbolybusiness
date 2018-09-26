@@ -519,6 +519,7 @@ public class WeChatOrderController extends SysController {
 	 * @param response
 	 * @throws IOException
 	 */
+	@RequestMapping(value = "/wechat/order/getCashBack")
 	public void getCashBack(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
 

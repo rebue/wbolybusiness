@@ -295,7 +295,7 @@
 						object.endPullupToRefresh(true); //已加载全部数据则传入true，还有剩下的数据则传入false，加个判断	
 					}
 					if(data.list.length < 1){
-						mui.toast("没有待反现信息");
+						mui.toast("没有交易信息");
 					}
 				},
 				error: function(xhr, type, errorThrown) {
@@ -312,7 +312,7 @@
 			} else {
 				start += 1;
 			}
-			mui.ajax('${ctx }/wechat/user/beBeingWithdraw.htm', {
+			mui.ajax('${ctx }/wechat/order/getCashBack.htm', {
 				data: {
 					"key": "59c23bdde5603ef993cf03fe64e448f1",
 					"pageNum": start,
@@ -357,7 +357,7 @@
 						object.endPullupToRefresh(true); //已加载全部数据则传入true，还有剩下的数据则传入false，加个判断	
 					}
 					if(data.list.length < 1){
-						mui.toast("没有待反现信息");
+						mui.toast("没有待全反信息");
 					}
 				},
 				error: function(xhr, type, errorThrown) {
@@ -417,7 +417,7 @@
 						object.endPullupToRefresh(true); //已加载全部数据则传入true，还有剩下的数据则传入false，加个判断	
 					}
 					if(data.list.length < 1){
-						mui.toast("没有待反现信息");
+						mui.toast("没有反现信息");
 					}
 				},
 				error: function(xhr, type, errorThrown) {
@@ -434,7 +434,7 @@
 			} else {
 				start += 1;
 			}
-			mui.ajax('${ctx }/wechat/user/beBeingWithdraw.htm', {
+			mui.ajax('${ctx }/wechat/order/getCashBack.htm', {
 				data: {
 					"key": "59c23bdde5603ef993cf03fe64e448f1",
 					"pageNum": start,
@@ -540,7 +540,7 @@
 						object.endPullupToRefresh(true); //已加载全部数据则传入true，还有剩下的数据则传入false，加个判断	
 					}
 					if(data.list.length < 1){
-						mui.toast("没有待反现信息");
+						mui.toast("没有提现中信息");
 					}
 				},
 				error: function(xhr, type, errorThrown) {
