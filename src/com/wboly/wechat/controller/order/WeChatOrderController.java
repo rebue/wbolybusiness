@@ -55,7 +55,7 @@ public class WeChatOrderController extends SysController {
 	 * @Name: 用户申请售后提交
 	 * @Author: nick
 	 */
-	//@RequestMapping(value = "/wechat/order/afterSaleApply")
+	// @RequestMapping(value = "/wechat/order/afterSaleApply")
 	public void ApplyAftermarket1(OrderEntity entity, HttpServletRequest request, HttpServletResponse response)
 			throws TException {
 
@@ -143,17 +143,18 @@ public class WeChatOrderController extends SysController {
 		}
 		return mav;
 	}
-	
+
 	/**
-	 * @throws IOException 
+	 * @throws IOException
 	 * @Name: 查看物流信息页面跳转
 	 * @Author: nick
 	 */
 	@RequestMapping(value = "/wechat/order/queryLogistics")
 	public ModelAndView queryLogistics(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		new ObjectMapper();
-		
-		String orderInfo = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/info?orderCode="+request.getParameter("orderId"));
+
+		String orderInfo = OkhttpUtils
+				.get(SysContext.ORDERURL + "/ord/order/info?orderCode=" + request.getParameter("orderId"));
 		List<Map<String, Object>> list = JsonUtil.listMaps(orderInfo);
 		System.out.println(String.valueOf(list));
 		String shipperCode = String.valueOf(list.get(0).get("shipperCode"));
@@ -164,20 +165,21 @@ public class WeChatOrderController extends SysController {
 		mav.setViewName("/htm/wechat/order/queryLogistics");
 		return mav;
 	}
-	
+
 	/**
-	 * @throws IOException 
+	 * @throws IOException
 	 * @Name: 买家部分退货提交
 	 * @Author: nick
 	 */
 	@RequestMapping(value = "/wechat/order/returnGoods")
-	public void ReturnPartofGoods(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, Object> map) throws TException, IOException {
+	public void ReturnPartofGoods(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam Map<String, Object> map) throws TException, IOException {
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
 		if (userId.equals("")) {
 			this.render(response, "{\"msg\":\"您没有登录\",\"result\":-11}");
 			return;
 		}
-		
+
 		map.put("userId", userId);
 		System.err.println("添加用户退货信息的参数为：" + String.valueOf(map));
 		// 添加用户退货信息
@@ -185,7 +187,7 @@ public class WeChatOrderController extends SysController {
 		System.err.println("添加用户退货信息的返回值为：" + results);
 		if (results == null || results.equals("") || results.equals("[]")) {
 			this.render(response, "{\"msg\":\"提交失败\",\"result\":-10}");
-			return ;
+			return;
 		}
 		this.render(response, results);
 	}
@@ -194,7 +196,7 @@ public class WeChatOrderController extends SysController {
 	 * @Name: 买家评价商品
 	 * @Author: nick
 	 */
-	//@RequestMapping(value = "/wechat/order/appraiseGoods")
+	// @RequestMapping(value = "/wechat/order/appraiseGoods")
 	public void AppraiseOrder(AppraiseEntity entity, HttpServletRequest request, HttpServletResponse response)
 			throws TException {
 
@@ -308,15 +310,16 @@ public class WeChatOrderController extends SysController {
 	}
 
 	/**
-	 * @throws IOException 
-	 * @throws JsonMappingException 
-	 * @throws JsonParseException 
+	 * @throws IOException
+	 * @throws JsonMappingException
+	 * @throws JsonParseException
 	 * @Name: 用户放弃订单
 	 * @Author: nick
 	 */
 	@SuppressWarnings({ "rawtypes" })
 	@RequestMapping(value = "/wechat/order/cancelOrder")
-	public void CancelShopOrder(HttpServletRequest request, HttpServletResponse response) throws TException, JsonParseException, JsonMappingException, IOException {
+	public void CancelShopOrder(HttpServletRequest request, HttpServletResponse response)
+			throws TException, JsonParseException, JsonMappingException, IOException {
 
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
 		if (userId.equals("")) {
@@ -329,7 +332,7 @@ public class WeChatOrderController extends SysController {
 			this.render(response, "{\"message\":\"请求参数有误\",\"flag\":false}");
 			return;
 		}
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", orderId);
 		map.put("userId", userId);
@@ -393,13 +396,14 @@ public class WeChatOrderController extends SysController {
 	}
 
 	/**
-	 * @throws IOException 
+	 * @throws IOException
 	 * @Name: 生成门店订单
 	 * @Author: nick
 	 */
 	@SuppressWarnings("rawtypes")
 	@RequestMapping("/wechat/order/createOrder")
-	public void CreateShopOrder(HttpServletRequest request, HttpServletResponse response) throws TException, IOException {
+	public void CreateShopOrder(HttpServletRequest request, HttpServletResponse response)
+			throws TException, IOException {
 		// 当前用户编号
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
 		// 当前用户名称
@@ -407,7 +411,7 @@ public class WeChatOrderController extends SysController {
 		String jsonData = request.getParameter("jsonData");
 		String goodsInfo = request.getParameter("goodsInfo");
 		System.out.println("生成订单的商品信息=====" + goodsInfo);
-		System.out.println("生成订单的总金额、总返现金、总数量、收货地址编号=====" +jsonData);
+		System.out.println("生成订单的总金额、总返现金、总数量、收货地址编号=====" + jsonData);
 		List<Map<String, Object>> list = JsonUtil.listMaps(jsonData);
 		// 将goodsInfo转为List<Map>
 		List<Map<String, Object>> goodsList = JsonUtil.listMaps(goodsInfo);
@@ -421,13 +425,15 @@ public class WeChatOrderController extends SysController {
 		ObjectMapper mapper = new ObjectMapper();
 		String goodsJson = mapper.writeValueAsString(goodsList);
 		System.err.println("用户下订单的参数为=====" + goodsJson);
-		String results = OkhttpUtils.post(SysContext.ORDERURL + "/ord/order?orderJson=" + java.net.URLEncoder.encode(goodsJson, "UTF-8"));
+		String results = OkhttpUtils
+				.post(SysContext.ORDERURL + "/ord/order?orderJson=" + java.net.URLEncoder.encode(goodsJson, "UTF-8"));
 		System.err.println("用户下订单返回值为：" + results);
 		if (results != null && !results.equals("") && !results.equals("null") && !results.equals("{}")) {
 			Map resultMap = mapper.readValue(results, Map.class);
 			int result = Integer.parseInt(String.valueOf(resultMap.get("result")));
 			if (result > 0) {
-				this.render(response, "{\"message\":\"" + resultMap.get("msg") + "\",\"orderId\":\"" + resultMap.get("orderId") + "\",\"flag\":true}");
+				this.render(response, "{\"message\":\"" + resultMap.get("msg") + "\",\"orderId\":\""
+						+ resultMap.get("orderId") + "\",\"flag\":true}");
 			} else {
 				this.render(response, "{\"message\":\"" + resultMap.get("msg") + "\",\"flag\":false}");
 			}
@@ -435,14 +441,13 @@ public class WeChatOrderController extends SysController {
 			this.render(response, "{\"message\":\"下单失败\",\"flag\":false}");
 		}
 	}
-	
+
 	/**
-	 * 买家确认收货
-	 * Title: aboutCinfirmReceipt
-	 * Description: 
+	 * 买家确认收货 Title: aboutCinfirmReceipt Description:
+	 * 
 	 * @param request
 	 * @param response
-	 * @throws IOException 
+	 * @throws IOException
 	 * @date 2018年4月14日 下午1:37:41
 	 */
 	@SuppressWarnings("rawtypes")
@@ -474,7 +479,7 @@ public class WeChatOrderController extends SysController {
 			this.render(response, "{\"message\":\"您没有登录\",\"flag\":false}");
 		}
 	}
-	
+
 	/**
 	 * @Name: 用户待返现订单列表
 	 * @Author: nick
@@ -503,9 +508,40 @@ public class WeChatOrderController extends SysController {
 		map.put("userId", userId);
 		System.out.println("获取用户订单的参数为：" + String.valueOf(map));
 		String results = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/getCashBackOrders", map);
-		//String results = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/info", map);
 		System.out.println("获取用户订单的返回值为：" + results);
 		this.render(response, "{\"message\":" + results + ",\"flag\":true}");
 	}
-	
+
+	/**
+	 * 获取返现信息
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 */
+	public void getCashBack(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+
+		if (userId.equals("")) {
+			this.render(response, "{\"message\":\"您没有登录\",\"flag\":false}");
+			return;
+		}
+
+		// 开始条数
+		String pageNum = request.getParameter("pageNum");
+		// 结束条数
+		String pageSize = request.getParameter("pageSize");
+		// 板块类型
+		String subjectType = request.getParameter("subjectType");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("pageNum", pageNum);
+		map.put("pageSize", pageSize);
+		map.put("userId", userId);
+		map.put("commissionState", 1);
+		map.put("subjectType", subjectType);
+		System.out.println("获取用户返现信息的参数为：" + String.valueOf(map));
+		String results = OkhttpUtils.get(SysContext.ORDERURL + "/ord/orderdetail", map);
+		System.out.println("获取用户订单的返回值为：" + results);
+		this.render(response, "{\"message\":" + results + ",\"flag\":true}");
+	}
 }
