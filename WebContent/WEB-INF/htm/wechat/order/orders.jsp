@@ -593,22 +593,19 @@
 				dataType:'json',//服务器返回json格式数据
 				type:'get',//HTTP请求类型
 				success:function(data){
-					loading(2);
 					if(data.flag){
-						AjaxGetData(0);// 订单取消成功之后重新加载
-						mui.toast(data.message);
-						return ;
+						console.log(data);
+						var shipperName = data.message.shipperName;
+						var logisticCode = data.message.logisticCode;
+						var id = data.message.id;
+						window.location.href = "https://www.duamai.com/damai-wx-web/kdi/KdiTrace.html?shipperName="+shipperName+'&logisticId='+id+'&logisticCode='+logisticCode;
 					}
-					mui.toast(data.message);
 				},
 				error:function(xhr,type,errorThrown){
 					//异常处理；
 					console.log(type);
-					loading(2);
 				}
 			});
-// 			window.location.href = "${ctx}/wechat/order/queryLogistics.htm?promoterId=" + orderId;
-// 			window.location.href = "https://www.duamai.com/damai-wx-web/kdi/KdiSearch.html";
 		}
 	</script>
 </body>
