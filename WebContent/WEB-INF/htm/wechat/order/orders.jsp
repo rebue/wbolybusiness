@@ -167,7 +167,7 @@
 								if(data.message[i].items[j].subjectType==1){
 									html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
 									html += '		<span class="b-money"><span>'  + '</span></span>';
-									html += '		<span class="numbox">邀请<span>' + data.message[i].items[j].cashbackCommissionSlot + '</span>人可免单</span>';
+									html += '		<span class="numbox">邀请<span style = "color:red">' + data.message[i].items[j].cashbackCommissionSlot + '</span>人可免单</span>';
 								}else{
 									html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
 									html += '		<span class="b-money"> 返 <span>' + formatCurrency(data.message[i].items[j].cashbackAmount) + '</span></span>';//*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
@@ -237,7 +237,10 @@
 								html += '<div class="cd-box" data-type="2">';
 								html += '	<input type="hidden" value="' + receivedTimes + '" class="buytime">'; // 签收时间戳
 								html += '	<input type="hidden" value="' + automaticSettlement + '" class="endtime">'; // 签收时间加七天（七天返款）
-								html += '	<p><span class="grey">获取订单状态中...</span></p>';
+								html += '	<p><span class="grey"></span></p>';
+								html += '</div>';
+								html += '<div class="unit-pay">';
+								html += '	<a class="mui-pull-right mui-btn bg"> 已签收</a>';
 								html += '</div>';
 							};
 							html += '	</div>'
@@ -287,7 +290,9 @@
 					}else{
 						var label = "剩余支付时间：";	
 					};
-					mui("div.cd-box p")[i].innerHTML= label+content;
+					if(mui("div.cd-box")[i].getAttribute("data-type")!="2"){
+						mui("div.cd-box p")[i].innerHTML= label+content;
+					}
 				} else {
 					if(mui("div.cd-box")[i].getAttribute("data-type") == "1"){
 						mui("div.cd-box p")[i].innerHTML="已签收";  
@@ -396,7 +401,7 @@
 								if(data.message[i].items[j].subjectType==1){
 									html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
 									html += '		<span class="b-money"><span>'  + '</span></span>';//*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
-									html += '		<span class="numbox">邀请<span>' + data.message[i].items[j].cashbackCommissionSlot + '</span>人可免单</span>';
+									html += '		<span class="numbox">邀请<span style = "color:red">' + data.message[i].items[j].cashbackCommissionSlot + '</span>人可免单</span>';
 								}else{
 									html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
 									html += '		<span class="b-money"> 返 <span>' + formatCurrency(data.message[i].items[j].cashbackAmount) + '</span></span>';//*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
@@ -466,7 +471,10 @@
 								html += '<div class="cd-box" data-type="2">';
 								html += '	<input type="hidden" value="' + receivedTimes + '" class="buytime">'; // 签收时间戳
 								html += '	<input type="hidden" value="' + automaticSettlement + '" class="endtime">'; // 签收时间加七天（七天返款）
-								html += '	<p><span class="grey">获取订单状态中...</span></p>';
+								html += '	<p><span class="grey"></span></p>';
+								html += '</div>';
+								html += '<div class="unit-pay">';
+								html += '	<a class="mui-pull-right mui-btn bg"> 已签收</a>';
 								html += '</div>';
 							};
 							html += '</div>'
