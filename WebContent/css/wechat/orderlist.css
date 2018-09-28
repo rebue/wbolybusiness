@@ -308,13 +308,13 @@ px
 .order-list-unit .car-inner-box  a.full-return:after {
 	content: '拼全返';
 	width: 150%;
-	line-height: 160%;
+	line-height: 140%;
 	background: #fe3000;
 	position: absolute;
-	top: 10%;
+	top: 20%;
 	left: 0;
 	z-index: 999;
-	font-size: 0.7rem;
+	font-size: 0.6rem;
 	color: #fff;
 	text-align: center;
 	transform: rotate(45deg);
