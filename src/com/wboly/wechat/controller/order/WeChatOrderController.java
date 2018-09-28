@@ -340,7 +340,7 @@ public class WeChatOrderController extends SysController {
 		map.put("cancelingOrderOpId", userId);
 		System.out.println("取消订单的参数为：{}" + String.valueOf(map));
 		// 取消订单
-		String results = OkhttpUtils.putByFormParams(SysContext.ORDERURL + "/ord/order/cancel", map);
+		String results = OkhttpUtils.putByJsonParams(SysContext.ORDERURL + "/ord/order/cancel", map);
 		System.out.println("取消订单的返回值为：" + results);
 		ObjectMapper mapper = new ObjectMapper();
 		Map resultMap = mapper.readValue(results, Map.class);
