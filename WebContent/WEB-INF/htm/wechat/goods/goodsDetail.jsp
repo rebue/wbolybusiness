@@ -546,11 +546,13 @@
 						sboxHtml +='<span class="goodsnum" id="stock">库存：<span></span></span>';
 					}else{
 						html += '<li class="mui-table-view-cell price-bar">';
-						html += '	<span class="full-return-price">¥<em>' + formatCurrency(data[0].salePrice) + '</em></span>';
+						html += '	<span class="full-return-price price">¥<em>' + formatCurrency(data[0].salePrice) + '</em></span>';
 						html += ' 	<span class="now-price">￥<em>0元'  + '</em></span>';
+						html += '<span id="ss_back" style="display:none"></span>'
+						html += ' 	<span style="display:none" class="back-money">返<em></em></span>'
 						html += '</li>';
 						sboxHtml +='<span class="ss_full_return_price">¥<span id="ss_price"></span></span> ';
-						sboxHtml +='<span class="ss_now_price">￥<em>0元</span>';
+						sboxHtml +='<span class="ss_now_price">￥<em style="display=none;" ></em>0元</span>';
 						sboxHtml +='<span class="goodsnum" id="stock">库存：<span></span></span>';
 					}
 					html += '<li class="mui-table-view-cell selectbar">';
