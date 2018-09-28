@@ -33,7 +33,7 @@
 						class="wboly-icon"> <img
 							src="${ctx }/images/wechat/concern.png" alt="" />
 					</span>
-						<div class="mui-media-body">全返商品</div></a></li>
+						<div class="mui-media-body">拼全返商品</div></a></li>
 				<li style="margin-left:0.9rem" class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3"><a
 					href="${ctx }/wechat/user/myWalletPage"> <span
 						class="wboly-icon"> <img
