@@ -169,15 +169,15 @@
 }
 
 #goods-main-box .car-inner-box .car-inner-box-img a.full-return:after {
-	content: '全返';
+	content: '拼全返';
 	width: 150%;
-	line-height: 150%;
+	line-height: 160%;
 	background: #fe3000;
 	position: absolute;
-	top: 10%;
+	top: 14%;
 	left: 0;
 	z-index: 999;
-	font-size: 0.75rem;
+	font-size: 0.7rem;
 	color: #fff;
 	text-align: center;
 	transform: rotate(45deg);
