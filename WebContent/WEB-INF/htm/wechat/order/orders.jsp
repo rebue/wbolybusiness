@@ -181,7 +181,7 @@
 								}else if(data.message[i].items[j].returnState ==2){
 									html+='<button class="mui-btn locked">已退货</button>'
 								}else if(data.message[i].items[j].returnState == 0 || data.message[i].items[j].returnState == 3){
-									var unitJson ='{"orderCode":"' + data.message[i].orderCode + '","orderDetailId":"' + data.message[i].items[j].id + '","onlineId":"' + data.message[i].items[j].onlineId + '","onlineTitle":"' + data.message[i].items[j].onlineTitle + '","goodsQsmm":"${goodsImgUrl}' + goodsQsmm + '","productId":"' + data.message[i].items[j].productId + '","buyPrice":"' + formatCurrency(data.message[i].items[j].buyPrice) + '","cashbackAmount":"' + formatCurrency(data.message[i].items[j].cashbackAmount) + '","buyCount":"' + realBuyCount + '","specName":"' + data.message[i].items[j].specName + '"}';
+									var unitJson ='{"orderCode":"' + data.message[i].orderCode + '","orderId":"' + data.message[i].id +'","orderDetailId":"' + data.message[i].items[j].id + '","onlineId":"' + data.message[i].items[j].onlineId + '","onlineTitle":"' + data.message[i].items[j].onlineTitle + '","goodsQsmm":"${goodsImgUrl}' + goodsQsmm + '","productId":"' + data.message[i].items[j].productId + '","buyPrice":"' + formatCurrency(data.message[i].items[j].buyPrice) + '","cashbackAmount":"' + formatCurrency(data.message[i].items[j].cashbackAmount) + '","buyCount":"' + realBuyCount + '","specName":"' + data.message[i].items[j].specName + '"}';
 									if (data.message[i].orderState != 1 && data.message[i].orderState != -1){
 										if(data.message[i].items[j].returnState == 0 || data.message[i].items[j].returnState == 3){
 											html+='<a href="javascript:returnPage(\'' + b.encode(unitJson) + '\')"  class="mui-btn">退货</a>';
@@ -416,7 +416,7 @@
 								}else if(data.message[i].items[j].returnState ==2){
 									html += '<button class="mui-btn locked">已退货</button>';
 								}else if(data.message[i].items[j].returnState == 0  || data.message[i].items[j].returnState == 3){
-									var unitJson ='{"orderCode":"' + data.message[i].orderCode + '","orderDetailId":"' + data.message[i].items[j].id + '","onlineId":"' + data.message[i].items[j].onlineId + '","onlineTitle":"' + data.message[i].items[j].onlineTitle + '","goodsQsmm":"${goodsImgUrl}' + goodsQsmm + '","productId":"' + data.message[i].items[j].productId + '","buyPrice":"' + formatCurrency(data.message[i].items[j].buyPrice) + '","cashbackAmount":"' + formatCurrency(data.message[i].items[j].cashbackAmount) + '","buyCount":"' + realBuyCount + '","specName":"' + data.message[i].items[j].specName + '"}';
+									var unitJson ='{"orderCode":"' + data.message[i].orderCode + '","orderId":"' + data.message[i].id +'","orderDetailId":"' + data.message[i].items[j].id + '","onlineId":"' + data.message[i].items[j].onlineId + '","onlineTitle":"' + data.message[i].items[j].onlineTitle + '","goodsQsmm":"${goodsImgUrl}' + goodsQsmm + '","productId":"' + data.message[i].items[j].productId + '","buyPrice":"' + formatCurrency(data.message[i].items[j].buyPrice) + '","cashbackAmount":"' + formatCurrency(data.message[i].items[j].cashbackAmount) + '","buyCount":"' + realBuyCount + '","specName":"' + data.message[i].items[j].specName + '"}';
 									if (data.message[i].orderState != 1 && data.message[i].orderState != -1){
 										if(data.message[i].items[j].returnState == 0 || data.message[i].items[j].returnState == 3){
 											html += '<a href="javascript:returnPage(\'' + b.encode(unitJson) + '\')"  class="mui-btn">退货</a>'

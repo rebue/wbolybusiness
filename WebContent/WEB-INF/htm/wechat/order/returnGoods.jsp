@@ -100,6 +100,8 @@
 	<script type="text/javascript" charset="utf-8">
 		// 订单编号
 		var orderCode = "${returnData['orderCode'] }";
+		// 订单编号
+		var orderId = "${returnData['orderId'] }";
 		// 订单详情编号
 		var orderDetailId = "${returnData['orderDetailId'] }";
 		// 规格名称
@@ -196,6 +198,7 @@
 				type : 'post',
 				dataType : 'json',
 				data : {
+					orderId : orderId,
 					orderCode : orderCode,
 					orderDetailId : orderDetailId,
 					onlineId : onlineId,
