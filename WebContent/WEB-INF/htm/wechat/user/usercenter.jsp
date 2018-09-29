@@ -123,22 +123,22 @@
 							</li>
 						</ul>
 					</li>
-					<li class="mui-table-view-cell">
+					<li class="mui-table-view-cell setPw" id="${ctx }/wechat/user/updateloginpwdpage.htm?userId=${userId}" >
 						<a href="${ctx }/wechat/user/updateloginpwdpage.htm?userId=${userId}" class="mui-navigate-right notshare"> 
 							<span class="mui-icon mui-icon-compose mui-pull-left"></span> 修改或设置登录密码
 						</a>
 					</li>
-					<li  class="mui-table-view-cell">
+					<li  class="mui-table-view-cell setName" id="${ctx }/wechat/user/setLoninNamePage.htm?userId=${userId}" >
 						<a href="${ctx }/wechat/user/setLoninNamePage.htm?userId=${userId}" class="mui-navigate-right notshare"> 
 							<span class="mui-icon mui-icon-compose mui-pull-left"></span> 修改或设置登录名称
 						</a>
 					</li>
-					<li class="mui-table-view-cell">
+					<li class="mui-table-view-cell setAddress" id="${ctx }/wechat/user/newAddressPage.htm?userId=${userId}" >
 						<a href="${ctx }/wechat/user/newAddressPage.htm?userId=${userId}" class="mui-navigate-right notshare"> 
 							<span class="mui-icon mui-icon-map mui-pull-left"></span> 收货地址
 						</a>
 					</li>
-					<li class="mui-table-view-cell">
+					<li class="mui-table-view-cell  setRealName" id="${ctx }/wechat/user/verifyRealNamePage.htm" >
 						<a id="verify" href="${ctx }/wechat/user/verifyRealNamePage.htm"  class="mui-navigate-right notshare"> 
 							<span class="mui-icon mui-icon-paperplane mui-pull-left"></span> 申请实名认证
 						</a>
@@ -160,6 +160,12 @@
 			$.init([LoadCartNum()]);
 			$.ready(function() {
 				mui('body').on('tap','a',function(){document.location.href=this.href;});
+				
+				mui('body').on('tap','.setPw',function(){document.location.href=this.id;});
+				mui('body').on('tap','.setName',function(){document.location.href=this.id;});
+				mui('body').on('tap','.setAddress',function(){document.location.href=this.id;});
+				mui('body').on('tap','.setRealName',function(){document.location.href=this.id;});
+
 				mui(".mui-tab-item-wboly")[3].classList.add('mui-active');
 				mui('#usercenter_main.mui-scroll-wrapper').scroll({bounce: false});
 				
