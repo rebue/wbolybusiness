@@ -93,12 +93,12 @@ public class WeChatUserController extends SysController {
 			return;
 		}
 		System.err.println("删除用户收货地址的参数为：" + addressId);
-		String results = OkhttpUtils.delete(SysContext.ORDERURL + "/ord/addr/" + addressId);
+		String results = OkhttpUtils.delete(SysContext.ORDERURL + "/ord/addr?id=" + addressId);
 		System.err.println("删除用户收货地址的返回值为：" + results);
 		ObjectMapper mapper = new ObjectMapper();
 		Map resultMap = mapper.readValue(results, Map.class);
-		boolean flag = (boolean) resultMap.get("success");
-		if (flag) {
+		int flag =(int)resultMap.get("result");
+		if (flag==1) {
 			this.render(response, "{\"message\":\"删除成功\",\"flag\":true}");
 			return;
 		}
