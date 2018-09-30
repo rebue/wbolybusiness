@@ -282,14 +282,14 @@ public class WeChatOrderController extends SysController {
 					mav.addObject("stayPay", "mui-active");
 					break;
 				case "stayTake":
-					mav.addObject("OrderType", 2);
+					mav.addObject("OrderType", 3);
 					mav.addObject("allOrder", "");
 					mav.addObject("stayTake", "mui-active");
 					mav.addObject("stayReturn", "");
 					mav.addObject("stayPay", "");
 					break;
 				case "stayReturn":
-					mav.addObject("OrderType", 3);
+					mav.addObject("OrderType", 4);
 					mav.addObject("allOrder", "");
 					mav.addObject("stayTake", "");
 					mav.addObject("stayReturn", "mui-active");

@@ -130,15 +130,28 @@
 								html += '	<input type="hidden" name="goodsId" value="'+data.message[i].items[j].onlineId +'">'
 								html += '	<div class="car-inner-box">'
 								html += '		<div class="car-inner-box-img">'
-								html += '			<img src="${goodsImgUrl}'+goodsQsmm+'_187_187.' + strs[1] + '" alt="" class="goodspic">';
+								if(data.message[i].items[j].subjectType==1){
+									html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '&promoterId=${userId}' + '" class="full-return">';
+									html += '		<img src="${goodsImgUrl}' + goodsQsmm + '" alt="" class="goodspic">';
+									html += '	</a>';
+								}else{
+									html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '&promoterId=${userId}' + '">';
+									html += '		<img src="${goodsImgUrl}' + goodsQsmm + '" alt="" class="goodspic">';
+									html += '	</a>';
+								}
 								html += '		</div>'
 								html += '	<div class="car-inner-body">'
 								html += '<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '&promoterId=${userId}' + '">'+ data.message[i].items[j].onlineTitle +'</a></h5>'
 								html += '	<p>规格：'+ data.message[i].items[j].specName+'</p><br/>'
 								html += '	<div class="price-area">'
-								html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) +'</span></span>'
-								html += '		<span class="b-money"> 返 <span>'+formatCurrency(data.message[i].items[j].cashbackAmount) +'</span></span>'//*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
-								html += '		<span class="numbox">数量：<span>'+data.message[i].items[j].buyCount +'</span></span>'
+								if(data.message[i].items[j].subjectType==1){
+									html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
+									html += '		<span class="b-money"><span>'  + '</span></span>';
+								}else{
+									html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
+									html += '		<span class="b-money"> 返 <span>' + formatCurrency(data.message[i].items[j].cashbackAmount) + '</span></span>';//*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
+									html += '		<span class="numbox">数量：<span>' + buyCount + '</span></span>';
+								}
 								html += '	</div>'
 								html += '</div>'									
 								html += '<div class="button-box">'
@@ -156,7 +169,7 @@
 								}else if(data.message[i].applicationState==4){
 									html += '<button class="mui-btn locked">已拒绝</button>'
 								}else if(data.message[i].items[j].returnState ==0){
-									var unitJson = '{"shopId":"'+data.message[i].items[j].shopid+'","supplierUid":"'+data.message[i].items[j].supplierUid+'","orderId":"'+data.message[i].orderId+'","ruleNum":"'+data.message[i].items[j].ruleNum+'","attrVal":"'+data.message[i].items[j].attrval+'","activityId":"'+data.message[i].items[j].activityId+'","img":"http://img.wboly.com/goods/'+data.message[i].items[j].faceimg+'_187_187.jpg","goodsId":"'+data.message[i].items[j].goodsId+'","price":"'+formatCurrency(data.message[i].items[j].retailPrice/100)+'","back":"'+formatCurrency(data.message[i].items[j].retailBacLimit/100)+'","number":"'+data.message[i].items[j].num+'","goodsName":"'+data.message[i].items[j].goodsTitle+'"}';
+									var unitJson = '{"shopId":"'+data.message[i].items[j].shopid+'","supplierUid":"'+data.message[i].items[j].supplierUid+'","orderId":"'+data.message[i].orderId+'","ruleNum":"'+data.message[i].items[j].ruleNum+'","attrVal":"'+data.message[i].items[j].attrval+'","activityId":"'+data.message[i].items[j].activityId+'","img":"http://img.wboly.com/goods/'+data.message[i].items[j].faceimg+'.jpg","goodsId":"'+data.message[i].items[j].goodsId+'","price":"'+formatCurrency(data.message[i].items[j].retailPrice/100)+'","back":"'+formatCurrency(data.message[i].items[j].retailBacLimit/100)+'","number":"'+data.message[i].items[j].num+'","goodsName":"'+data.message[i].items[j].goodsTitle+'"}';
 									if (data.message[i].state == 3 || data.message[i].state == 4){
 										if(data.message[i].items[j].appraiseState == 0){
 											html += '<a href="javascript:commentPage(\''+b.encode(unitJson)+'\')" class="mui-btn">待评价</a>'
@@ -281,6 +294,7 @@
 						mui.toast(data.message);
 						return ;
 					}
+					console.log(data);
 					var html = "";
 					for(var i=0;i<data.message.length;i++){
 						if (data.message[i]!=null && data.message[i] != "" && data.message[i].items.length>0) {
@@ -304,15 +318,28 @@
 								html += '	<input type="hidden" name="goodsId" value="'+data.message[i].items[j].onlineId +'">'
 								html += '	<div class="car-inner-box">'
 								html += '		<div class="car-inner-box-img">'
-								html += '			<img src="${goodsImgUrl}'+goodsQsmm+'_187_187.' + strs[1] + '" alt="" class="goodspic">';
+								if(data.message[i].items[j].subjectType==1){
+									html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '&promoterId=${userId}' + '" class="full-return">';
+									html += '		<img src="${goodsImgUrl}' + goodsQsmm + '" alt="" class="goodspic">';
+									html += '	</a>';
+								}else{
+									html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '&promoterId=${userId}' + '">';
+									html += '		<img src="${goodsImgUrl}' + goodsQsmm + '" alt="" class="goodspic">';
+									html += '	</a>';
+								}
 								html += '		</div>'
 								html += '	<div class="car-inner-body">'
 								html += '<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '&promoterId=${userId}' + '">'+ data.message[i].items[j].onlineTitle +'</a></h5>'
 								html += '	<p>规格：'+ data.message[i].items[j].specName+'</p><br/>'
 								html += '	<div class="price-area">'
-								html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) +'</span></span>'
-								html += '		<span class="b-money"> 返 <span>'+formatCurrency(data.message[i].items[j].cashbackAmount) +'</span></span>'//*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
-								html += '		<span class="numbox">数量：<span>'+data.message[i].items[j].buyCount +'</span></span>'
+								if(data.message[i].items[j].subjectType==1){
+									html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
+									html += '		<span class="b-money"><span>'  + '</span></span>';
+								}else{
+									html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
+									html += '		<span class="b-money"> 返 <span>' + formatCurrency(data.message[i].items[j].cashbackAmount) + '</span></span>';//*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
+									html += '		<span class="numbox">数量：<span>' + buyCount + '</span></span>';
+								}
 								html += '	</div>'
 								html += '</div>'									
 								html += '<div class="button-box">'
@@ -330,7 +357,7 @@
 								}else if(data.message[i].applicationState==4){
 									html += '<button class="mui-btn locked">已拒绝</button>'
 								}else if(data.message[i].items[j].returnState ==0){
-									var unitJson = '{"shopId":"'+data.message[i].items[j].shopid+'","supplierUid":"'+data.message[i].items[j].supplierUid+'","orderId":"'+data.message[i].orderId+'","ruleNum":"'+data.message[i].items[j].ruleNum+'","attrVal":"'+data.message[i].items[j].attrval+'","activityId":"'+data.message[i].items[j].activityId+'","img":"http://img.wboly.com/goods/'+data.message[i].items[j].faceimg+'_187_187.jpg","goodsId":"'+data.message[i].items[j].goodsId+'","price":"'+formatCurrency(data.message[i].items[j].retailPrice/100)+'","back":"'+formatCurrency(data.message[i].items[j].retailBacLimit/100)+'","number":"'+data.message[i].items[j].num+'","goodsName":"'+data.message[i].items[j].goodsTitle+'"}';
+									var unitJson = '{"shopId":"'+data.message[i].items[j].shopid+'","supplierUid":"'+data.message[i].items[j].supplierUid+'","orderId":"'+data.message[i].orderId+'","ruleNum":"'+data.message[i].items[j].ruleNum+'","attrVal":"'+data.message[i].items[j].attrval+'","activityId":"'+data.message[i].items[j].activityId+'","img":"http://img.wboly.com/goods/'+data.message[i].items[j].faceimg+'.jpg","goodsId":"'+data.message[i].items[j].goodsId+'","price":"'+formatCurrency(data.message[i].items[j].retailPrice/100)+'","back":"'+formatCurrency(data.message[i].items[j].retailBacLimit/100)+'","number":"'+data.message[i].items[j].num+'","goodsName":"'+data.message[i].items[j].goodsTitle+'"}';
 									if (data.message[i].state == 3 || data.message[i].state == 4){
 										if(data.message[i].items[j].appraiseState == 0){
 											html += '<a href="javascript:commentPage(\''+b.encode(unitJson)+'\')" class="mui-btn">待评价</a>'
