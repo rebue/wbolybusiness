@@ -174,8 +174,8 @@ public class WeChatOAuth2Controller extends SysController {
 				System.out.println("==============登录成功，开始返回===========");
 				andView.addObject("JSURL", request.getRequestURL());
 				andView.addObject("userId", wechatLoginResult.get("userId"));
-				andView.addObject("onlineIds", wechatLoginResult.get("onlineId"));
-				andView.addObject("specIds", wechatLoginResult.get("specId"));
+				andView.addObject("onlineId", wechatLoginResult.get("onlineId"));
+				andView.addObject("specId", wechatLoginResult.get("specId"));
 				andView.setViewName(wechatLoginResult.get("msg").toString());
 				return andView;
 			}

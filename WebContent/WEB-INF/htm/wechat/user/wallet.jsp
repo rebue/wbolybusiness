@@ -35,11 +35,11 @@
 			<div class="mui-slider tab-slider">
 				<div id="sliderSegmentedControl"
 					class="order-tab-box mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
-					<a class="mui-control-item mui-active" data-value="1" href="#item1">余额<br />0.00</a> 
-					<a class="mui-control-item" data-value="2" href="#item2">待全返<br />0.00</a> 
-					<a class="mui-control-item" data-value="3" href="#item3">返现金<br />0.00</a> 
-					<a class="mui-control-item" data-value="4" href="#item4">待返现<br />0.00</a> 
-					<a class="mui-control-item" data-value="5" href="#item5">提现中 <br />0.00</a>
+					<a class="mui-control-item mui-active" data-value="1" href="#item1">余额<br /><span class="money-show" id="balance">0.00</span></a> 
+					<a class="mui-control-item" data-value="2" href="#item2">待全返<br /><span class="money-show" id="commissioning">0.00</span></a> 
+					<a class="mui-control-item" data-value="3" href="#item3">返现金<br /><span class="money-show" id="cashback">0.00</span></a> 
+					<a class="mui-control-item" data-value="4" href="#item4">待返现<br /><span class="money-show" id="balance">0.00</span></a> 
+					<a class="mui-control-item" data-value="5" href="#item5">提现中 <br /><span class="money-show" id="withdrawing">0.00</span></a>
 				</div>
 				<div class="active-bar">
 					<span id="active-bar-span"></span>
@@ -185,6 +185,7 @@
 			$.ready(function() {
 				mui('#wallet_main').on('tap','.car-inner-body a',function(){document.location.href=this.href;});
 				mui('#wallet_main').on('tap','.mui-table-view-cell a',function(){document.location.href=this.href;});
+				mui('body').on('tap','.mui-bar-nav a',function(){document.location.href=this.href;});
 				mui("#active-bar-span")[0].style.left = mui(".tab-slider .mui-control-item.mui-active")[0].offsetLeft + "px";
 				accountTrade(0);
 				setconHeight();

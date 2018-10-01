@@ -602,7 +602,7 @@
 						if (id == item.onlineSpec) {
 							price = formatCurrency(item.salePrice);//全局变量：当前单价
 							back = formatCurrency(item.cashbackAmount);//全局变量：当前返现
-							stock = item.saleCount;//全局变量：当前库存
+							stock = item.currentOnlineCount - item.saleCount;//全局变量：当前库存
 							total = parseFloat(mul(price, buyNum)).toFixed(2);//全局变量：计算当前总价（当前单价*购买数量）
 							document.querySelector("#ss_price").innerText = price;//显示所选SKU的单价
 							document.querySelector(".price em").innerText = price;

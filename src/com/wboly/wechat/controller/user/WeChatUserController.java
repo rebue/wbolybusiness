@@ -351,11 +351,11 @@ public class WeChatUserController extends SysController {
 		Map map = mapper.readValue(result, Map.class);
 		System.err.println("WX:用户编号为:" + userId + "\t 查询账户余额成功返回");
 		DecimalFormat df = new DecimalFormat("0.00");
-		map.put("availableBalance", df.format(map.get("balance")));// 账户余额,单位:分
-		map.put("sumretailBacLimit", df.format(map.get("cashback")));// 可用返现金额，单位:分
-
-		// 返现总金额单位:分
-		map.put("usableBacLimit", df.format(map.get("cashbacking")));
+		map.put("balance", df.format(map.get("balance")));// 账户余额,单位:分
+		map.put("cashback", df.format(map.get("cashback")));// 可用返现金额，单位:分
+		map.put("commissionTotal", df.format(map.get("commissionTotal")));// 已返佣总额，单位:分
+		map.put("commissioning", df.format(map.get("commissioning")));// 待返佣总额，单位:分
+		map.put("withdrawing", df.format(map.get("withdrawing")));// 提现中，单位:分
 		this.render(response, "{\"message\":" + JsonUtil.ObjectToJson(map) + ",\"flag\":true}");
 	}
 

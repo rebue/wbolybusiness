@@ -76,7 +76,7 @@ public class SysAuth implements Filter {
 				if (!StringUtils.isAnyBlank(promoterId, onlineId, specId) && !userId.equals(promoterId)) {
 					System.out.println("拦截器获取到的上线id为：" + onlineId);
 					String encodeUrl = "https%3A%2F%2Fwww.duamai.com%2Fwxx-svr%2Fwxx%2Fresponse%2Fauthorizecode";// 微信回调地址
-//					String encodeUrl = URLEncoder.encode(backUrl, "UTF-8");// 对url进行编码
+//					String encodeUrl = "http%3A%2F%2F596038980.mynatapp.cc%2Fwxx-svr%2Fwxx%2Fresponse%2Fauthorizecode";// 微信回调地址
 					String state = requestUrlss + "," + promoterId + "," + onlineId + "," + specId;
 					String url = SITE.AUTHORIZE.getMessage() + "?appid=" + SysContext.wxAppId + "&redirect_uri=" + encodeUrl
 							+ "&response_type=code&scope=snsapi_userinfo&state=" + state;
