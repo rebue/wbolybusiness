@@ -97,7 +97,7 @@
 		// 上传图片
 		var arr = new Array();
 		var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
-		var serverUrl = 'https://www.duamai.com/ise-svr/ise/upload'; 
+		var serverUrl = 'http://192.168.1.201/ise-svr/ise/upload'; 
 		(function($, doc) {
 			mui.init();
 			$.ready(function() {
