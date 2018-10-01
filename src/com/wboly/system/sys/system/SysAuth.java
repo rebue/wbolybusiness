@@ -12,6 +12,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.wboly.system.sys.util.wx.WeixinUtil.SITE;
 
 public class SysAuth implements Filter {
@@ -67,14 +69,14 @@ public class SysAuth implements Filter {
 				// 获取当前登录用户编号
 				String userId = SysCache.getWeChatUserByColumn(request, "userId");
 				System.out.println("拦截器获取到的当前用户id为：" + userId);
-				if (!userId.equals(promoterId)) {
-					// 上线id
-					String onlineId = request.getParameter("onlineId");
-					// 规格id
-					String specId = request.getParameter("specId");
+				// 上线id
+				String onlineId = request.getParameter("onlineId");
+				// 规格id
+				String specId = request.getParameter("specId");
+				if (!StringUtils.isAnyBlank(promoterId, onlineId, specId) && !userId.equals(promoterId)) {
 					System.out.println("拦截器获取到的上线id为：" + onlineId);
-					String backUrl = SysContext.WXXURL + "/wxx/response/authorizecode";// 微信回调地址
-					String encodeUrl = URLEncoder.encode(backUrl, "UTF-8");// 对url进行编码
+					String encodeUrl = "https%3A%2F%2Fwww.duamai.com%2Fwxx-svr%2Fwxx%2Fresponse%2Fauthorizecode";// 微信回调地址
+//					String encodeUrl = URLEncoder.encode(backUrl, "UTF-8");// 对url进行编码
 					String state = requestUrlss + "," + promoterId + "," + onlineId + "," + specId;
 					String url = SITE.AUTHORIZE.getMessage() + "?appid=" + SysContext.wxAppId + "&redirect_uri=" + encodeUrl
 							+ "&response_type=code&scope=snsapi_userinfo&state=" + state;
