@@ -187,6 +187,7 @@ public class WeChatPayController extends SysController {
 		finalpackage.put("timeStamp", timestamp.toString());
 		finalpackage.put("nonceStr", nonce_str);
 		finalpackage.put("package", packages);
+//		finalpackage.put("prepay_id", prepay_id);
 		finalpackage.put("signType", WxConfig.signType);
 
 		String finalsign1 = WXSignUtils.createSign("UTF-8", finalpackage);

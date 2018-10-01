@@ -51,7 +51,7 @@
 		<button class="bottombtn mui-pull-right" id="addcartbtn">加入购物车</button>
 	</nav>
 	<div id="guideDiv"
-		style="position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); display: none; z-index: 99;">
+		style="position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); display: ${guideDisplay}; z-index: 99;">
 		<img src="${ctx }/images/wechat/guide.png" alt="" style="width: 100%;" />
 	</div>
 	<div id="goods-detail-content" class="mui-content mui-scroll-wrapper">
@@ -196,7 +196,7 @@
 				LoadAds();
 				LoadGoodsContent();
 				LoadGoodsSku();
-				mui('#selectBox').popover('show');
+// 				mui('#selectBox').popover('show');
 				SaveSKU();
 	
 				LoadCartNum();

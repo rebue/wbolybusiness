@@ -28,7 +28,7 @@ public class WxConfig {
 
 	/**
 	 * appid 公众号唯一标识
-	 */
+	 */                          
 	public static String appid = "wx75f0e29692eab341";
 //	public static String appid = "wxa5f7f04a76cc41c5"; //线下
 
@@ -41,12 +41,12 @@ public class WxConfig {
 	/**
 	 * 商户号（mch_id）
 	 */
-	public static String partner = "1444599902";
+	public static String partner = "1500255022";
 
 	/**
 	 * 商户API初始秘钥
 	 */
-	public static String partnerkey = "hsjslejehgsabkl458shgdd4e47ehhss";
+	public static String partnerkey = "520933f2d8c94EB797d96f48CE4130e2";
 
 	/**
 	 * 交易类型
