@@ -12,9 +12,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.wboly.system.sys.util.wx.WeixinUtil.SITE;
+import org.apache.commons.lang3.StringUtils;
 
-import rebue.wheel.turing.JwtUtils;
+import com.wboly.system.sys.util.wx.WeixinUtil.SITE;
 
 public class SysAuth implements Filter {
 
@@ -42,7 +42,7 @@ public class SysAuth implements Filter {
 			+ "/wechat/user/setLoginName.htm,/wechat/user/setLoninNamePage.htm,/wechat/user/setLoginPassword.htm,/wechat/user/changeLogonPassword.htm,/wechat/user/updateloginpwdpage.htm,"
 			+ "/wechat/user/verifyRealNamePage.htm,/wechat/user/verifyRealName.htm,/wechat/user/verifyRealNameApply.htm,/wechat/user/verifyResult.htm,"
 			+"/wechat/goods/fullReturnGoodsList.htm,/wechat/goods/getFullReturnGoodsList.htm, /wechat/user/accountTrade.htm, /wechat/user/cashbackTrade.htm, /wechat/user/beBeingWithdraw.htm,"
-			+"/wechat/order/getOrderLogisticInfo.htm, /wechat/order/getCashBack.htm";
+			+"/wechat/order/getOrderLogisticInfo.htm, /wechat/order/getCashBack.htm, /wechat/user/applyWithdrAwaccountPage.htm";
 
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
 			throws IOException, ServletException {
@@ -66,16 +66,17 @@ public class SysAuth implements Filter {
 					|| requestUrlss.contains("/wechat/oauth2/checkSignature.htm")) {
 				chain.doFilter(servletRequest, servletResponse);
 			} else {
-				String sign = JwtUtils.getSignInCookies(request);
-				System.out.println("sign信息为：" + sign);
-				if (sign == null) {
-					// 上线id
-					String onlineId = request.getParameter("onlineId");
-					// 规格id
-					String specId = request.getParameter("specId");
+				// 获取当前登录用户编号
+				String userId = SysCache.getWeChatUserByColumn(request, "userId");
+				System.out.println("拦截器获取到的当前用户id为：" + userId);
+				// 上线id
+				String onlineId = request.getParameter("onlineId");
+				// 规格id
+				String specId = request.getParameter("specId");
+				if (!StringUtils.isAnyBlank(promoterId, onlineId, specId) && !userId.equals(promoterId)) {
 					System.out.println("拦截器获取到的上线id为：" + onlineId);
-					String backUrl = SysContext.WXXURL + "/wxx/response/authorizecode";// 微信回调地址
-					String encodeUrl = URLEncoder.encode(backUrl, "UTF-8");// 对url进行编码
+					String encodeUrl = "https%3A%2F%2Fwww.duamai.com%2Fwxx-svr%2Fwxx%2Fresponse%2Fauthorizecode";// 微信回调地址
+//					String encodeUrl = "http%3A%2F%2F596038980.mynatapp.cc%2Fwxx-svr%2Fwxx%2Fresponse%2Fauthorizecode";// 微信回调地址
 					String state = requestUrlss + "," + promoterId + "," + onlineId + "," + specId;
 					String url = SITE.AUTHORIZE.getMessage() + "?appid=" + SysContext.wxAppId + "&redirect_uri=" + encodeUrl
 							+ "&response_type=code&scope=snsapi_userinfo&state=" + state;

@@ -174,7 +174,6 @@ public class WeChatOAuth2Controller extends SysController {
 				System.out.println("==============登录成功，开始返回===========");
 				andView.addObject("JSURL", request.getRequestURL());
 				andView.addObject("userId", wechatLoginResult.get("userId"));
-				andView.addObject("promoterId", wechatLoginResult.get("promoterId"));
 				andView.addObject("onlineId", wechatLoginResult.get("onlineId"));
 				andView.addObject("specId", wechatLoginResult.get("specId"));
 				andView.setViewName(wechatLoginResult.get("msg").toString());
@@ -200,7 +199,6 @@ public class WeChatOAuth2Controller extends SysController {
 	 */
 	public Map<String, Object> wechatLogin(HttpServletRequest request, HttpServletResponse response,
 			Map<String, Object> map) throws JsonParseException, JsonMappingException, IOException, ParseException {
-		SignUtils.sign1(map, SysContext.LOGINSIGNKEY);
 		Map<String, Object> m = new HashMap<String, Object>();
 		String state = String.valueOf(map.get("state"));
 		String msg = "/htm/wechat/index/index";

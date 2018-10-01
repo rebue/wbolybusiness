@@ -15,6 +15,7 @@
 <link rel="stylesheet" type="text/css"
 	href="${ctx }/css/wechat/usercenter.css" />
 <script src="${ctx }/js/wechat/mui.min.js"></script>
+<script src="${ctx }/js/wechat/jquery.min.js"></script>
 <script src="${ctx }/js/util/commonUtil.js"></script>
 <script src="${ctx }/js/util/base64.js"></script>
 </head>
@@ -24,7 +25,7 @@
 		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 		<h4 class="mui-title">我的钱包</h4>
 		<h5 class="mui-title" style="left: auto; font-size: 15px;">
-			<a>提现</a>
+			<a id="withdraw">提现</a>
 		</h5>
 	</header>
 	<div id="wallet_main">
@@ -34,12 +35,11 @@
 			<div class="mui-slider tab-slider">
 				<div id="sliderSegmentedControl"
 					class="order-tab-box mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
-					<a class="mui-control-item mui-active" data-value="1" href="#item1">余额<br />0.00
-					</a> <a class="mui-control-item" data-value="2" href="#item2">待全返<br />0.00
-					</a> <a class="mui-control-item" data-value="3" href="#item3">返现金<br />0.00
-					</a> <a class="mui-control-item" data-value="4" href="#item4">待返现<br />0.00
-					</a> <a class="mui-control-item" data-value="5" href="#item5">提现中 <br />0.00
-					</a>
+					<a class="mui-control-item mui-active" data-value="1" href="#item1">余额<br /><span class="money-show" id="balance">0.00</span></a> 
+					<a class="mui-control-item" data-value="2" href="#item2">待全返<br /><span class="money-show" id="commissioning">0.00</span></a> 
+					<a class="mui-control-item" data-value="3" href="#item3">返现金<br /><span class="money-show" id="cashback">0.00</span></a> 
+					<a class="mui-control-item" data-value="4" href="#item4">待返现<br /><span class="money-show" id="balance">0.00</span></a> 
+					<a class="mui-control-item" data-value="5" href="#item5">提现中 <br /><span class="money-show" id="withdrawing">0.00</span></a>
 				</div>
 				<div class="active-bar">
 					<span id="active-bar-span"></span>
@@ -124,10 +124,10 @@
 		var state = 2;
 		var pageNum = 1;
 		var pageSize = 10;
-		
+		var $$=jQuery.noConflict();
 		var b = new Base64();
 		
-		(function($, doc) {
+		(function($, doc, $$) {
 			mui.init({
 				pullRefresh: [{
 					container: '#item1.mui-scroll-wrapper',
@@ -185,6 +185,7 @@
 			$.ready(function() {
 				mui('#wallet_main').on('tap','.car-inner-body a',function(){document.location.href=this.href;});
 				mui('#wallet_main').on('tap','.mui-table-view-cell a',function(){document.location.href=this.href;});
+				mui('body').on('tap','.mui-bar-nav a',function(){document.location.href=this.href;});
 				mui("#active-bar-span")[0].style.left = mui(".tab-slider .mui-control-item.mui-active")[0].offsetLeft + "px";
 				accountTrade(0);
 				setconHeight();
@@ -216,8 +217,48 @@
 						beBeingWithdraw(0);
 					};
 				});
+				
+				// 提现
+				mui("#withdraw").on('tap', 'a', function(e) {
+					// 判断用户是否已实名认证
+					mui.ajax('http://localhost:20082/rna/existbyuserId', {
+						data: {
+							"userId": "${userId}",
+						},
+						dataType: 'json',
+						type: 'get',
+						success: function(data) {
+							console.log(data);
+							// 判断是否已实名认证（  true：已认证  false：未认证）
+							if(data == false || data == "false") {
+								mui.confirm('您还未通过实名认证暂时无法进行提现，是否前去认证？', ' ', ['是', '否'], function(e) {
+									if (e.index == 0) {
+										window.location.href="${ctx}/wechat/user/verifyRealNamePage.htm";
+									}
+								})
+							} else {
+								// 判断是否已有提现账号
+								mui.ajax('http://localhost:9300/withdraw/account', {
+									data: {
+										"userId": "${userId}",
+									},
+									dataType: 'json',
+									type: 'get',
+									success: function(data) {
+										console.log(data)
+										if (data.length == 0) {
+											window.location.href="${ctx}/wechat/user/applyWithdrAwaccountPage.htm";
+										} else {
+											
+										}
+									}
+								})
+							}
+						},
+					});	
+				});
 			});
-		})(mui, document);
+		})(mui, document, jQuery);
 
 		// 账号交易ajax下拉刷新事件
 		function pulldownRefresh(obj) {

@@ -329,46 +329,6 @@
 					skuIds = String(sku_arr);//全局变量：选中的SKU数组（字符串）						
 				};
 	
-				//提交选中的SKU数据,返回得到相应SKU的单价、返现金、库存等;
-				function AjaxUpdate(id, specId) {
-					skuIds = specId;
-					//写ajax方法，可以提交skuIds等数据
-					mui.ajax('${ctx}/wechat/goods/selectGoodsSpecDetails.htm', {
-						data : {
-							key : '59c23bdde5603ef993cf03fe64e448f1',
-							specId : specId,
-							onlineId : "${onlineId}"
-						},
-						dataType : 'json',//服务器返回json格式数据
-						type : 'post',//HTTP请求类型
-						success : function(data) {
-							//以下是得到返回数据success后执行的：
-							//如果选择了多种SKU,而这种SKU的组合不存在,库存返回0即可	
-							mui.each(data, function(index, item) {
-								if (id == item.onlineSpec) {
-									price = formatCurrency(item.salePrice);//全局变量：当前单价
-									back = formatCurrency(item.cashbackAmount);//全局变量：当前返现
-									stock = item.saleCount;//全局变量：当前库存
-									total = parseFloat(mul(price, buyNum)).toFixed(2);//全局变量：计算当前总价（当前单价*购买数量）
-									document.querySelector("#ss_price").innerText = price;//显示所选SKU的单价
-									document.querySelector(".price em").innerText = price;
-									document.querySelector("#ss_back").innerText = back;//显示所选SKU的返现
-									document.querySelector(".back-money em").innerText = back;
-									document.querySelector("#stock span").innerText = stock;//显示所选SKU的库存	
-									document.querySelector("#total_price").innerText = "¥" + total;//显示当前总价
-									mui("#mui-numbox").numbox().setOption('max', stock);//限制数量输入框不能超出库存
-									mui("#mui-numbox").numbox().setValue(1);
-								}
-							});
-						},
-						error : function(xhr, type,
-								errorThrown) {
-							//异常处理；
-							console.log(type);
-						}
-					});
-				};
-	
 				//切换会员评价筛选方式
 				mui(".comments-tab-box").on('tap', 'a.mui-control-item', function() {
 					commentType = this.getAttribute("data-id");
@@ -604,6 +564,7 @@
 									var specIds = skuitem.getAttribute("data-sku");
 									if (specId == specIds) {
 										skuitem.classList.add("sku_active");
+										AjaxUpdate(data[i].onlineSpec, specId);
 									}
 								}
 							};
@@ -621,6 +582,46 @@
 				}
 			});
 		}
+		
+		//提交选中的SKU数据,返回得到相应SKU的单价、返现金、库存等;
+		function AjaxUpdate(id, specId) {
+			skuIds = specId;
+			//写ajax方法，可以提交skuIds等数据
+			mui.ajax('${ctx}/wechat/goods/selectGoodsSpecDetails.htm', {
+				data : {
+					key : '59c23bdde5603ef993cf03fe64e448f1',
+					specId : specId,
+					onlineId : "${onlineId}"
+				},
+				dataType : 'json',//服务器返回json格式数据
+				type : 'post',//HTTP请求类型
+				success : function(data) {
+					//以下是得到返回数据success后执行的：
+					//如果选择了多种SKU,而这种SKU的组合不存在,库存返回0即可	
+					mui.each(data, function(index, item) {
+						if (id == item.onlineSpec) {
+							price = formatCurrency(item.salePrice);//全局变量：当前单价
+							back = formatCurrency(item.cashbackAmount);//全局变量：当前返现
+							stock = item.currentOnlineCount - item.saleCount;//全局变量：当前库存
+							total = parseFloat(mul(price, buyNum)).toFixed(2);//全局变量：计算当前总价（当前单价*购买数量）
+							document.querySelector("#ss_price").innerText = price;//显示所选SKU的单价
+							document.querySelector(".price em").innerText = price;
+							document.querySelector("#ss_back").innerText = back;//显示所选SKU的返现
+							document.querySelector(".back-money em").innerText = back;
+							document.querySelector("#stock span").innerText = stock;//显示所选SKU的库存	
+							document.querySelector("#total_price").innerText = "¥" + total;//显示当前总价
+							mui("#mui-numbox").numbox().setOption('max', stock);//限制数量输入框不能超出库存
+							mui("#mui-numbox").numbox().setValue(1);
+						}
+					});
+				},
+				error : function(xhr, type,
+						errorThrown) {
+					//异常处理；
+					console.log(type);
+				}
+			});
+		};
 	</script>
 </body>
 </html>

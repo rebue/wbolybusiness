@@ -91,6 +91,7 @@ public class SysListener implements ServletContextListener {
 		// 实名认证微服务地址
 		String rnaUrl = PropertiesUtil.getPropertiesValue("system.properties", "RNAURL").toString();
 		SysContext.RNAURL = rnaUrl;
+		sc.setAttribute("rnaUrl", rnaUrl);
 
 		// 快递微服务地址
 		String kdiUrl = PropertiesUtil.getPropertiesValue("system.properties", "KDIURL").toString();

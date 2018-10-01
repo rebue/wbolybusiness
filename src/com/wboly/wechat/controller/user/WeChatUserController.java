@@ -93,12 +93,12 @@ public class WeChatUserController extends SysController {
 			return;
 		}
 		System.err.println("删除用户收货地址的参数为：" + addressId);
-		String results = OkhttpUtils.delete(SysContext.ORDERURL + "/ord/addr?id=" + addressId);
+		String results = OkhttpUtils.delete(SysContext.ORDERURL + "/ord/addr/" + addressId);
 		System.err.println("删除用户收货地址的返回值为：" + results);
 		ObjectMapper mapper = new ObjectMapper();
 		Map resultMap = mapper.readValue(results, Map.class);
-		int flag =(int)resultMap.get("result");
-		if (flag==1) {
+		boolean flag = (boolean) resultMap.get("success");
+		if (flag) {
 			this.render(response, "{\"message\":\"删除成功\",\"flag\":true}");
 			return;
 		}
@@ -322,6 +322,7 @@ public class WeChatUserController extends SysController {
 		if (userId.equals("")) {
 			mav.setViewName("/htm/wechat/login/login");
 		} else {
+			mav.addObject("userId", userId);
 			mav.setViewName("/htm/wechat/user/wallet");
 		}
 		return mav;
@@ -350,11 +351,11 @@ public class WeChatUserController extends SysController {
 		Map map = mapper.readValue(result, Map.class);
 		System.err.println("WX:用户编号为:" + userId + "\t 查询账户余额成功返回");
 		DecimalFormat df = new DecimalFormat("0.00");
-		map.put("availableBalance", df.format(map.get("balance")));// 账户余额,单位:分
-		map.put("sumretailBacLimit", df.format(map.get("cashback")));// 可用返现金额，单位:分
-
-		// 返现总金额单位:分
-		map.put("usableBacLimit", df.format(map.get("cashbacking")));
+		map.put("balance", df.format(map.get("balance")));// 账户余额,单位:分
+		map.put("cashback", df.format(map.get("cashback")));// 可用返现金额，单位:分
+		map.put("commissionTotal", df.format(map.get("commissionTotal")));// 已返佣总额，单位:分
+		map.put("commissioning", df.format(map.get("commissioning")));// 待返佣总额，单位:分
+		map.put("withdrawing", df.format(map.get("withdrawing")));// 提现中，单位:分
 		this.render(response, "{\"message\":" + JsonUtil.ObjectToJson(map) + ",\"flag\":true}");
 	}
 
@@ -813,7 +814,7 @@ public class WeChatUserController extends SysController {
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
 		map.put("pageNum", pageNum);
 		map.put("pageSize", pageSize);
-		map.put("accountId", "193201");
+		map.put("accountId", userId);
 		_log.info("查询账号交易信息的参数为：{}", map.toString());
 		String trades = OkhttpUtils.get(SysContext.VPAYURL + "/afc/trade/balancelist", map);
 		_log.info("查询账号交易信息的返回值为：{}", trades);
@@ -835,7 +836,7 @@ public class WeChatUserController extends SysController {
 		// 获取当前登录用户编号
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("accountId", "193201");
+		map.put("accountId", userId);
 		map.put("pageNum", pageNum);
 		map.put("pageSize", pageSize);
 		_log.info("查询用户返现金交易记录的参数为：{}", map.toString());
@@ -859,12 +860,28 @@ public class WeChatUserController extends SysController {
 		// 获取当前登录用户编号
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("accountId", "193201");
+		map.put("accountId", userId);
 		map.put("pageNum", pageNum);
 		map.put("pageSize", pageSize);
 		_log.info("查询用户返现金交易记录的参数为：{}", map.toString());
 		String beBeingWithdraw = OkhttpUtils.get(SysContext.VPAYURL + "/afc/withdraw", map);
 		_log.info("查询用户返现金交易记录的返回值为：{}", beBeingWithdraw);
 		this.render(response, beBeingWithdraw);
+	}
+
+	/**
+	 * 跳转至申请提现账号页面
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public String applyWithdrAwaccountPage(HttpServletRequest request, HttpServletResponse response) {
+		// 获取当前登录用户编号
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+		if (userId != null && !userId.equals("") && !userId.equals("null")) {
+			return "/htm/wechat/user/applywithdrawaccount";
+		} else {
+			return "redirect:/wechat/oauth2/checkSignature/login.htm";
+		}
 	}
 }

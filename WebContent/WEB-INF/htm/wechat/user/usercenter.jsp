@@ -101,24 +101,24 @@
 								<a href="${ctx }/wechat/user/myWalletPage.htm?userId=${userId}">
 									<div class="mui-media-body">余额</div>
 								</a> 
-								<span class="money-show" id="yue">0.00</span>
+								<span class="money-show" id="balance">0.00</span>
 							</li>
 							<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
 								<a href="${ctx }/wechat/user/myWalletPage.htm?userId=${userId}">
 									<div class="mui-media-body">返现金</div>
 								</a> 
-								<span class="money-show" id="fanxain">0.00</span>
+								<span class="money-show" id="cashback">0.00</span>
 							</li>
 							<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
 								<a href="${ctx }/wechat/user/myWalletPage.htm?userId=${userId}">
-									<div class="mui-media-body">待返现金</div>
+									<div class="mui-media-body">已全返</div>
 								</a> 
-								<span class="money-show" id="waitFanxian">0.00</span>
+								<span class="money-show" id="commissionTotal">0.00</span>
 							</li>
 							<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
 								<a href="${ctx }/wechat/user/myWalletPage.htm?userId=${userId}">
 									<div class="mui-media-body">提现中</div>
-									<span class="money-show" id="yue">0.00</span>
+									<span class="money-show" id="withdrawing">0.00</span>
 								</a>
 							</li>
 						</ul>
@@ -195,7 +195,7 @@
 				
 				function verifyRealName(){
 					var userId=document.getElementById("verifyUserId");
-					var url="http://192.168.1.16:20088/rna/getbyuserid";
+					var url="${rnaUrl}/rna/getbyuserid";
 					$.get(url,{'userId':userId.value},function(data){
 						console.log("返回的值"+data);
 						if(data==null || data ==""){

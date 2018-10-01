@@ -348,12 +348,11 @@ function getMoney() {
 		timeout : 10000,// 超时时间设置为10秒；
 		success : function(data) {
 			if (data.flag) {
-				document.getElementById("yue").innerHTML = formatCurrency(data.message.availableBalance);
-				document.getElementById("fanxain").innerHTML = formatCurrency(data.message.sumretailBacLimit);
-				document.getElementById("waitFanxian").innerHTML = formatCurrency(data.message.usableBacLimit);
-				if (document.getElementById("sumEarnings") != null) {
-					document.getElementById("sumEarnings").innerHTML = formatCurrency(data.message.amount);
-				}
+				document.getElementById("balance").innerHTML = formatCurrency(data.message.balance);
+				document.getElementById("cashback").innerHTML = formatCurrency(data.message.cashback);
+				document.getElementById("commissioning").innerHTML = formatCurrency(data.message.commissioning);
+				document.getElementById("commissionTotal").innerHTML = formatCurrency(data.message.commissionTotal);
+				document.getElementById("withdrawing").innerHTML = formatCurrency(data.message.withdrawing);
 				return;
 			}
 			mui.toast(data.message);
