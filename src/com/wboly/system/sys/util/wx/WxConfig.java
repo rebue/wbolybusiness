@@ -46,7 +46,7 @@ public class WxConfig {
 	/**
 	 * 商户API初始秘钥
 	 */
-	public static String partnerkey = "520933f2d8c94EB797d96f48CE4130e2";
+	public static String partnerkey = "520933f2d8c94EB797d96f48CE4130e3";
 
 	/**
 	 * 交易类型
