@@ -11,6 +11,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,6 +51,8 @@ public class WeChatOAuth2Controller extends SysController {
 
 	@Autowired
 	private WeChatUserService weChatUserService;
+	
+	private static final Logger _log = LoggerFactory.getLogger(WeChatOAuth2Controller.class);
 
 	public static void main(String[] args) throws UnsupportedEncodingException {
 		String url = SysContext.USERCENTERURL + "/user/id/byusername?userName="
@@ -104,7 +108,7 @@ public class WeChatOAuth2Controller extends SysController {
 			throws JsonParseException, JsonMappingException, IOException, ParseException {
 		System.out.println("微信授权回调地址的请求参数为：" + wxMaps.toString());
 		ModelAndView andView = new ModelAndView();
-		
+
 //		// 本地
 //		String code = request.getParameter("code");
 //		// 微信授权登陆获取到的用户信息
@@ -129,12 +133,11 @@ public class WeChatOAuth2Controller extends SysController {
 		 */
 
 		// 线上
-		
+
 		String openid = String.valueOf(wxMaps.get("openid"));
 		String unionid = String.valueOf(wxMaps.get("unionid"));
 		String nickname = String.valueOf(wxMaps.get("nickname"));
 		String headimgurl = String.valueOf(wxMaps.get("headimgurl"));
-		 
 
 		System.out.println("微信登录获取到的用户 信息为：openid=" + openid + "====unionid=" + unionid + "=====nickname=" + nickname
 				+ "====headimgurl=" + headimgurl);
@@ -197,6 +200,7 @@ public class WeChatOAuth2Controller extends SysController {
 	 * @throws JsonParseException
 	 * @throws ParseException
 	 */
+	@SuppressWarnings("unchecked")
 	public Map<String, Object> wechatLogin(HttpServletRequest request, HttpServletResponse response,
 			Map<String, Object> map) throws JsonParseException, JsonMappingException, IOException, ParseException {
 		Map<String, Object> m = new HashMap<String, Object>();
@@ -222,7 +226,6 @@ public class WeChatOAuth2Controller extends SysController {
 																						  */;
 		if (!wechatLoginResults.equals("") && !wechatLoginResults.equals("null") && wechatLoginResults != null) {
 			ObjectMapper objectMapper = new ObjectMapper();
-			@SuppressWarnings("unchecked")
 			Map<String, Object> resultMap = objectMapper.readValue(wechatLoginResults, Map.class);
 			String wechatLoginResult = JsonUtil.GetJsonValue(wechatLoginResults, "result");
 			System.err.println("微信登录返回值为：" + wechatLoginResults);
@@ -246,6 +249,25 @@ public class WeChatOAuth2Controller extends SysController {
 				System.err.println(map.get("wxNickname") + "：登录成功");
 				String userId = JsonUtil.GetJsonValue(wechatLoginResults, "userId");
 				map.put("userId", userId);
+				if (onlineId != null && !onlineId.equals("") && !onlineId.equals("null")) {
+					if (!promoterId.equals(userId)) {
+						Map<String, Object> buyRelationMap = new HashMap<String, Object>();
+						buyRelationMap.put("uplineUserId", promoterId);
+						buyRelationMap.put("downlineUserId", userId);
+						buyRelationMap.put("onlineId", onlineId);
+						buyRelationMap.put("createTime", new Date());
+						_log.info("添加用戶商品購買關係的參賽為: {}", buyRelationMap);
+						String addBuyRelationResult = OkhttpUtils.postByJsonParams(SysContext.ORDERURL + "/ord/goodsbuyrelation", buyRelationMap);
+						_log.info("添加用戶商品購買關係的返回值为: {}", addBuyRelationResult);
+						Map<String, Object> addBuyRelationResultMap = objectMapper.readValue(addBuyRelationResult, Map.class);
+						System.out.println(addBuyRelationResultMap.get("result"));
+						if (!String.valueOf(addBuyRelationResultMap.get("result")).equals("1")) {
+							m.put("result", -8);
+							m.put("msg", "添加购买关系失败！");
+							return m;
+						}
+					}
+				}
 				m = insertRegInfoAndCacheUserInfo(map);
 				m.put("msg", msg);
 				m.put("promoterId", promoterId);
