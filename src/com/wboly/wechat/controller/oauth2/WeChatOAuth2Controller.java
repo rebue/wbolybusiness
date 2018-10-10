@@ -178,7 +178,6 @@ public class WeChatOAuth2Controller extends SysController {
 				andView.addObject("JSURL", request.getRequestURL());
 				andView.addObject("userId", wechatLoginResult.get("userId"));
 				andView.addObject("onlineId", wechatLoginResult.get("onlineId"));
-				andView.addObject("specId", wechatLoginResult.get("specId"));
 				andView.setViewName(wechatLoginResult.get("msg").toString());
 				return andView;
 			}
@@ -208,14 +207,12 @@ public class WeChatOAuth2Controller extends SysController {
 		String msg = "/htm/wechat/index/index";
 		String promoterId = "";
 		String onlineId = "";
-		String specId = "";
 		if (state != null && !state.equals("") && !state.equals("null") && !state.equals("login") && state.contains(",")) {
 			String[] states = state.split(",");
 			promoterId = states[1];
 			map.put("promoterId", promoterId);
 			msg = "redirect:" + states[0].replaceFirst(SysContext.SYS_NAME, "");
 			onlineId = states[2];
-			specId = states[3];
 			map.put("promoterId", promoterId);
 			map.put("onlineId", onlineId);
 		}
@@ -272,7 +269,6 @@ public class WeChatOAuth2Controller extends SysController {
 				m.put("msg", msg);
 				m.put("promoterId", promoterId);
 				m.put("onlineId", onlineId);
-				m.put("specId", specId);
 			} else if (wechatLoginResult.equals("0")) {
 				System.err.println(map.get("wxNickname") + "：缓存失败");
 				m.put("result", wechatLoginResult);
@@ -295,7 +291,6 @@ public class WeChatOAuth2Controller extends SysController {
 				m.put("msg", msg);
 				m.put("promoterId", promoterId);
 				m.put("onlineId", onlineId);
-				m.put("specId", specId);
 			} else if (wechatLoginResult.equals("-3")) {
 				System.err.println(map.get("wxNickname") + "：密码错误");
 				m.put("result", wechatLoginResult);

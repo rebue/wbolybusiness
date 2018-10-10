@@ -114,8 +114,6 @@
 				}
 			});
 			
-			setShopData(1, "安吉华尔街工谷店");
-			
 			wx.config({
 	               debug : false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
 	               appId : '<%=ret.get("appid")%>', // 必填，公众号的唯一标识
@@ -146,7 +144,7 @@
 				    effect : "flip",
 				    autoplayDisableOnInteraction : false,	    		
 				});   					  
-				  
+				reloadData();
 				//普通示例				
 				// var a_width = mui("#wboly-scoll-message img")[0].clientWidth+1;
 				///var b_width = mui("#wboly-scoll-message span")[0].clientWidth+13;
@@ -219,28 +217,6 @@
 				});
 			});
 		})(mui, document);	
-				
-		/**
-		* 保存门店数据
-		*/ 
-		function setShopData(shopId, shopName){
-			mui.ajax('${ctx}/wechat/shop/saveInSeesion.htm',{
-				data:{
-					shopId:shopId,
-					shopName : shopName,
-					key:'59c23bdde5603ef993cf03fe64e448f1'
-				},
-				dataType:'json',//服务器返回json格式数据
-				type:'post',//HTTP请求类型
-				success:function(data){
-					reloadData();
-				},
-				error:function(xhr,type,errorThrown){
-					//异常处理；
-					console.log(type+":"+errorThrown);
-				}
-			});
-		}
 				
 		/**
 		* 加载首页信息

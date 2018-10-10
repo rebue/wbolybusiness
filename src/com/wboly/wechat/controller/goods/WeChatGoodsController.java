@@ -61,15 +61,12 @@ public class WeChatGoodsController extends SysController {
 		ModelAndView mav = new ModelAndView();
 		// 上线id
 		String onlineId = request.getParameter("onlineId");
-		// 规格id
-		String specId = request.getParameter("specId");
 		if(request.getParameter("guideDisplay") == null) {
 			mav.addObject("guideDisplay", "none");
 		}else {
 			mav.addObject("guideDisplay", "");
 		}
 		mav.addObject("onlineId", onlineId);
-		mav.addObject("specId", specId);
 		mav.setViewName("/htm/wechat/goods/goodsDetail");// 商品详情
 		return mav;
 	}
