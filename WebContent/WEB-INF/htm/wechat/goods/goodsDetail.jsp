@@ -541,7 +541,9 @@
 						document.body.querySelector("#sku_box .sku_unit").innerHTML = html;
 						html += '<ul class="sku_list">';
 						for (var i = 0; i < data.length; i++) {
-							html += '<li class="sku_item" data-sku="' + data[i].specId + '" data-value="' + data[i].onlineSpec + '">' + data[i].onlineSpec + '</li>';
+							if(data[i].currentOnlineCount - data[i].saleCount > 0) {
+								html += '<li class="sku_item" data-sku="' + data[i].specId + '" data-value="' + data[i].onlineSpec + '">' + data[i].onlineSpec + '</li>';
+							}
 						}
 						html += '</ul>';
 						document.body.querySelector("#sku_box .sku_unit").innerHTML = html;
