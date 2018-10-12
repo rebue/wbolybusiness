@@ -28,7 +28,7 @@
 						<div class="mui-media-body">扫一扫</div>
 				</a>
 				</li> --%>
-				<li style="margin-left:1.8rem" class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3"><a
+				<%-- <li style="margin-left:1.8rem" class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3"><a
 					href="${ctx }/wechat/goods/fullReturnGoodsList.htm"> <span
 						class="wboly-icon"> <img
 							src="${ctx }/images/wechat/concern.png" alt="" />
@@ -39,13 +39,13 @@
 						class="wboly-icon"> <img
 							src="${ctx }/images/wechat/my_wallet.png" alt="" />
 					</span>
-						<div class="mui-media-body">我的钱包</div></a></li>
-				<li style="margin-left:0.9rem" class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3"><a
+						<div class="mui-media-body">我的钱包</div></a></li> --%>
+				<%-- <li style="margin-left:0.9rem" class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3"><a
 					href="${ctx }/wechat/collect/collectPage.htm"> <span
 						class="wboly-icon"> <img
 							src="${ctx }/images/wechat/sign_in.png" alt="" />
 					</span>
-						<div class="mui-media-body">我的关注</div></a></li>
+						<div class="mui-media-body">我的关注</div></a></li> --%>
 <!-- 				<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3"><a -->
 <!-- 					href="http://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzIwOTI0MjAxMg==#wechat_redirect"> -->
 <!-- 						<span class="wboly-icon"> <img -->
@@ -83,8 +83,8 @@
 	-->
 	<script src="${ctx }/js/wechat/city.data.js"></script>
 	<script type="text/javascript" src="${ctx }/js/jquery/jquery-1.9.1.min.js"></script>
-	<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=GY7epABzpfsPo2d2Pm6SVBWIstGtHtyo"></script>
+	<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+	<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=GY7epABzpfsPo2d2Pm6SVBWIstGtHtyo"></script>
 	<script type="text/javascript" charset="utf-8">
 		var mySwiper;
 		var mySwiper2;
@@ -113,8 +113,6 @@
 					}
 				}
 			});
-			
-			setShopData(1, "安吉华尔街工谷店");
 			
 			wx.config({
 	               debug : false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -146,7 +144,7 @@
 				    effect : "flip",
 				    autoplayDisableOnInteraction : false,	    		
 				});   					  
-				  
+				reloadData();
 				//普通示例				
 				// var a_width = mui("#wboly-scoll-message img")[0].clientWidth+1;
 				///var b_width = mui("#wboly-scoll-message span")[0].clientWidth+13;
@@ -219,28 +217,6 @@
 				});
 			});
 		})(mui, document);	
-				
-		/**
-		* 保存门店数据
-		*/ 
-		function setShopData(shopId, shopName){
-			mui.ajax('${ctx}/wechat/shop/saveInSeesion.htm',{
-				data:{
-					shopId:shopId,
-					shopName : shopName,
-					key:'59c23bdde5603ef993cf03fe64e448f1'
-				},
-				dataType:'json',//服务器返回json格式数据
-				type:'post',//HTTP请求类型
-				success:function(data){
-					reloadData();
-				},
-				error:function(xhr,type,errorThrown){
-					//异常处理；
-					console.log(type+":"+errorThrown);
-				}
-			});
-		}
 				
 		/**
 		* 加载首页信息

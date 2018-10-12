@@ -27,6 +27,7 @@ import com.wboly.rpc.entity.GoodsEntity;
 import com.wboly.system.sys.cache.RedisBase;
 import com.wboly.system.sys.spring.SysController;
 import com.wboly.system.sys.system.SysContext;
+import com.wboly.system.sys.util.JsonUtil;
 import com.wboly.system.sys.util.SessionUtil;
 import com.wboly.system.sys.util.WriterJsonUtil;
 import com.wboly.wechat.service.index.WeChatIndexService;
@@ -61,15 +62,20 @@ public class WeChatGoodsController extends SysController {
 		ModelAndView mav = new ModelAndView();
 		// 上线id
 		String onlineId = request.getParameter("onlineId");
-		// 规格id
-		String specId = request.getParameter("specId");
 		if(request.getParameter("guideDisplay") == null) {
 			mav.addObject("guideDisplay", "none");
 		}else {
 			mav.addObject("guideDisplay", "");
 		}
+		String goodsPics = OkhttpUtils.get(SysContext.ONLINEURL + "/onl/onlinepic?onlineId=" + onlineId);
+		System.out.println("获取到的商品上线图片为：{}" + goodsPics);
+		List<Map<String, Object>> listPics = JsonUtil.listMaps(goodsPics);
+		StringBuilder pics = new StringBuilder();
+		for (int i = 0; i < listPics.size(); i++) {
+			pics.append(listPics.get(i).get("picPath") + ",");
+		}
 		mav.addObject("onlineId", onlineId);
-		mav.addObject("specId", specId);
+		mav.addObject("goodsPics", pics.substring(0, pics.length() - 1));
 		mav.setViewName("/htm/wechat/goods/goodsDetail");// 商品详情
 		return mav;
 	}

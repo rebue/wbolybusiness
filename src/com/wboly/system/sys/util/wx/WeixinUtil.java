@@ -29,7 +29,7 @@ public class WeixinUtil {
 	 */
 	public static boolean createMenu(String at) {
 
-		String str = "{\"button\":[" + "{\"type\":\"view\"" + ",\"name\":\"超市购物\"" + ",\"url\":\"" + WxConfig.onLineURL
+		String str = "{\"button\":[" + "{\"type\":\"view\"" + ",\"name\":\"大卖购物\"" + ",\"url\":\"" + WxConfig.onLineURL
 				+ "/wechat/oauth2/checkSignature/login.htm\"}]}";
 		System.err.println(str);
 		String reqUrl = WX_MENU.CREATE_MENU.GET() + "?access_token=" + at;

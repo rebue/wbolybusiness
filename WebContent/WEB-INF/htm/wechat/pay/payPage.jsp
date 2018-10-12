@@ -34,7 +34,7 @@
 						window.location.href = "${ctx }/wechat/success/wxpay/${orderId}.htm?promoterId=${userId}";
 					} else if (res.err_msg == "get_brand_wcpay_request:fail") {
 						alert("微信支付失败");
-						window.location.href = "${ctx}/web/order/updateorderno/${orderId}.htm?promoterId=${userId}";
+						window.location.href = "${ctx}/wechat/order/myOrders.htm?promoterId=${userId}";
 					} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
 						if (confirm("您的订单已生成了,去支付?")) {
 							window.location.href = "${ctx}/wechat/order/myOrders.htm?promoterId=${userId}";
