@@ -171,7 +171,6 @@
 		var back = "";//默认SKU、或当前选中SKU的返现;
 		var stock = "";//默认SKU、或当前选中SKU的库存;
 		var total = parseFloat(mul(price, buyNum)).toFixed(2);//当前总价	
-		var goodsId = "${goodsBase['goodsId']}";
 		//如果立即购买、收藏、添加购物车等动作需要某些数据,最好一进来就设值
 		//比如var stock = "${abc.def}";var price = "${ghi.jkl}"等;	
 		var commentType = "0"; //默认会员评价筛选的类型=全部;
@@ -449,28 +448,19 @@
 		};
 
 		// 加载轮播
-		function LoadAds() {
-			mui.ajax('${ctx}/wechat/goods/goodsCarouselPic.htm', {
-				data : {
-					onlineId : "${onlineId}"
-				},
-				dataType : 'json',//服务器返回json格式数据
-				type : 'post',//HTTP请求类型
-				success : function(data) {
-					var html = "";
-					for (var i = 0; i < data.length; i++) {
-						var strs = new Array();
-						// 根据逗号获取图片后缀
-						strs = data[i].picPath.split(".");
-						html += '<div class="swiper-slide">';
-						html += '	<div class="swiper-zoom-container">';
-						html += '		<img src="${goodsImgUrl}' + data[i].picPath + '">';
-						html += '	</div>';
-						html += '</div>';
-					}
-					document.body.querySelector("#slider .swiper-wrapper").innerHTML = html;
-				}
-			});
+		function LoadAds(){
+			var imgs = "${goodsPics}";
+			console.log(imgs);
+			var html="";
+			document.body.querySelector("#slider .swiper-wrapper").innerHTML=html;
+			var img = imgs.split(",");
+			for(var i = 0;i<img.length;i++){
+				html += '<div class="swiper-slide">'
+				html += '<div class="swiper-zoom-container">'
+				html += '<img src="${goodsImgUrl}' + img[i] + '">'
+				html += '</div></div>';
+			}
+			document.body.querySelector("#slider .swiper-wrapper").innerHTML=html;
 		}
 
 		// 加载商品内容
@@ -551,7 +541,9 @@
 						document.body.querySelector("#sku_box .sku_unit").innerHTML = html;
 						html += '<ul class="sku_list">';
 						for (var i = 0; i < data.length; i++) {
-							html += '<li class="sku_item" data-sku="' + data[i].specId + '" data-value="' + data[i].onlineSpec + '">' + data[i].onlineSpec + '</li>';
+							if(data[i].currentOnlineCount - data[i].saleCount > 0) {
+								html += '<li class="sku_item" data-sku="' + data[i].specId + '" data-value="' + data[i].onlineSpec + '">' + data[i].onlineSpec + '</li>';
+							}
 						}
 						html += '</ul>';
 						document.body.querySelector("#sku_box .sku_unit").innerHTML = html;
