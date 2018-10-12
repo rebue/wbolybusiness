@@ -167,7 +167,11 @@
 								if(data.message[i].items[j].subjectType==1){
 									html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
 									html += '		<span class="b-money"><span>'  + '</span></span>';
-									html += '		<span class="numbox">邀请<span style = "color:red">' + data.message[i].items[j].cashbackCommissionSlot + '</span>人可免单</span>';
+									if(data.message[i].items[j].cashbackCommissionSlot==0){
+										html += '		<span class="numbox"><span style = "color:red">'+ '</span>获得免单</span>';
+									}else{
+										html += '		<span class="numbox">邀请<span style = "color:red">' + data.message[i].items[j].cashbackCommissionSlot + '</span>人可免单</span>';
+									}
 								}else{
 									html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
 									html += '		<span class="b-money"> 返 <span>' + formatCurrency(data.message[i].items[j].cashbackAmount) + '</span></span>';//*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
@@ -404,7 +408,11 @@
 								if(data.message[i].items[j].subjectType==1){
 									html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
 									html += '		<span class="b-money"><span>'  + '</span></span>';//*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
-									html += '		<span class="numbox">邀请<span style = "color:red">' + data.message[i].items[j].cashbackCommissionSlot + '</span>人可免单</span>';
+									if(data.message[i].items[j].cashbackCommissionSlot==0){
+										html += '		<span class="numbox"><span style = "color:red">'+ '</span>已满足免单条件</span>';
+									}else{
+										html += '		<span class="numbox">邀请<span style = "color:red">' + data.message[i].items[j].cashbackCommissionSlot + '</span>人可免单</span>';
+									}
 								}else{
 									html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
 									html += '		<span class="b-money"> 返 <span>' + formatCurrency(data.message[i].items[j].cashbackAmount) + '</span></span>';//*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
