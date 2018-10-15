@@ -218,9 +218,7 @@ public class WeChatOAuth2Controller extends SysController {
 		}
 		System.out.println("微信用户登录的参数为：" + String.valueOf(map));
 		String wechatLoginUrl = SysContext.USERCENTERURL + "/user/login/by/wx";
-		String wechatLoginResults = OkhttpUtils.postByJsonParams(wechatLoginUrl, map)/*
-																						  "{\"result\":\"1\", \"msg\":\"/htm/wechat/index/index\", \"userId\":\"472984484858298368\", \"expirationTime\":\"2018-8-10 20:18:18\", \"sign\":\"asdaadadadadadadda\"}"
-																						  */;
+		String wechatLoginResults = /*OkhttpUtils.postByJsonParams(wechatLoginUrl, map)*/"{\"result\":\"1\", \"msg\":\"/htm/wechat/index/index\", \"userId\":\"525616558689484801\", \"expirationTime\":\"2018-8-10 20:18:18\", \"sign\":\"asdaadadadadadadda\"}";
 		if (!wechatLoginResults.equals("") && !wechatLoginResults.equals("null") && wechatLoginResults != null) {
 			ObjectMapper objectMapper = new ObjectMapper();
 			Map<String, Object> resultMap = objectMapper.readValue(wechatLoginResults, Map.class);

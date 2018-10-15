@@ -33,6 +33,7 @@ import com.wboly.system.sys.util.JsonUtil;
 import com.wboly.wechat.service.user.WeChatUserService;
 
 import net.sf.json.JSONArray;
+import rebue.wheel.AgentUtils;
 import rebue.wheel.NetUtils;
 import rebue.wheel.OkhttpUtils;
 import rebue.wheel.RegexUtils;
@@ -914,6 +915,7 @@ public class WeChatUserController extends SysController {
 	 * @param response
 	 * @return
 	 */
+	@RequestMapping("/wechat/user/applyWithdrAwaccountPage")
 	public String applyWithdrAwaccountPage(HttpServletRequest request, HttpServletResponse response) {
 		// 获取当前登录用户编号
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
@@ -922,5 +924,29 @@ public class WeChatUserController extends SysController {
 		} else {
 			return "redirect:/wechat/oauth2/checkSignature/login.htm";
 		}
+	}
+	
+	/**
+	 * 提交申请提现账号信息
+	 * @param request
+	 * @param response
+	 * @param applyWithdrAwaccounts
+	 * @throws IOException 
+	 */
+	@RequestMapping("/wechat/user/submitApplyWithdrAwaccount")
+	public void submitApplyWithdrAwaccount(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, Object> applyWithdrAwaccounts) throws IOException {
+		// 获取当前用户ID
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+		if (userId == null || userId.equals("") || userId.equals("null")) {
+			this.render(response, "{\"msg\":\"您没有登录\",\"result\":-11}");
+			return ;
+		}
+		applyWithdrAwaccounts.put("applicantId", userId);
+		applyWithdrAwaccounts.put("applicantIp", AgentUtils.getIpAddr(request, "nginx"));
+		applyWithdrAwaccounts.put("accountId", userId);
+		System.out.println("提交申请提现账户信息的参数为：" + String.valueOf(applyWithdrAwaccounts));
+		String postByJsonParamsResult = OkhttpUtils.postByJsonParams(SysContext.VPAYURL + "/afc/withdrawaccountbindflow/addex", applyWithdrAwaccounts);
+		System.out.println("提交申请提现账户信息的返回值为：" + postByJsonParamsResult);
+		this.render(response, postByJsonParamsResult);
 	}
 }

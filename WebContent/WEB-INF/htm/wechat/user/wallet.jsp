@@ -185,7 +185,7 @@
 			$.ready(function() {
 				mui('#wallet_main').on('tap','.car-inner-body a',function(){document.location.href=this.href;});
 				mui('#wallet_main').on('tap','.mui-table-view-cell a',function(){document.location.href=this.href;});
-				mui('body').on('tap','.mui-bar-nav a',function(){document.location.href=this.href;});
+				// mui('body').on('tap','.mui-bar-nav a',function(){document.location.href=this.href;});
 				mui("#active-bar-span")[0].style.left = mui(".tab-slider .mui-control-item.mui-active")[0].offsetLeft + "px";
 				accountTrade(0);
 				setconHeight();
@@ -219,11 +219,12 @@
 				});
 				
 				// 提现
-				mui("#withdraw").on('tap', 'a', function(e) {
+				document.getElementById('withdraw').addEventListener('tap',function(){
 					// 判断用户是否已实名认证
-					mui.ajax('http://localhost:20082/rna/existbyuserId', {
+					mui.ajax('${rnaUrl}/rna/rnaverify/exist', {
 						data: {
 							"userId": "${userId}",
+							"applyState": 2,
 						},
 						dataType: 'json',
 						type: 'get',
@@ -238,18 +239,26 @@
 								})
 							} else {
 								// 判断是否已有提现账号
-								mui.ajax('http://localhost:9300/withdraw/account', {
+								mui.ajax('${vPayUrl}/afc/withdrawaccountbindflow/getbyapplicantid', {
 									data: {
-										"userId": "${userId}",
+										"applicantId": "${userId}",
 									},
 									dataType: 'json',
 									type: 'get',
 									success: function(data) {
 										console.log(data)
-										if (data.length == 0) {
+										if (data == null || data == "null") {
 											window.location.href="${ctx}/wechat/user/applyWithdrAwaccountPage.htm";
+										} else if (data.flowState == 1) {
+											mui.toast("您的提现账号正在申请中");
+										} else if (data.flowState == -1) {
+											mui.confirm('您的提现账号申请已被拒绝，原因为：' + data.rejectReason + '，是否前去重新申请？', ' ', ['是', '否'], function(e) {
+												if (e.index == 0) {
+													window.location.href="${ctx}/wechat/user/applyWithdrAwaccountPage.htm";
+												}
+											})
 										} else {
-											
+											window.location.href="${ctx}/wechat/user/wechatWithdraw.htm";
 										}
 									}
 								})

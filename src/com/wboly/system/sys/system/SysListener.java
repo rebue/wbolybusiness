@@ -59,7 +59,7 @@ public class SysListener implements ServletContextListener {
 		// 新v支付路径
 		String vPayUrl = PropertiesUtil.getPropertiesValue("system.properties", "VPAYURL").toString();
 		SysContext.VPAYURL = vPayUrl;
-
+		sc.setAttribute("vPayUrl", vPayUrl);
 		// 新用户中心路径
 		String userCenterUrl = PropertiesUtil.getPropertiesValue("system.properties", "USERCENTERURL").toString();
 		SysContext.USERCENTERURL = userCenterUrl;
@@ -113,7 +113,8 @@ public class SysListener implements ServletContextListener {
 		sc.setAttribute("imgUrl", imgUrl);
 
 		// 查询接口所有配置文件的key和value转化为map
-
+		String userjson = "{\"userId\":525616558689484801,\"userName\":\"名字不要太长这样就好了\",\"img\":\"http://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83epRv921niaj5x7YBGHcWDdD65icDvBzs8icsbkwOyDnKhQ9pmibJxHiafPXOOiaw8oKtOWibS0SaI8RrSN4A/132\",\"openid\":\"oAwIr04JK8GVF5xvNaOZ4IxwQhhQ\"}";
+		SysCache.setWechatUser("oAwIr04JK8GVF5xvNaOZ4IxwQhhQ", userjson);// 缓存用户信息
 		// 执行定时任务
 		TimeUtil.timer();
 
