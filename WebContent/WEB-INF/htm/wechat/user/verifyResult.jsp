@@ -83,11 +83,10 @@
 					//从cookie中获取申请状态并插入
 					var userId=document.getElementById("applyState");
 					var applyStateResult="";
-					if(getCookie("applyState")==1){
+					if(getCookie("applyState")==2){
 						applyStateResult="已通过"
-					}else if(getCookie("applyState")==2){
+					}else if(getCookie("applyState")==1){
 						applyStateResult="待审核中"
-
 					}else if(getCookie("applyState")==3){
 						applyStateResult="已拒绝"
 

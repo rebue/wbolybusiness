@@ -1,6 +1,8 @@
 package com.wboly.system.sys.system;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -38,7 +40,7 @@ public class SysAuth implements Filter {
 			+ "/wechat/goods/goodsCarouselPic.htm,/wechat/goods/selectGoodsDetails.htm,/wechat/goods/selectGoodsSpecDetails.htm,"
 			+ "/wechat/cart/batchdelete.htm,/wechat/order/aboutCinfirmReceipt.htm,/wechat/order/queryLogistics.htm,/wechat/order/returnGoods.htm,"
 			+ "/wechat/user/setLoginName.htm,/wechat/user/setLoninNamePage.htm,/wechat/user/setLoginPassword.htm,/wechat/user/changeLogonPassword.htm,/wechat/user/updateloginpwdpage.htm,"
-			+ "/wechat/user/verifyRealNamePage.htm,/wechat/user/verifyRealName.htm,/wechat/user/verifyRealNameApply.htm,/wechat/user/verifyResult.htm,"
+			+ "/wechat/user/verifyRealNamePage.htm,/wechat/user/uploadRealImg.htm,/wechat/user/verifyRealName.htm,/wechat/user/verifyRealNameApply.htm,/wechat/user/verifyResult.htm,"
 			+"/wechat/goods/fullReturnGoodsList.htm,/wechat/goods/getFullReturnGoodsList.htm, /wechat/user/accountTrade.htm, /wechat/user/cashbackTrade.htm, /wechat/user/beBeingWithdraw.htm,"
 			+"/wechat/order/getOrderLogisticInfo.htm, /wechat/order/getCashBack.htm, /wechat/user/applyWithdrAwaccountPage.htm";
 

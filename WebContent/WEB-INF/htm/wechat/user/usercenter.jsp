@@ -193,30 +193,31 @@
 			        document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString() + ";path=/";
 			    }
 				
-				function verifyRealName(){
-					var userId=document.getElementById("verifyUserId");
-					var url="${rnaUrl}/rna/getbyuserid";
-					$.get(url,{'userId':userId.value},function(data){
-						console.log("返回的值"+data);
+				
+				$.ajax({
+					url : "${ctx }/wechat/user/verifyRealName.htm?userId=${userId}",
+					type : "get",
+					dataType:'json',//服务器返回json格式数据
+					success:function(data){
+						console.log(data);
 						if(data==null || data ==""){
 							return;
 						}
-						data = JSON.parse(data)
 						var verify=document.getElementById("verify");
 						var html='';
+						console.log(verify);
 						if(data.applyState==null){
 							return;
 						}else{
 							verify.href="${ctx }/wechat/user/verifyResult.htm?userId=${userId}";
+							mui('body').on('tap','.setRealName',function(){document.location.href="${ctx }/wechat/user/verifyResult.htm?userId=${userId}";});
 						    setCookie("applyState", data.applyState);
 						    setCookie("rejectReason", data.rejectReason);
-
 						}
-
-					})
-					
-				}
-				verifyRealName();
+					}
+				});
+				
+				
 			});
 		})(mui, document);
 		

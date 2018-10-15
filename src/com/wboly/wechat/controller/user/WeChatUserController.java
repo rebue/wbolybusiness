@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -308,7 +309,43 @@ public class WeChatUserController extends SysController {
 		mav.setViewName("/htm/wechat/user/usercenter");
 		return mav;
 	}
+	
+	
+	
+	/**
+	 * @throws IOException 
+	 * @Name: 查看登录密码是否存在
+	 * @Author: nick
+	 */
+	@RequestMapping(value = "/wechat/user/loginPwIsExis", method = RequestMethod.GET)
+	public void loginPwIsExis(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+		String id = SysCache.getWeChatUserByColumn(request, "userId");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("id", id);
+		System.err.println("查看登录密码是否存在的参数为：" + String.valueOf(map));
+		String result = OkhttpUtils.get(SysContext.USERCENTERURL + "/user/loginPwIsExis",map);
+		System.err.println("查看登录密码是否存在的结果为：" +result );
+		this.render(response, result);
+	}
+	
+	/**
+	 * @throws IOException 
+	 * @Name: 查看用户是否实名认证
+	 * @Author: nick
+	 */
+	@RequestMapping(value = "/wechat/user/verifyRealName", method = RequestMethod.GET)
+	public void verifyRealName(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		System.err.println("查看登录密码是否存在的参数为：" + String.valueOf(map));
+		String result = OkhttpUtils.get(SysContext.RNAURL + "/rna/getbyuserid",map);
+		System.err.println("查看登录密码是否存在的结果为：" +result );
+		this.render(response, result);
+	}
+	
+	
 	/**
 	 * @Name: 我的钱包页面
 	 * @Author: nick
@@ -351,11 +388,11 @@ public class WeChatUserController extends SysController {
 		Map map = mapper.readValue(result, Map.class);
 		System.err.println("WX:用户编号为:" + userId + "\t 查询账户余额成功返回");
 		DecimalFormat df = new DecimalFormat("0.00");
-		map.put("balance", df.format(map.get("balance")));// 账户余额,单位:分
-		map.put("cashback", df.format(map.get("cashback")));// 可用返现金额，单位:分
-		map.put("commissionTotal", df.format(map.get("commissionTotal")));// 已返佣总额，单位:分
-		map.put("commissioning", df.format(map.get("commissioning")));// 待返佣总额，单位:分
-		map.put("withdrawing", df.format(map.get("withdrawing")));// 提现中，单位:分
+		map.put("availableBalance", df.format(map.get("balance")));// 账户余额,单位:分
+		map.put("sumretailBacLimit", df.format(map.get("cashback")));// 可用返现金额，单位:分
+
+		// 返现总金额单位:分
+		map.put("usableBacLimit", df.format(map.get("cashbacking")));
 		this.render(response, "{\"message\":" + JsonUtil.ObjectToJson(map) + ",\"flag\":true}");
 	}
 
@@ -796,6 +833,8 @@ public class WeChatUserController extends SysController {
 			return andView;
 		}
 	}
+	
+	
 
 	/**
 	 * 查询账号余额交易信息

@@ -21,8 +21,25 @@
 	</head>
 	<script type="text/javascript">
 		$(function () {
-			$(".divTop2").hide();
-			
+			$.ajax({
+				url : "${ctx }/wechat/user/loginPwIsExis.htm?userId=${userId}",
+				type : "get",
+				dataType:'json',//服务器返回json格式数据
+				success:function(data){
+					if (data == "1") {
+						$(".divTop2").hide();
+						$(".divTop1").show();
+						$("#bankCard").css("display","none")
+						$("#payTreasure").css("color","#fe3000")
+					} else {
+						$(".divTop1").hide();
+						$(".divTop2").show();
+						$("#payTreasure").css("display","none")
+						$("#bankCard").css("color","#fe3000")
+					}
+				}
+			});
+			/*  这里是原本的点击显示，后面改为上面的动态显示
 			$(document).on("tap", "#payTreasure", function() {
 				$(".divTop1").show();
 				$(".divTop2").hide();
@@ -31,7 +48,10 @@
 			$(document).on("tap", "#bankCard", function() {
 				$(".divTop2").show();
 				$(".divTop1").hide();
-			});
+			}); 
+			
+			
+			*/
 			
 			// 修改密码提交
 			$(document).on("tap", "#updateSubmit", function() {
@@ -145,6 +165,7 @@
 			}
 		    return flag;
 		};
+		
 	</script>
 	<style type="text/css">
 		.divTop1 { mcolor: #555; padding: 10px; margin-top: 3px; }
