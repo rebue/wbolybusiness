@@ -15,6 +15,7 @@ import com.wboly.system.sys.util.JsonUtil;
 import com.wboly.system.sys.util.MD5CodeUtil;
 import com.wboly.system.sys.util.OrderKeyRandom;
 
+import rebue.wheel.turing.JwtUtils;
 import redis.clients.jedis.Jedis;
 
 public class SysCache extends Base64EnOut {
@@ -886,5 +887,11 @@ public class SysCache extends Base64EnOut {
 		} else {
 			return "";
 		}
+	}
+	
+	public static void main(String[] args) {
+		// JwtUtils.addCookie(sign, ExpiryTime, response);
+		String userjson = "{\"userId\":525616558689484801,\"userName\":\"名字不要太长这样就好了\",\"img\":\"http://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83epRv921niaj5x7YBGHcWDdD65icDvBzs8icsbkwOyDnKhQ9pmibJxHiafPXOOiaw8oKtOWibS0SaI8RrSN4A/132\",\"openid\":\"oAwIr04JK8GVF5xvNaOZ4IxwQhhQ\"}";
+		SysCache.setWechatUser("oAwIr04JK8GVF5xvNaOZ4IxwQhhQ", userjson);// 缓存用户信息
 	}
 }
