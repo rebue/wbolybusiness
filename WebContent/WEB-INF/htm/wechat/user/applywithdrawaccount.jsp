@@ -42,7 +42,7 @@
 			</div>
 			<div class="info-bar mui-table-view-cell phone-box">
 				<span class="mui-pull-left">提现账号：</span> 
-				<input style="border: 0px; outline: none; cursor: pointer; font-size: 0.875rem" name="bankAccountNo" id="bankAccountNo" placeholder="支付宝/银行账号(填写错误概不负责)" />
+				<input oninput = "value=value.replace(/[^\d]/g,'')" style="border: 0px; outline: none; cursor: pointer; font-size: 0.875rem" name="bankAccountNo" id="bankAccountNo" placeholder="支付宝/银行账号(填写错误概不负责)" />
 			</div>
 			<div class="info-bar mui-table-view-cell phone-box">
 				<span class="mui-pull-left">开户银行：</span> 

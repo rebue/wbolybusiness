@@ -18,8 +18,8 @@
 	</head>
 	<script type="text/javascript">
 		$(function () {
-			$("#bankCanCarry").html("当前可用金额：${balance}元，今天还可以提现${num}次。当前可透支0元，总共可提现${balance}元");
-			$("#alipayCanCarry").html("当前可用金额：${balance}元，今天还可以提现${num}次。当前可透支0元，总共可提现${balance}元");
+			$("#bankCanCarry").html("当前可用金额：${balance}元，本月已提现${withdrawNumber}次，总共可提现${balance}元");
+			$("#alipayCanCarry").html("当前可用金额：${balance}元，本月已提现${withdrawNumber}次，总共可提现${balance}元");
 			var withdrawType = "${withdrawType}";
 			var bankAccountNo = "${bankAccountNo}";
 			var bankAccountName = "${bankAccountName}";
@@ -27,8 +27,15 @@
 			var openAccountBank = "${openAccountBank}";
 			var orderId = "${orderId}";
 			var id = "${id}";
+			var withdrawNumber = "${withdrawNumber}";
+			console.log("${seviceCharge}")
+			if (withdrawNumber > 0) {
+				$(".seviceCharge").show();
+			} else {
+				$(".seviceCharge").remove();
+			}
 			if (withdrawType != 0) {
-				if (withdrawType == 1) {
+				if (withdrawType == 2) {
 					$("#alipayName").val(bankAccountName);
 					$("#alipayAccount").val(bankAccountNo);
 					$("#alipayTelephone").val(contactTel);
@@ -40,7 +47,7 @@
 					$("#bankCard").remove();
 				}
 				
-				if (withdrawType == 2) {
+				if (withdrawType == 1) {
 					$("#bankName").val(bankAccountName);
 					$("#bankAccount").val(bankAccountNo);
 					$("#openBank").val(openAccountBank);
@@ -82,7 +89,8 @@
 					data : {id : id, withdrawType : withdrawType, bankAccountNo : bankAccountNo, alipayAmount : alipayAmount,
 						bankAccountName : bankAccountName, contactTel : contactTel, orderId : orderId},
 					success:function(data){
-						if (data.flag == true) {
+						console.log(data)
+						if (data.flag == true || data.flag == "true") {
 							mui.toast(data.msg);
 							window.location.href="${ctx }/wechat/user/wechatWithdraw.htm?promoterId=${userId}";
 						} else {
@@ -110,7 +118,8 @@
 					data : {id : id, withdrawType : withdrawType, bankAccountNo : bankAccountNo, bankAmount : bankAmount,
 						bankAccountName : bankAccountName, contactTel : contactTel, openAccountBank : openAccountBank, orderId : orderId},
 					success:function(data){
-						if (data.flag == true) {
+						console.log(data)
+						if (data.flag == true || data.flag == "true") {
 							mui.toast(data.msg);
 							window.location.href="${ctx }/wechat/user/wechatWithdraw.htm?promoterId=${userId}";
 						} else {
@@ -159,6 +168,10 @@
 						<label style="color: #555;">金&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;额：</label> 
 						<input id="alipayAmount" />
 					</div>
+					<div class="divTop1 seviceCharge">
+						<label style="color: #555;">手续费：</label> 
+						<input value="${seviceCharge }" disabled="disabled">
+					</div>
 					<div class="divTop1" style="text-align: center;">
 						<button id="alipaySubmit">确认提现</button>
 					</div>
@@ -182,6 +195,10 @@
 					<div class="divTop2">
 						<label style="color: #555;">金&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;额：</label> 
 						<input id="bankAmount">
+					</div>
+					<div class="divTop2 seviceCharge">
+						<label style="color: #555;">&nbsp;手续费&nbsp;&nbsp;：</label> 
+						<input value="${seviceCharge }"  disabled="disabled">
 					</div>
 					<div class="divTop2" style="text-align: center;">
 						<button id="bankSubmit">确认提现</button>
