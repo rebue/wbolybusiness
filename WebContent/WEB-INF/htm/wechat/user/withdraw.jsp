@@ -82,6 +82,10 @@
 					mui.toast("金额只能输入大于0的整数或者保留两位小数!");
 					return ;
 				}
+				if (alipayAmount > 5000) {
+					mui.toast("已超出单次提现最大额度5000元!");
+					return ;
+				}
 				$.ajax({
 					url : "${ctx}/wechat/user/withdrawalApplicationSubmit",
 					type : "post",
@@ -109,6 +113,10 @@
 				console.log(reg.test(bankAmount));
 				if (!reg.test(bankAmount)) {
 					mui.toast("金额只能输入大于0的整数或者保留两位小数!");
+					return ;
+				}
+				if (bankAmount > 5000) {
+					mui.toast("已超出单次提现最大额度5000元!");
 					return ;
 				}
 				$.ajax({
@@ -169,7 +177,7 @@
 						<input id="alipayAmount" />
 					</div>
 					<div class="divTop1 seviceCharge">
-						<label style="color: #555;">手续费：</label> 
+						<label style="color: #555;">&nbsp;手续费&nbsp;&nbsp;：</label> 
 						<input value="${seviceCharge }" disabled="disabled">
 					</div>
 					<div class="divTop1" style="text-align: center;">

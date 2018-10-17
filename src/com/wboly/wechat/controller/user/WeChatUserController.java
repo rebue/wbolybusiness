@@ -868,6 +868,7 @@ public class WeChatUserController extends SysController {
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("accountId", userId);
+		map.put("withdrawState", 2);
 		map.put("pageNum", pageNum);
 		map.put("pageSize", pageSize);
 		_log.info("查询用户返现金交易记录的参数为：{}", map.toString());

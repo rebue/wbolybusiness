@@ -221,7 +221,7 @@
 				// 提现
 				document.getElementById('withdraw').addEventListener('tap',function(){
 					// 判断用户是否已实名认证
-					mui.ajax('${rnaUrl}/rna/rnaverify/exist', {
+					mui.ajax('https://www.duamai.com/rna-svr/rna/rnaverify/exist', {
 						data: {
 							"userId": "${userId}",
 							"applyState": 2,
@@ -239,7 +239,7 @@
 								})
 							} else {
 								// 判断是否已有提现账号
-								mui.ajax('${vPayUrl}/afc/withdrawaccountbindflow/getbyapplicantid', {
+								mui.ajax('https://www.duamai.com/afc-svr/afc/withdrawaccountbindflow/getbyapplicantid', {
 									data: {
 										"applicantId": "${userId}",
 									},
