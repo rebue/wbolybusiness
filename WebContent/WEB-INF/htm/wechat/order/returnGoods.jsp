@@ -118,6 +118,17 @@
 		var SizeLimit = 9 * 1024 * 1024; // 15 M     
 		var SingleSizeLimit = 3 * 1024 * 1024; // 3 M 
 		var serverUrl = 'https://www.duamai.com/ise-svr/ise/upload'; //测试
+		
+		function selectType(){
+			var orderState = document.getElementById("orderState");
+			if(orderState.value==2){
+				returnType=1;
+			}else{
+				returnType=2;
+			}
+		}
+		
+		selectType();
 
 		(function($, doc) {
 			mui.init();
@@ -165,12 +176,9 @@
 				var select = document.getElementById("orderState");
 				function returnType(){
 					if(select.value==2){
-						console.log("2")
-						info.innerHTML="退款";
-						returnType=1;
+						info.innerHTML="仅退款";
 					}else{
 						info.innerHTML="退货并退款";
-						returnType=2;
 					}
 					
 					
