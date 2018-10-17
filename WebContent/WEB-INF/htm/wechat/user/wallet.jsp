@@ -206,14 +206,19 @@
 					state = obj.getAttribute("data-value");
 					mui("#active-bar-span")[0].style.left = left + "px";
 					if(event.detail.slideNumber == 0) {
+						document.createElement("inner_data_1").innerHTML = "";
 						accountTrade(0);
 					} else if(event.detail.slideNumber == 1) {
+						document.createElement("inner_data_2").innerHTML = "";
 						toBeFullyReturned(0);
 					} else if(event.detail.slideNumber == 2) {
+						document.createElement("inner_data_3").innerHTML = "";
 						accountCashback(0);
 					} else if(event.detail.slideNumber == 3) {
+						document.createElement("inner_data_4").innerHTML = "";
 						ordinaryCashback(0);
 					} else if (event.detail.slideNumber == 4) {
+						document.createElement("inner_data_5").innerHTML = "";
 						beBeingWithdraw(0);
 					};
 				});
