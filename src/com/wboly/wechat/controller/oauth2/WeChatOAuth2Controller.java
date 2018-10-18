@@ -218,7 +218,7 @@ public class WeChatOAuth2Controller extends SysController {
 		}
 		System.out.println("微信用户登录的参数为：" + String.valueOf(map));
 		String wechatLoginUrl = SysContext.USERCENTERURL + "/user/login/by/wx";
-		String wechatLoginResults = /*OkhttpUtils.postByJsonParams(wechatLoginUrl, map)*/"{\"result\":\"1\", \"msg\":\"/htm/wechat/index/index\", \"userId\":\"525616558689484801\", \"expirationTime\":\"2018-8-10 20:18:18\", \"sign\":\"asdaadadadadadadda\"}";
+		String wechatLoginResults = OkhttpUtils.postByJsonParams(wechatLoginUrl, map)/*"{\"result\":\"1\", \"msg\":\"/htm/wechat/index/index\", \"userId\":\"525616558689484801\", \"expirationTime\":\"2018-8-10 20:18:18\", \"sign\":\"asdaadadadadadadda\"}"*/;
 		if (!wechatLoginResults.equals("") && !wechatLoginResults.equals("null") && wechatLoginResults != null) {
 			ObjectMapper objectMapper = new ObjectMapper();
 			Map<String, Object> resultMap = objectMapper.readValue(wechatLoginResults, Map.class);
@@ -281,7 +281,7 @@ public class WeChatOAuth2Controller extends SysController {
 				Map<String, Object> regMap = wechatReg(request, response, map);
 				String regResult = String.valueOf(regMap.get("result"));
 				if (regResult.equals("1")) {
-					map.put("userId", regMap.get("msg"));
+					map.put("userId", regMap.get("userId"));
 					m = insertRegInfoAndCacheUserInfo(map);
 				} else {
 					m = regMap;
@@ -346,7 +346,7 @@ public class WeChatOAuth2Controller extends SysController {
 				System.err.println(map.get("wxNickname") + "：注册成功");
 				Map<String, Object> results = wechatLogin(request, response, map);
 				m.put("result", wechatRegResult);
-				m.put("msg", regMap.get("userId"));
+				m.put("userId", regMap.get("userId"));
 			} else if (wechatRegResult.equals("0")) {
 				System.err.println(map.get("wxNickname") + "：在注册时出现缓存失败");
 				m.put("result", wechatRegResult);
