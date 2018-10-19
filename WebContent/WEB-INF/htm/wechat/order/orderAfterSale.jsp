@@ -162,6 +162,7 @@
 									html += '<button class="mui-btn locked">已取消</button>'
 								}else if(data.message[i].applicationState==1){
 									html += '<button class="mui-btn locked">待审核</button>'
+									html+='<a href="javascript:cancelReturn(\'' + data.message[i].id + '\')" class="mui-btn">取消退货</a>'
 								}else if(data.message[i].applicationState==2){
 									html += '<button class="mui-btn locked">退货中</button>'
 								}else if(data.message[i].applicationState==3){
@@ -350,6 +351,7 @@
 									html += '<button class="mui-btn locked">已取消</button>'
 								}else if(data.message[i].applicationState==1){
 									html += '<button class="mui-btn locked">待审核</button>'
+									html += '<a href="javascript:cancelReturn(\'' + data.message[i].id + '\')" class="mui-btn">取消退货</a>'
 								}else if(data.message[i].applicationState==2){
 									html += '<button class="mui-btn locked">退货中</button>'
 								}else if(data.message[i].applicationState==3){
@@ -472,6 +474,38 @@
 					});
 				};
 			});
+		}
+		
+		// 取消退货
+		function cancelReturn(orderId){
+			console.log(orderId);
+			mui.confirm("确定要取消退货吗?"," ",['确定','取消'],function(e){
+				if (e.index == 0) {
+					mui.ajax('${ctx}/wechat/order/cancelReturn.htm',{
+						data:{
+							key:'59c23bdde5603ef993cf03fe64e448f1',
+							orderId : orderId
+						},
+						dataType:'json',//服务器返回json格式数据
+						type:'get',//HTTP请求类型
+						success:function(data){
+							console.log(data.message.msg);
+							if(data.message.result == 1){
+								AjaxGetData(0);// 订单取消成功之后重新加载
+								mui.toast(data.message.msg);
+								return ;
+							}
+							mui.toast(data.message.msg);
+						},
+						error:function(xhr,type,errorThrown){
+							mui.toast("查询订单轨迹出错");
+							//异常处理；
+							console.log(type);
+							loading(2);
+						}
+					});
+				}
+			})
 		}
 	</script>
 </body>

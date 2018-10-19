@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.thrift.TException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,6 +27,7 @@ import com.wboly.system.sys.system.SysCache;
 import com.wboly.system.sys.system.SysContext;
 import com.wboly.system.sys.util.Base64EnOut;
 import com.wboly.system.sys.util.JsonUtil;
+
 import rebue.wheel.NetUtils;
 import rebue.wheel.OkhttpUtils;
 
@@ -35,6 +38,8 @@ import rebue.wheel.OkhttpUtils;
 @Controller
 public class WeChatOrderController extends SysController {
 
+	private static final Logger _log = LoggerFactory.getLogger(WeChatOrderController.class);
+	
 	/**
 	 * @Name: 所有订单售后页面跳转
 	 * @Author: nick
@@ -568,6 +573,31 @@ public class WeChatOrderController extends SysController {
 		String results = OkhttpUtils.get(SysContext.KDIURL + "/kdi/logistic/getLogisticInfo", map);
 		System.out.println("获取用户订单物流信息返回值为：" + results);
 		this.render(response, "{\"message\":" + results + ",\"flag\":true}");
+	}
+	
+	/**
+	 * 取消退货
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping("/wechat/order/cancelReturn")
+	public void cancelReturn(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+		if (userId.equals("")) {
+			this.render(response, "{\"message\":\"您没有登录\",\"flag\":false}");
+			return;
+		}
+		// 订单
+		String orderId = request.getParameter("orderId");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("id", orderId);
+		map.put("cancelOpId", userId);
+		map.put("applicationState", -1);
+		_log.info("取消退货的参数为：{}", String.valueOf(map));
+		String result = OkhttpUtils.putByJsonParams(SysContext.ORDERURL + "/ord/return/cancel", map);
+		_log.info("取消退货的返回值为：{}", result);
+		this.render(response, "{\"message\":" + result + ",\"flag\":true}");
 	}
 }
 
