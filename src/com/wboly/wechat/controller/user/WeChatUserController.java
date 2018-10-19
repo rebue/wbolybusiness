@@ -19,7 +19,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -32,7 +31,6 @@ import com.wboly.system.sys.util.HttpUtil;
 import com.wboly.system.sys.util.JsonUtil;
 import com.wboly.wechat.service.user.WeChatUserService;
 
-import net.sf.json.JSONArray;
 import rebue.wheel.AgentUtils;
 import rebue.wheel.NetUtils;
 import rebue.wheel.OkhttpUtils;
@@ -311,8 +309,6 @@ public class WeChatUserController extends SysController {
 		return mav;
 	}
 	
-	
-	
 	/**
 	 * @throws IOException 
 	 * @Name: 查看登录密码是否存在
@@ -345,7 +341,6 @@ public class WeChatUserController extends SysController {
 		System.err.println("查看登录密码是否存在的结果为：" +result );
 		this.render(response, result);
 	}
-	
 	
 	/**
 	 * @Name: 我的钱包页面
@@ -446,7 +441,6 @@ public class WeChatUserController extends SysController {
 		} else {
 			mav.setViewName("/wechat/oauth2/checkSignature/login.htm");
 		}
-
 		return mav;
 	}
 
@@ -916,5 +910,93 @@ public class WeChatUserController extends SysController {
 		String postByJsonParamsResult = OkhttpUtils.postByJsonParams(SysContext.VPAYURL + "/afc/withdrawaccountbindflow/addex", applyWithdrAwaccounts);
 		System.out.println("提交申请提现账户信息的返回值为：" + postByJsonParamsResult);
 		this.render(response, postByJsonParamsResult);
+	}
+	
+	/**
+	 * @Name: 修改登录密码页面
+	 * @Author: knick
+	 */
+	@RequestMapping(value = { "/wechat/user/updatepaypwdpage" })
+	public ModelAndView updatePayPwdPage(HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView();
+		// 用户编号
+		String loginuid = SysCache.getWeChatUserByColumn(request, "userId");
+		if (null != loginuid && !"".equals(loginuid)) {
+			mav.setViewName("/htm/wechat/user/updatePayPwd");
+		} else {
+			mav.setViewName("/wechat/oauth2/checkSignature/login.htm");
+		}
+		return mav;
+	}
+	
+	/**
+	 * @throws IOException 
+	 * @Name: 查看支付密码是否存在
+	 * @Author: nick
+	 */
+	@RequestMapping(value = "/wechat/user/payPwIsExis", method = RequestMethod.GET)
+	public void payPwIsExis(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String id = SysCache.getWeChatUserByColumn(request, "userId");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("id", id);
+		System.err.println("查看支付密码是否存在的参数为：" + String.valueOf(map));
+		String result = OkhttpUtils.get(SysContext.USERCENTERURL + "/user/payPwIsExis",map);
+		System.err.println("查看支付密码是否存在的结果为：" +result );
+		this.render(response, result);
+	}
+	
+	/**
+	 * 设置支付密码
+	 * 
+	 * @param request
+	 * @param response
+	 * @param map
+	 * @throws IOException
+	 */
+	@RequestMapping("/wechat/user/setPayPassword")
+	public void setPayPassword(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam Map<String, Object> map) throws IOException {
+		System.out.println(String.valueOf(map));
+		// 获取当前登录用户编号
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+		if (userId != null && !userId.equals("") && !userId.equals("null")) {
+			// 获取当前登录用户编号
+			String wxId = SysCache.getWeChatUserByColumn(request, "openid");
+			map.put("wxId", wxId);
+			System.out.println("设置支付密码的参数为：" + wxId);
+			_log.info("设置支付密码的参数为：{}", wxId);
+			String result = OkhttpUtils.postByFormParams(SysContext.USERCENTERURL + "/paypswd/add/bywxid", map);
+			_log.info("设置支付密码的返回值为：{}", result);
+			this.render(response, result);
+		} else {
+			this.render(response, "{\"msg\":\"您未登录！\", \"result\":\"-74110\"}");
+		}
+	}
+	
+	/**
+	 * 修改支付密码提交
+	 * 
+	 * @param request
+	 * @param response
+	 * @param map
+	 * @throws IOException
+	 */
+	@RequestMapping("/wechat/user/changePayPassword")
+	public void changePayPassword(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam Map<String, Object> map) throws IOException {
+		System.out.println(String.valueOf(map));
+		// 获取当前登录用户编号
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+		if (userId != null && !userId.equals("") && !userId.equals("null")) {
+			// 获取当前登录用户编号
+			String wxId = SysCache.getWeChatUserByColumn(request, "openid");
+			map.put("wxId", wxId);
+			System.out.println("修改支付密码的参数为：" + wxId);
+			String result = OkhttpUtils.postByFormParams(SysContext.USERCENTERURL + "/paypswd/modify/bywxid", map);
+			System.out.println("微信修改支付密码的返回值为：" + result);
+			this.render(response, result);
+		} else {
+			this.render(response, "{\"msg\":\"您未登录！\", \"result\":\"-74110\"}");
+		}
 	}
 }

@@ -123,6 +123,11 @@
 							</li>
 						</ul>
 					</li>
+					<li class="mui-table-view-cell setPw" id="${ctx }/wechat/user/updatepaypwdpage.htm?userId=${userId}" >
+						<a href="${ctx }/wechat/user/updatepaypwdpage.htm?userId=${userId}" class="mui-navigate-right notshare"> 
+							<span class="mui-icon mui-icon-compose mui-pull-left"></span> 修改或设置支付密码
+						</a>
+					</li>
 					<li class="mui-table-view-cell setPw" id="${ctx }/wechat/user/updateloginpwdpage.htm?userId=${userId}" >
 						<a href="${ctx }/wechat/user/updateloginpwdpage.htm?userId=${userId}" class="mui-navigate-right notshare"> 
 							<span class="mui-icon mui-icon-compose mui-pull-left"></span> 修改或设置登录密码
