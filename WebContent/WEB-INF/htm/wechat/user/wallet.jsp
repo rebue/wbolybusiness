@@ -225,51 +225,7 @@
 				
 				// 提现
 				document.getElementById('withdraw').addEventListener('tap',function(){
-					// 判断用户是否已实名认证
-					mui.ajax('https://www.duamai.com/rna-svr/rna/rnaverify/exist', {
-						data: {
-							"userId": "${userId}",
-							"applyState": 2,
-						},
-						dataType: 'json',
-						type: 'get',
-						success: function(data) {
-							console.log(data);
-							// 判断是否已实名认证（  true：已认证  false：未认证）
-							if(data == false || data == "false") {
-								mui.confirm('您还未通过实名认证暂时无法进行提现，是否前去认证？', ' ', ['是', '否'], function(e) {
-									if (e.index == 0) {
-										window.location.href="${ctx}/wechat/user/verifyRealNamePage.htm";
-									}
-								})
-							} else {
-								// 判断是否已有提现账号
-								mui.ajax('https://www.duamai.com/afc-svr/afc/withdrawaccountbindflow/getbyapplicantid', {
-									data: {
-										"applicantId": "${userId}",
-									},
-									dataType: 'json',
-									type: 'get',
-									success: function(data) {
-										console.log(data)
-										if (data == null || data == "null") {
-											window.location.href="${ctx}/wechat/user/applyWithdrAwaccountPage.htm";
-										} else if (data.flowState == 1) {
-											mui.toast("您的提现账号正在申请中");
-										} else if (data.flowState == -1) {
-											mui.confirm('您的提现账号申请已被拒绝，原因为：' + data.rejectReason + '，是否前去重新申请？', ' ', ['是', '否'], function(e) {
-												if (e.index == 0) {
-													window.location.href="${ctx}/wechat/user/applyWithdrAwaccountPage.htm";
-												}
-											})
-										} else {
-											window.location.href="${ctx}/wechat/user/wechatWithdraw.htm";
-										}
-									}
-								})
-							}
-						},
-					});	
+					window.location.href="${ctx}/wechat/user/wechatWithdraw.htm";
 				});
 			});
 		})(mui, document, jQuery);

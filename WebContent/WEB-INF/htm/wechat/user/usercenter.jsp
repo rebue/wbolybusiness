@@ -143,11 +143,11 @@
 							<span class="mui-icon mui-icon-map mui-pull-left"></span> 收货地址
 						</a>
 					</li>
-					<li class="mui-table-view-cell  setRealName" id="${ctx }/wechat/user/verifyRealNamePage.htm" >
+					<%-- <li class="mui-table-view-cell  setRealName" id="${ctx }/wechat/user/verifyRealNamePage.htm" >
 						<a id="verify" href="${ctx }/wechat/user/verifyRealNamePage.htm"  class="mui-navigate-right notshare"> 
 							<span class="mui-icon mui-icon-paperplane mui-pull-left"></span> 申请实名认证
 						</a>
-					</li>
+					</li> --%>
 					<li class="mui-table-view-cell">
 						<a href="javascript:guideDiv();" class="mui-navigate-right weixinshare"> 
 							<span class="mui-icon mui-icon-redo mui-pull-left"></span> 分享给好友

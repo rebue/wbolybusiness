@@ -152,8 +152,7 @@
 					var textareas = document.querySelectorAll("textarea");
 					for (var i = 0; i < textareas.length; i++) {
 						textareas[i].blur();
-					}
-					;
+					};
 				});
 				
 				//可选择菜单

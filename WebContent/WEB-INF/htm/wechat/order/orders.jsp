@@ -508,7 +508,7 @@
 								html += '</div>';
 								html += '<div class="unit-pay">';
 								html += '	<a class="mui-pull-left mui-btn bg" href="javascript:queryLogistics(\'' + data.message[i].id + '\')">查看物流</a>';
-								html += '	<a class="mui-pull-right mui-btn bg" href="javascript:aboutCinfirmReceipt(\'' + data.message[i].orderCode + '\')">确认收货</a>';
+								html += '	<a class="mui-pull-right mui-btn bg" href="javascript:aboutCinfirmReceipt(\'' + data.message[i].id + '\')">确认收货</a>';
 								html += '</div>';
 							} else if (data.message[i].orderState == 4) {
 								// 签收时间戳

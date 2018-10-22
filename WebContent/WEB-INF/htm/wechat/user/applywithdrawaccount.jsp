@@ -27,6 +27,14 @@
 	<div id="opt_main" class="mui-scroll-wrapper">
 		<div class="mui-content mui-scroll">
 			<div class="info-bar mui-table-view-cell phone-box">
+				<span class="mui-pull-left">身份证姓名：</span> 
+				<input style="border: 0px; outline: none; cursor: pointer; font-size: 0.875rem" name="bankAccountName" id="bankAccountName" placeholder="身份证姓名"/>
+			</div>
+			<div class="info-bar mui-table-view-cell phone-box">
+				<span class="mui-pull-left">身份证号码：</span> 
+				<input style="border: 0px; outline: none; cursor: pointer; font-size: 0.875rem" name="bankAccountName" id="bankAccountName" placeholder="身份证号码"/>
+			</div>
+			<div class="info-bar mui-table-view-cell phone-box">
 				<span class="mui-pull-left">账户名称：</span> 
 				<input style="border: 0px; outline: none; cursor: pointer; font-size: 0.875rem" name="bankAccountName" id="bankAccountName" placeholder="支付宝/银行卡真实姓名"/>
 			</div>

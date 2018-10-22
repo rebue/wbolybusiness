@@ -92,8 +92,8 @@
 	<script type="text/javascript">
 		var label = "点击上传手持身份证正反面以及身份证正反面照片";
 		var NumLimit = 4;
-		var SizeLimit = 9 * 1024 * 1024; // 15 M     
-		var SingleSizeLimit = 3 * 1024 * 1024; // 3 M 
+		var SizeLimit = 20 * 1024 * 1024; // 15 M     
+		var SingleSizeLimit = 10 * 1024 * 1024; // 3 M 
 		// 上传图片
 		var arr = new Array();
 		var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;

@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -590,26 +591,50 @@ public class WeChatUserController extends SysController {
 		if (userId == null || userId.equals("") || userId.equals("null")) {
 			return new ModelAndView("redirect:/wechat/oauth2/checkSignature/login.htm");
 		}
+		ObjectMapper objectMapper = new ObjectMapper();
+		// 用户可用余额接口
+		String url = SysContext.VPAYURL + "/account/funds?userId=" + userId;
+		String result = HttpUtil.getUrl(url);
+		_log.info("跳转至提现页面查询用户账户的返回值为：{}", result);
+		Map accountMap = objectMapper.readValue(result, Map.class);
+		_log.info("跳转至提现页面查询用户账户转换后的返回值为：{}", accountMap);
+		andView.addObject("balance", accountMap.get("balance"));
 		_log.info("查询用户提现账号信息的参数为：{}", userId);
-		// 查询用户是否有提现账号
+		// 查询用户提现账号
 		String urls = SysContext.VPAYURL + "/withdraw/account/info?userId=" + userId;
 		String results = HttpUtil.getUrl(urls);
 		_log.info("查询用户提现账号信息的返回值为：{}", results);
-		ObjectMapper objectMapper = new ObjectMapper();
-		Map map = objectMapper.readValue(results, Map.class);
-		_log.info("将用户提现账号信息转为map的返回值为：{}", String.valueOf(map));
+		String withdrawNumber = "0";
+		String id = "";
+		String withdrawType = "0";
+		String bankAccountNo = "";
+		String bankAccountName = "";
+		String contactTel = "";
+		String openAccountBank = "";
+		String seviceCharge = "0";
+		if (results != null && !results.equals("") && !results.equals("null")) {
+			Map map = objectMapper.readValue(results, Map.class);
+			_log.info("将用户提现账号信息转为map的返回值为：{}", String.valueOf(map));
+			withdrawNumber = String.valueOf(map.get("withdrawNumber"));
+			id = String.valueOf(map.get("id"));
+			withdrawType = String.valueOf(map.get("withdrawType"));
+			bankAccountNo = String.valueOf(map.get("bankAccountNo"));
+			bankAccountName = String.valueOf(map.get("bankAccountName"));
+			contactTel = String.valueOf(map.get("contactTel"));
+			openAccountBank = String.valueOf(map.get("openAccountBank"));
+			seviceCharge = String.valueOf(map.get("seviceCharge"));
+		}
 		// 获取用户提现次数
-		andView.addObject("withdrawNumber", map.get("withdrawNumber"));
+		andView.addObject("withdrawNumber", withdrawNumber);
 		// 用户账号金额信息
-		andView.addObject("balance", map.get("balance"));
 		andView.addObject("orderId", String.valueOf(UUID.randomUUID()).replaceAll("-", ""));
-		andView.addObject("id", map.get("id"));
-		andView.addObject("withdrawType", map.get("withdrawType"));
-		andView.addObject("bankAccountNo", map.get("bankAccountNo"));
-		andView.addObject("bankAccountName", map.get("bankAccountName"));
-		andView.addObject("contactTel", map.get("contactTel"));
-		andView.addObject("openAccountBank", map.get("openAccountBank"));
-		andView.addObject("seviceCharge", map.get("seviceCharge"));
+		andView.addObject("id", id);
+		andView.addObject("withdrawType", withdrawType);
+		andView.addObject("bankAccountNo", bankAccountNo);
+		andView.addObject("bankAccountName", bankAccountName);
+		andView.addObject("contactTel", contactTel);
+		andView.addObject("openAccountBank", openAccountBank);
+		andView.addObject("seviceCharge", seviceCharge);
 		andView.setViewName("/htm/wechat/user/withdraw");
 		return andView;
 	}
@@ -998,5 +1023,24 @@ public class WeChatUserController extends SysController {
 		} else {
 			this.render(response, "{\"msg\":\"您未登录！\", \"result\":\"-74110\"}");
 		}
+	}
+	
+	/**
+	 * 申请提现、申请提现账户、添加实名认证信息
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 */
+	@RequestMapping("/wechat/user/applyWithdraw")
+	public void applyWithdraw(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, Object> map) throws IOException {
+		// 获取当前登录用户编号
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+		map.put("applicantId", userId);
+		map.put("ip", AgentUtils.getIpAddr(request, "nginx"));
+		map.put("tradeTitle", "大卖网络-用户提现");
+		System.out.println(map);
+		String results = OkhttpUtils.postByJsonParams(SysContext.VPAYURL + "/withdraw/apply", map);
+		_log.info("申请提现的返回值为：{}", results);
+		this.render(response, results);
 	}
 }
