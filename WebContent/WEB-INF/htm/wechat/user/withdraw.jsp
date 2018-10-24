@@ -17,14 +17,10 @@
 <script type="text/javascript" src="${ctx }/js/jquery/jquery-1.9.1.min.js"></script>
 </head>
 <script type="text/javascript">
-	// 提现类型
-	var withdrawType = 2;
-
 	$(function() {
 		// 提现次数
 		var withdrawNumber = "${withdrawNumber}";
 		var balance = "${balance}";
-		console.log(balance)
 		$("#bankCanCarry").html("当前可用金额：<span><font color=\"red\">" + balance + "</font></span>元，本月已提现" + withdrawNumber + "次，总共可提现<span><font color=\"red\">" + balance + "</font></span>元");
 
 		if (withdrawNumber == 0) {
@@ -34,24 +30,24 @@
 		// 提现账号
 		var bankAccountNo = "${bankAccountNo}";
 		if (bankAccountNo != null && bankAccountNo != "" && bankAccountNo != "null") {
+			var withdrawType = "${withdrawType0}";
+			if (withdrawType == 1) {
+				// 回显账户姓名、账号、提现类型、开户银行（只有提现类型为银行卡才显示）、移动电话
+				$("#bankAccountName").val("${bankAccountName}");
+				$("#bankAccountNo").val("${bankAccountNo}");
+				$("#contactTel").val("${contactTel}");
+				$("#openAccountBank").val("${openAccountBank}");
+				$("#bankAccountName").attr("disabled", true);
+				$("#bankAccountNo").attr("disabled", true);
+				$("#contactTel").attr("disabled", true);
+				$("#openAccountBank").attr("disabled", true);
+			}
 			// 隐藏身份证号
 			$("#idCards").hide();
-			// 回显账户姓名、账号、提现类型、开户银行（只有提现类型为银行卡才显示）、移动电话
-			$("#bankAccountName").val("${bankAccountName}");
-			$("#bankAccountNo").val("${bankAccountNo}");
-			$("#contactTel").val("${contactTel}");
-			if ("${withdrawType}" == 1) {
-				$("#openAccountBank").val("${openAccountBank}");
-			}
-			$("#bankAccountName").attr("disabled", true);
-			$("#bankAccountNo").attr("disabled", true);
-			$("#contactTel").attr("disabled", true);
-			$("#openAccountBank").attr("disabled", true);
 		}
 
 		// 提现提交
 		$(document).on("tap", "#bankSubmit", function() {
-			console.log(withdrawType)
 			var bankAmount = $("#bankAmount").val();
 			// 验证只能输入大于0的正整数或者保留两位小数的正小数
 			var reg = /^([1-9]\d*(\.\d*[1-9])?)|(0\.\d*[1-9])$/;
@@ -84,14 +80,12 @@
 				return;
 			}
 			if (contactTel == null || contactTel == "" || contactTel == "null") {
-				mui.toast("移动电话不能为空!");
+				mui.toast("联系电话不能为空!");
 				return;
 			}
-			if(withdrawType == 1) {
-				if (openAccountBank == null || openAccountBank == "" || openAccountBank == "null") {
-					mui.toast("开户银行不能为空!");
-					return;
-				}
+			if (openAccountBank == null || openAccountBank == "" || openAccountBank == "null") {
+				mui.toast("银行名称不能为空!");
+				return;
 			}
 			// 设置提现账户、申请提现、添加实名认证
 			$.ajax({
@@ -102,7 +96,7 @@
 					bankAccountName: bankAccountName,
 					idCard: idCard,
 					bankAccountNo: bankAccountNo,
-					withdrawType: withdrawType,
+					withdrawType: 1,
 					openAccountBank: openAccountBank,
 					contactTel: contactTel,
 					withdrawAmount: bankAmount,
@@ -111,49 +105,15 @@
 				success: function(data) {
 					console.log(data);
 					if (data.result == 1) {
-						mui.toast(data.msg);
+						alert(data.msg);
 						window.location.href = "${ctx }/wechat/user/wechatWithdraw.htm?promoterId=${userId}";
 					}
+					alert(data.msg);
 				}
 			})
 		})
-
-		//可选择菜单
-		var info = document.getElementById("r-info");
-		mui(document).on('tap', '.mui-popover-action .btn-list li>a', function() {
-			var a = this, parent;
-			//根据点击按钮，反推当前是哪个actionsheet
-			for (parent = a.parentNode; parent != document.body; parent = parent.parentNode) {
-				if (parent.classList.contains('mui-popover-action')) {
-					break;
-				}
-			}
-			//关闭actionsheet
-			mui('#' + parent.id).popover('toggle');
-			info.innerHTML = a.innerHTML;
-			withdrawType = a.getAttribute("data-value");
-			if (withdrawType == 1) {
-				$("#openBanks").show();
-			} else {
-				$("#openBanks").hide();
-			}
-		});
-
-		withdrawTypes();
 	})
 
-	// 选择提现类型
-	function withdrawTypes() {
-		var info = document.getElementById("r-info");
-		var select = document.getElementById("withdrawType");
-		if (select.value == 2) {
-			info.innerHTML = "支付宝";
-			$("#openBanks").hide();
-		} else {
-			info.innerHTML = "银行卡";
-			$("#openBanks").show();
-		}
-	}
 </script>
 <style type="text/css">
 .divTop2 {
@@ -175,11 +135,10 @@ input {
 	<div id="wallet_main">
 		<div class="mui-content">
 			<div class="divTop2">
-				<input type="hidden" id="withdrawType" value="${withdrawType }">
 				<div class="divTop2" style="font-size: 14px; color: #555;" id="bankCanCarry"></div>
 				<div class="divTop2">
 					<label style="color: #555;">金&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;额：</label>
-					<input id="bankAmount" value="${balance}">
+					<input id="bankAmount">
 				</div>
 				<div class="divTop2">
 					<label style="color: #555;">账户姓名：</label> 
@@ -190,23 +149,17 @@ input {
 					<input id="idCard">
 				</div>
 				<div class="divTop2">
-					<label style="color: #555;">账&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：</label>
+					<label style="color: #555;">银行卡号：</label>
 					<input id="bankAccountNo">
 				</div>
 				<div class="divTop2">
-					<a href="#sheet"> 
-						<span>提现类型：</span> 
-						<span class="r-info" id="r-info"></span>
-					</a>
-				</div>
-				<div class="divTop2" id="openBanks" style="display: none;">
-					<label style="color: #555;">开户银行：</label> 
+					<label style="color: #555;">银行名称：</label> 
 					<input id="openAccountBank">
 				</div>
 				<div class="divTop2">
-					<label style="color: #555;">移动电话：</label> <input id="contactTel">
+					<label style="color: #555;">联系电话：</label> <input id="contactTel">
 				</div>
-				<div class="divTop2" style="font-size: 14px; color: #555;">银行卡2个工作日内到账，支付宝5个工作日内到账，当次提现最大金额5000元</div>
+				<div class="divTop2" style="font-size: 14px; color: #555;">银行卡5个工作日内到账，当次提现最大金额5000元</div>
 				<div class="divTop2 seviceCharge">
 					<label style="color: #555;">&nbsp;手续费&nbsp;&nbsp;：</label> <input
 						value="${seviceCharge }" disabled="disabled">
@@ -218,18 +171,6 @@ input {
 			<div style="padding-top: 3px;"></div>
 			<div></div>
 		</div>
-	</div>
-	<div id="sheet"
-		class="mui-popover mui-popover-bottom mui-popover-action ">
-		<!-- 可选择菜单 -->
-		<ul class="mui-table-view btn-list">
-			<li class="mui-table-view-cell"><a data-value="2">支付宝</a></li>
-			<li class="mui-table-view-cell"><a data-value="1">银行卡</a></li>
-		</ul>
-		<!-- 取消菜单 -->
-		<ul class="mui-table-view">
-			<li class="mui-table-view-cell"><a href="#sheet"><b>取消</b></a></li>
-		</ul>
 	</div>
 </body>
 </html>
