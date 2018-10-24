@@ -30,7 +30,7 @@
 		// 提现账号
 		var bankAccountNo = "${bankAccountNo}";
 		if (bankAccountNo != null && bankAccountNo != "" && bankAccountNo != "null") {
-			var withdrawType = "${withdrawType0}";
+			var withdrawType = "${withdrawType}";
 			if (withdrawType == 1) {
 				// 回显账户姓名、账号、提现类型、开户银行（只有提现类型为银行卡才显示）、移动电话
 				$("#bankAccountName").val("${bankAccountName}");
@@ -112,6 +112,11 @@
 				}
 			})
 		})
+		
+		// 提现记录
+		document.getElementById('withdrawRecord').addEventListener('tap',function(){
+			window.location.href="${ctx}/wechat/user/withdrawRecord.htm";
+		});
 	})
 
 </script>
@@ -130,7 +135,9 @@ input {
 	<header class="mui-bar mui-bar-nav" style="box-shadow: none;">
 		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 		<h4 class="mui-title">我的提现</h4>
-		<h5 class="mui-title" style="left: auto; font-size: 15px;">提现记录</h5>
+		<h5 class="mui-title" style="left: auto; font-size: 15px;">
+			<a id="withdrawRecord">提现记录</a>
+		</h5>
 	</header>
 	<div id="wallet_main">
 		<div class="mui-content">

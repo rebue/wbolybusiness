@@ -887,11 +887,10 @@ public class WeChatUserController extends SysController {
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("accountId", userId);
-		map.put("withdrawState", 2);
 		map.put("pageNum", pageNum);
 		map.put("pageSize", pageSize);
 		_log.info("查询用户返现金交易记录的参数为：{}", map.toString());
-		String beBeingWithdraw = OkhttpUtils.get(SysContext.VPAYURL + "/afc/withdraw", map);
+		String beBeingWithdraw = OkhttpUtils.get(SysContext.VPAYURL + "/withdraw/applting", map);
 		_log.info("查询用户返现金交易记录的返回值为：{}", beBeingWithdraw);
 		this.render(response, beBeingWithdraw);
 	}
@@ -1042,5 +1041,46 @@ public class WeChatUserController extends SysController {
 		String results = OkhttpUtils.postByJsonParams(SysContext.VPAYURL + "/withdraw/apply", map);
 		_log.info("申请提现的返回值为：{}", results);
 		this.render(response, results);
+	}
+	
+	/**
+	 * 跳转至提现记录页面
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/wechat/user/withdrawRecord")
+	public ModelAndView withdrawRecord(HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView();
+		// 用户编号
+		String loginuid = SysCache.getWeChatUserByColumn(request, "userId");
+		if (null != loginuid && !"".equals(loginuid)) {
+			mav.setViewName("/htm/wechat/user/withdrawRecord");
+		} else {
+			mav.setViewName("/wechat/oauth2/checkSignature/login.htm");
+		}
+		return mav;
+	}
+	
+	/**
+	 * 获取用户提现记录
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping("/wechat/user/getWithdrawRecord")
+	public void getWithdrawRecord(HttpServletRequest request, HttpServletResponse response, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) throws IOException {
+		// 获取当前登录用户编号
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+		if (userId != null && !userId.equals("") && !userId.equals("null")) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("applicantId", userId);
+			map.put("pageNum", pageNum);
+			map.put("pageSize", pageSize);
+			String result = OkhttpUtils.get(SysContext.VPAYURL + "/afc/withdraw", map);
+			System.out.println("获取的返回值为：" + result);
+			this.render(response, result);
+		} else {
+			this.render(response, "{\"msg\":\"您未登录！\", \"result\":\"-74110\"}");
+		}
 	}
 }
