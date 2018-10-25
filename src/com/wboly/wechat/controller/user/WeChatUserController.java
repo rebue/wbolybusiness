@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,7 +32,7 @@ import com.wboly.system.sys.util.HttpUtil;
 import com.wboly.system.sys.util.JsonUtil;
 import com.wboly.wechat.service.user.WeChatUserService;
 
-import net.sf.json.JSONArray;
+import rebue.wheel.AgentUtils;
 import rebue.wheel.NetUtils;
 import rebue.wheel.OkhttpUtils;
 import rebue.wheel.RegexUtils;
@@ -308,7 +309,40 @@ public class WeChatUserController extends SysController {
 		mav.setViewName("/htm/wechat/user/usercenter");
 		return mav;
 	}
+	
+	/**
+	 * @throws IOException 
+	 * @Name: 查看登录密码是否存在
+	 * @Author: nick
+	 */
+	@RequestMapping(value = "/wechat/user/loginPwIsExis", method = RequestMethod.GET)
+	public void loginPwIsExis(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+		String id = SysCache.getWeChatUserByColumn(request, "userId");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("id", id);
+		System.err.println("查看登录密码是否存在的参数为：" + String.valueOf(map));
+		String result = OkhttpUtils.get(SysContext.USERCENTERURL + "/user/loginPwIsExis",map);
+		System.err.println("查看登录密码是否存在的结果为：" +result );
+		this.render(response, result);
+	}
+	
+	/**
+	 * @throws IOException 
+	 * @Name: 查看用户是否实名认证
+	 * @Author: nick
+	 */
+	@RequestMapping(value = "/wechat/user/verifyRealName", method = RequestMethod.GET)
+	public void verifyRealName(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		System.err.println("查看登录密码是否存在的参数为：" + String.valueOf(map));
+		String result = OkhttpUtils.get(SysContext.RNAURL + "/rna/getbyuserid",map);
+		System.err.println("查看登录密码是否存在的结果为：" +result );
+		this.render(response, result);
+	}
+	
 	/**
 	 * @Name: 我的钱包页面
 	 * @Author: nick
@@ -351,11 +385,11 @@ public class WeChatUserController extends SysController {
 		Map map = mapper.readValue(result, Map.class);
 		System.err.println("WX:用户编号为:" + userId + "\t 查询账户余额成功返回");
 		DecimalFormat df = new DecimalFormat("0.00");
-		map.put("balance", df.format(map.get("balance")));// 账户余额,单位:分
-		map.put("cashback", df.format(map.get("cashback")));// 可用返现金额，单位:分
-		map.put("commissionTotal", df.format(map.get("commissionTotal")));// 已返佣总额，单位:分
-		map.put("commissioning", df.format(map.get("commissioning")));// 待返佣总额，单位:分
-		map.put("withdrawing", df.format(map.get("withdrawing")));// 提现中，单位:分
+		map.put("availableBalance", df.format(map.get("balance")));// 账户余额,单位:分
+		map.put("sumretailBacLimit", df.format(map.get("cashback")));// 可用返现金额，单位:分
+
+		// 返现总金额单位:分
+		map.put("usableBacLimit", df.format(map.get("cashbacking")));
 		this.render(response, "{\"message\":" + JsonUtil.ObjectToJson(map) + ",\"flag\":true}");
 	}
 
@@ -408,7 +442,6 @@ public class WeChatUserController extends SysController {
 		} else {
 			mav.setViewName("/wechat/oauth2/checkSignature/login.htm");
 		}
-
 		return mav;
 	}
 
@@ -546,65 +579,63 @@ public class WeChatUserController extends SysController {
 	 * 跳转至微信提现页面
 	 * 
 	 * @return 2018年1月19日14:04:13
+	 * @throws IOException 
+	 * @throws JsonMappingException 
+	 * @throws JsonParseException 
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes" })
 	@RequestMapping(value = "/wechat/user/wechatWithdraw")
-	public ModelAndView skipWechatWithdraw(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView skipWechatWithdraw(HttpServletRequest request, HttpServletResponse response) throws JsonParseException, JsonMappingException, IOException {
 		ModelAndView andView = new ModelAndView();
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
 		if (userId == null || userId.equals("") || userId.equals("null")) {
 			return new ModelAndView("redirect:/wechat/oauth2/checkSignature/login.htm");
 		}
-		// 查询用户是否有提现账号
-		String urls = SysContext.VPAYURL + "/withdraw/account/exist/byuserid?userId=" + userId;
+		ObjectMapper objectMapper = new ObjectMapper();
+		// 用户可用余额接口
+		String url = SysContext.VPAYURL + "/account/funds?userId=" + userId;
+		String result = HttpUtil.getUrl(url);
+		_log.info("跳转至提现页面查询用户账户的返回值为：{}", result);
+		Map accountMap = objectMapper.readValue(result, Map.class);
+		_log.info("跳转至提现页面查询用户账户转换后的返回值为：{}", accountMap);
+		andView.addObject("balance", accountMap.get("balance"));
+		_log.info("查询用户提现账号信息的参数为：{}", userId);
+		// 查询用户提现账号
+		String urls = SysContext.VPAYURL + "/withdraw/account/info?userId=" + userId;
 		String results = HttpUtil.getUrl(urls);
-		System.out.println(results);
-		// 如果没有则跳转至用户中心首页
-		if (results.equals("true") || results.equals(true)) {
-			// 获取用户提现次数
-			int num = SysCache.getUserWithdrawalNumber(userId);
-			andView.addObject("num", 3 - num);
-			// 获取用户账号金额信息
-			String priceUrl = SysContext.VPAYURL + "/account/funds?userId=" + userId;
-			String priceResult = HttpUtil.getUrl(priceUrl);
-			String balance = "0";
-			if (priceResult != null && !priceResult.equals("null") && !priceResult.equals("")) {
-				balance = JsonUtil.getJSONValue(priceResult, "balance");
-			}
-			andView.addObject("balance", balance);
-			// 获取用户提现账号信息
-			String url = SysContext.VPAYURL + "/withdraw/account?userId=" + userId;
-			String result = HttpUtil.getUrl(url);
-			String id = "0";
-			String withdrawType = "0";
-			String bankAccountNo = "0";
-			String bankAccountName = "0";
-			String contactTel = "0";
-			String openAccountBank = "0"; // 开户银行
-			if (result != null && !result.equals("") && !result.equals("null") && !result.equals("[]")) {
-				List<Map<String, Object>> list = JSONArray.fromObject(result);
-				id = String.valueOf(list.get(0).get("id"));
-				withdrawType = String.valueOf(list.get(0).get("withdrawType")); // 提现类型
-				bankAccountNo = String.valueOf(list.get(0).get("bankAccountNo")); // 提现账号
-				bankAccountName = String.valueOf(list.get(0).get("bankAccountName")); // 账号名称
-				contactTel = String.valueOf(list.get(0).get("contactTel")); // 联系电话
-				if (withdrawType.equals("2")) {
-					openAccountBank = String.valueOf(list.get(0).get("openAccountBank"));
-				} else {
-					openAccountBank = "支付宝网银";
-				}
-			}
-			andView.addObject("orderId", String.valueOf(UUID.randomUUID()).replaceAll("-", ""));
-			andView.addObject("id", id);
-			andView.addObject("withdrawType", withdrawType);
-			andView.addObject("bankAccountNo", bankAccountNo);
-			andView.addObject("bankAccountName", bankAccountName);
-			andView.addObject("contactTel", contactTel);
-			andView.addObject("openAccountBank", openAccountBank);
-			andView.setViewName("/htm/wechat/user/withdraw");
-		} else {
-			andView.setViewName("redirect:/wechat/user/userCenter.htm");
+		_log.info("查询用户提现账号信息的返回值为：{}", results);
+		String withdrawNumber = "0";
+		String id = "";
+		String withdrawType = "0";
+		String bankAccountNo = "";
+		String bankAccountName = "";
+		String contactTel = "";
+		String openAccountBank = "";
+		String seviceCharge = "0";
+		if (results != null && !results.equals("") && !results.equals("null")) {
+			Map map = objectMapper.readValue(results, Map.class);
+			_log.info("将用户提现账号信息转为map的返回值为：{}", String.valueOf(map));
+			withdrawNumber = String.valueOf(map.get("withdrawNumber"));
+			id = String.valueOf(map.get("id"));
+			withdrawType = String.valueOf(map.get("withdrawType"));
+			bankAccountNo = String.valueOf(map.get("bankAccountNo"));
+			bankAccountName = String.valueOf(map.get("bankAccountName"));
+			contactTel = String.valueOf(map.get("contactTel"));
+			openAccountBank = String.valueOf(map.get("openAccountBank"));
+			seviceCharge = String.valueOf(map.get("seviceCharge"));
 		}
+		// 获取用户提现次数
+		andView.addObject("withdrawNumber", withdrawNumber);
+		// 用户账号金额信息
+		andView.addObject("orderId", String.valueOf(UUID.randomUUID()).replaceAll("-", ""));
+		andView.addObject("id", id);
+		andView.addObject("withdrawType", withdrawType);
+		andView.addObject("bankAccountNo", bankAccountNo);
+		andView.addObject("bankAccountName", bankAccountName);
+		andView.addObject("contactTel", contactTel);
+		andView.addObject("openAccountBank", openAccountBank);
+		andView.addObject("seviceCharge", seviceCharge);
+		andView.setViewName("/htm/wechat/user/withdraw");
 		return andView;
 	}
 
@@ -623,18 +654,12 @@ public class WeChatUserController extends SysController {
 			this.render(response, "{\"msg\":\"您未登录！\", \"flag\":\"false\"}");
 			return;
 		}
-		// 获取用户提现次数
-		int num = SysCache.getUserWithdrawalNumber(userId);
-		if (num == 3) {
-			this.render(response, "{\"msg\":\"您今天的提现次数已用完！\", \"flag\":\"false\"}");
-			return;
-		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		String id = String.valueOf(request.getParameter("id"));
 		String withdrawType = String.valueOf(request.getParameter("withdrawType"));
 		String orderId = String.valueOf(request.getParameter("orderId"));
 		String amount = "";
-		if (withdrawType.equals("2")) {
+		if (withdrawType.equals("1")) {
 			amount = String.valueOf(request.getParameter("bankAmount"));
 		} else {
 			amount = String.valueOf(request.getParameter("alipayAmount"));
@@ -642,7 +667,7 @@ public class WeChatUserController extends SysController {
 		map.put("userId", userId);
 		map.put("id", id);
 		map.put("orderId", orderId);
-		map.put("tradeTitle", "商超-用户提现");
+		map.put("tradeTitle", "大卖网络-用户提现");
 		map.put("tradeAmount", amount);
 		map.put("opId", userId);
 		map.put("mac", NetUtils.getFirstMacAddrOfLocalHost());
@@ -654,7 +679,6 @@ public class WeChatUserController extends SysController {
 			String result = JsonUtil.getJSONValue(results, "result");
 			if (result.equals("1")) {
 				// 缓存用户提现次数
-				SysCache.setUserWithdrawalNumber(userId, String.valueOf(num + 1));
 				this.render(response, "{\"msg\":\"提交成功！\", \"flag\":\"true\"}");
 			} else if (result.equals("0")) {
 				this.render(response, "{\"msg\":\"参数不正确！\", \"flag\":\"false\"}");
@@ -796,6 +820,8 @@ public class WeChatUserController extends SysController {
 			return andView;
 		}
 	}
+	
+	
 
 	/**
 	 * 查询账号余额交易信息
@@ -864,7 +890,7 @@ public class WeChatUserController extends SysController {
 		map.put("pageNum", pageNum);
 		map.put("pageSize", pageSize);
 		_log.info("查询用户返现金交易记录的参数为：{}", map.toString());
-		String beBeingWithdraw = OkhttpUtils.get(SysContext.VPAYURL + "/afc/withdraw", map);
+		String beBeingWithdraw = OkhttpUtils.get(SysContext.VPAYURL + "/withdraw/applting", map);
 		_log.info("查询用户返现金交易记录的返回值为：{}", beBeingWithdraw);
 		this.render(response, beBeingWithdraw);
 	}
@@ -875,6 +901,7 @@ public class WeChatUserController extends SysController {
 	 * @param response
 	 * @return
 	 */
+	@RequestMapping("/wechat/user/applyWithdrAwaccountPage")
 	public String applyWithdrAwaccountPage(HttpServletRequest request, HttpServletResponse response) {
 		// 获取当前登录用户编号
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
@@ -882,6 +909,178 @@ public class WeChatUserController extends SysController {
 			return "/htm/wechat/user/applywithdrawaccount";
 		} else {
 			return "redirect:/wechat/oauth2/checkSignature/login.htm";
+		}
+	}
+	
+	/**
+	 * 提交申请提现账号信息
+	 * @param request
+	 * @param response
+	 * @param applyWithdrAwaccounts
+	 * @throws IOException 
+	 */
+	@RequestMapping("/wechat/user/submitApplyWithdrAwaccount")
+	public void submitApplyWithdrAwaccount(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, Object> applyWithdrAwaccounts) throws IOException {
+		// 获取当前用户ID
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+		if (userId == null || userId.equals("") || userId.equals("null")) {
+			this.render(response, "{\"msg\":\"您没有登录\",\"result\":-11}");
+			return ;
+		}
+		applyWithdrAwaccounts.put("applicantId", userId);
+		applyWithdrAwaccounts.put("applicantIp", AgentUtils.getIpAddr(request, "nginx"));
+		applyWithdrAwaccounts.put("accountId", userId);
+		System.out.println("提交申请提现账户信息的参数为：" + String.valueOf(applyWithdrAwaccounts));
+		String postByJsonParamsResult = OkhttpUtils.postByJsonParams(SysContext.VPAYURL + "/afc/withdrawaccountbindflow/addex", applyWithdrAwaccounts);
+		System.out.println("提交申请提现账户信息的返回值为：" + postByJsonParamsResult);
+		this.render(response, postByJsonParamsResult);
+	}
+	
+	/**
+	 * @Name: 修改登录密码页面
+	 * @Author: knick
+	 */
+	@RequestMapping(value = { "/wechat/user/updatepaypwdpage" })
+	public ModelAndView updatePayPwdPage(HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView();
+		// 用户编号
+		String loginuid = SysCache.getWeChatUserByColumn(request, "userId");
+		if (null != loginuid && !"".equals(loginuid)) {
+			mav.setViewName("/htm/wechat/user/updatePayPwd");
+		} else {
+			mav.setViewName("/wechat/oauth2/checkSignature/login.htm");
+		}
+		return mav;
+	}
+	
+	/**
+	 * @throws IOException 
+	 * @Name: 查看支付密码是否存在
+	 * @Author: nick
+	 */
+	@RequestMapping(value = "/wechat/user/payPwIsExis", method = RequestMethod.GET)
+	public void payPwIsExis(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String id = SysCache.getWeChatUserByColumn(request, "userId");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("id", id);
+		System.err.println("查看支付密码是否存在的参数为：" + String.valueOf(map));
+		String result = OkhttpUtils.get(SysContext.USERCENTERURL + "/user/payPwIsExis",map);
+		System.err.println("查看支付密码是否存在的结果为：" +result );
+		this.render(response, result);
+	}
+	
+	/**
+	 * 设置支付密码
+	 * 
+	 * @param request
+	 * @param response
+	 * @param map
+	 * @throws IOException
+	 */
+	@RequestMapping("/wechat/user/setPayPassword")
+	public void setPayPassword(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam Map<String, Object> map) throws IOException {
+		System.out.println(String.valueOf(map));
+		// 获取当前登录用户编号
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+		if (userId != null && !userId.equals("") && !userId.equals("null")) {
+			// 获取当前登录用户编号
+			String wxId = SysCache.getWeChatUserByColumn(request, "openid");
+			map.put("wxId", wxId);
+			System.out.println("设置支付密码的参数为：" + wxId);
+			_log.info("设置支付密码的参数为：{}", wxId);
+			String result = OkhttpUtils.postByFormParams(SysContext.USERCENTERURL + "/paypswd/add/bywxid", map);
+			_log.info("设置支付密码的返回值为：{}", result);
+			this.render(response, result);
+		} else {
+			this.render(response, "{\"msg\":\"您未登录！\", \"result\":\"-74110\"}");
+		}
+	}
+	
+	/**
+	 * 修改支付密码提交
+	 * 
+	 * @param request
+	 * @param response
+	 * @param map
+	 * @throws IOException
+	 */
+	@RequestMapping("/wechat/user/changePayPassword")
+	public void changePayPassword(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam Map<String, Object> map) throws IOException {
+		System.out.println(String.valueOf(map));
+		// 获取当前登录用户编号
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+		if (userId != null && !userId.equals("") && !userId.equals("null")) {
+			// 获取当前登录用户编号
+			String wxId = SysCache.getWeChatUserByColumn(request, "openid");
+			map.put("wxId", wxId);
+			System.out.println("修改支付密码的参数为：" + wxId);
+			String result = OkhttpUtils.postByFormParams(SysContext.USERCENTERURL + "/paypswd/modify/bywxid", map);
+			System.out.println("微信修改支付密码的返回值为：" + result);
+			this.render(response, result);
+		} else {
+			this.render(response, "{\"msg\":\"您未登录！\", \"result\":\"-74110\"}");
+		}
+	}
+	
+	/**
+	 * 申请提现、申请提现账户、添加实名认证信息
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 */
+	@RequestMapping("/wechat/user/applyWithdraw")
+	public void applyWithdraw(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, Object> map) throws IOException {
+		// 获取当前登录用户编号
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+		map.put("applicantId", userId);
+		map.put("ip", AgentUtils.getIpAddr(request, "nginx"));
+		map.put("tradeTitle", "大卖网络-用户提现");
+		System.out.println(map);
+		String results = OkhttpUtils.postByJsonParams(SysContext.VPAYURL + "/withdraw/apply", map);
+		_log.info("申请提现的返回值为：{}", results);
+		this.render(response, results);
+	}
+	
+	/**
+	 * 跳转至提现记录页面
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/wechat/user/withdrawRecord")
+	public ModelAndView withdrawRecord(HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView();
+		// 用户编号
+		String loginuid = SysCache.getWeChatUserByColumn(request, "userId");
+		if (null != loginuid && !"".equals(loginuid)) {
+			mav.setViewName("/htm/wechat/user/withdrawRecord");
+		} else {
+			mav.setViewName("/wechat/oauth2/checkSignature/login.htm");
+		}
+		return mav;
+	}
+	
+	/**
+	 * 获取用户提现记录
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping("/wechat/user/getWithdrawRecord")
+	public void getWithdrawRecord(HttpServletRequest request, HttpServletResponse response, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) throws IOException {
+		// 获取当前登录用户编号
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+		if (userId != null && !userId.equals("") && !userId.equals("null")) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("applicantId", userId);
+			map.put("pageNum", pageNum);
+			map.put("pageSize", pageSize);
+			String result = OkhttpUtils.get(SysContext.VPAYURL + "/afc/withdraw", map);
+			System.out.println("获取的返回值为：" + result);
+			this.render(response, result);
+		} else {
+			this.render(response, "{\"msg\":\"您未登录！\", \"result\":\"-74110\"}");
 		}
 	}
 }

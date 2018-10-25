@@ -123,6 +123,11 @@
 							</li>
 						</ul>
 					</li>
+					<li class="mui-table-view-cell setPw" id="${ctx }/wechat/user/updatepaypwdpage.htm?userId=${userId}" >
+						<a href="${ctx }/wechat/user/updatepaypwdpage.htm?userId=${userId}" class="mui-navigate-right notshare"> 
+							<span class="mui-icon mui-icon-compose mui-pull-left"></span> 修改或设置支付密码
+						</a>
+					</li>
 					<li class="mui-table-view-cell setPw" id="${ctx }/wechat/user/updateloginpwdpage.htm?userId=${userId}" >
 						<a href="${ctx }/wechat/user/updateloginpwdpage.htm?userId=${userId}" class="mui-navigate-right notshare"> 
 							<span class="mui-icon mui-icon-compose mui-pull-left"></span> 修改或设置登录密码
@@ -138,11 +143,11 @@
 							<span class="mui-icon mui-icon-map mui-pull-left"></span> 收货地址
 						</a>
 					</li>
-					<li class="mui-table-view-cell  setRealName" id="${ctx }/wechat/user/verifyRealNamePage.htm" >
+					<%-- <li class="mui-table-view-cell  setRealName" id="${ctx }/wechat/user/verifyRealNamePage.htm" >
 						<a id="verify" href="${ctx }/wechat/user/verifyRealNamePage.htm"  class="mui-navigate-right notshare"> 
 							<span class="mui-icon mui-icon-paperplane mui-pull-left"></span> 申请实名认证
 						</a>
-					</li>
+					</li> --%>
 					<li class="mui-table-view-cell">
 						<a href="javascript:guideDiv();" class="mui-navigate-right weixinshare"> 
 							<span class="mui-icon mui-icon-redo mui-pull-left"></span> 分享给好友
@@ -193,30 +198,31 @@
 			        document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString() + ";path=/";
 			    }
 				
-				function verifyRealName(){
-					var userId=document.getElementById("verifyUserId");
-					var url="${rnaUrl}/rna/getbyuserid";
-					$.get(url,{'userId':userId.value},function(data){
-						console.log("返回的值"+data);
+				
+				$.ajax({
+					url : "${ctx }/wechat/user/verifyRealName.htm?userId=${userId}",
+					type : "get",
+					dataType:'json',//服务器返回json格式数据
+					success:function(data){
+						console.log(data);
 						if(data==null || data ==""){
 							return;
 						}
-						data = JSON.parse(data)
 						var verify=document.getElementById("verify");
 						var html='';
+						console.log(verify);
 						if(data.applyState==null){
 							return;
 						}else{
 							verify.href="${ctx }/wechat/user/verifyResult.htm?userId=${userId}";
+							mui('body').on('tap','.setRealName',function(){document.location.href="${ctx }/wechat/user/verifyResult.htm?userId=${userId}";});
 						    setCookie("applyState", data.applyState);
 						    setCookie("rejectReason", data.rejectReason);
-
 						}
-
-					})
-					
-				}
-				verifyRealName();
+					}
+				});
+				
+				
 			});
 		})(mui, document);
 		

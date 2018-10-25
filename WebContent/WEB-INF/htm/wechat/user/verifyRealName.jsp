@@ -92,12 +92,14 @@
 	<script type="text/javascript">
 		var label = "点击上传手持身份证正反面以及身份证正反面照片";
 		var NumLimit = 4;
-		var SizeLimit = 9 * 1024 * 1024; // 15 M     
-		var SingleSizeLimit = 3 * 1024 * 1024; // 3 M 
+		var SizeLimit = 20 * 1024 * 1024; // 15 M     
+		var SingleSizeLimit = 10 * 1024 * 1024; // 3 M 
 		// 上传图片
 		var arr = new Array();
 		var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
-		var serverUrl = 'http://192.168.1.201/ise-svr/ise/upload'; 
+		//var serverUrl = 'http://192.168.1.201/ise-svr/ise/upload'; 
+		var serverUrl = 'https://www.duamai.com/ise-svr/ise/upload'; 
+		//var serverUrl = '${ctx }/wechat/user/uploadRealImg.htm'; 
 		(function($, doc) {
 			mui.init();
 			$.ready(function() {
@@ -153,10 +155,10 @@
 							}else if(reg.test(mui("#idCard")[0].value)==false){
 								mui.toast("输入的身份证号不合法！");
 							}else{
-								if (mui(".filelist img").length > 0) {
+								if (mui(".filelist img").length ==4) {
 									 uploader.upload(); //在uploader的上传成功事件里触发ajaxupdate();
 								} else {
-									mui.toast("请上传认证照片");
+									mui.toast("请上传符合要求的四张图片认证照片");
 								}
 							};
 						});

@@ -185,7 +185,7 @@
 			$.ready(function() {
 				mui('#wallet_main').on('tap','.car-inner-body a',function(){document.location.href=this.href;});
 				mui('#wallet_main').on('tap','.mui-table-view-cell a',function(){document.location.href=this.href;});
-				mui('body').on('tap','.mui-bar-nav a',function(){document.location.href=this.href;});
+				// mui('body').on('tap','.mui-bar-nav a',function(){document.location.href=this.href;});
 				mui("#active-bar-span")[0].style.left = mui(".tab-slider .mui-control-item.mui-active")[0].offsetLeft + "px";
 				accountTrade(0);
 				setconHeight();
@@ -206,56 +206,26 @@
 					state = obj.getAttribute("data-value");
 					mui("#active-bar-span")[0].style.left = left + "px";
 					if(event.detail.slideNumber == 0) {
+						document.getElementById("inner_data_1").innerHTML = "";
 						accountTrade(0);
 					} else if(event.detail.slideNumber == 1) {
+						document.getElementById("inner_data_2").innerHTML = "";
 						toBeFullyReturned(0);
 					} else if(event.detail.slideNumber == 2) {
+						document.getElementById("inner_data_3").innerHTML = "";
 						accountCashback(0);
 					} else if(event.detail.slideNumber == 3) {
+						document.getElementById("inner_data_4").innerHTML = "";
 						ordinaryCashback(0);
 					} else if (event.detail.slideNumber == 4) {
+						document.getElementById("inner_data_5").innerHTML = "";
 						beBeingWithdraw(0);
 					};
 				});
 				
 				// 提现
-				mui("#withdraw").on('tap', 'a', function(e) {
-					// 判断用户是否已实名认证
-					mui.ajax('http://localhost:20082/rna/existbyuserId', {
-						data: {
-							"userId": "${userId}",
-						},
-						dataType: 'json',
-						type: 'get',
-						success: function(data) {
-							console.log(data);
-							// 判断是否已实名认证（  true：已认证  false：未认证）
-							if(data == false || data == "false") {
-								mui.confirm('您还未通过实名认证暂时无法进行提现，是否前去认证？', ' ', ['是', '否'], function(e) {
-									if (e.index == 0) {
-										window.location.href="${ctx}/wechat/user/verifyRealNamePage.htm";
-									}
-								})
-							} else {
-								// 判断是否已有提现账号
-								mui.ajax('http://localhost:9300/withdraw/account', {
-									data: {
-										"userId": "${userId}",
-									},
-									dataType: 'json',
-									type: 'get',
-									success: function(data) {
-										console.log(data)
-										if (data.length == 0) {
-											window.location.href="${ctx}/wechat/user/applyWithdrAwaccountPage.htm";
-										} else {
-											
-										}
-									}
-								})
-							}
-						},
-					});	
+				document.getElementById('withdraw').addEventListener('tap',function(){
+					window.location.href="${ctx}/wechat/user/wechatWithdraw.htm";
 				});
 			});
 		})(mui, document, jQuery);

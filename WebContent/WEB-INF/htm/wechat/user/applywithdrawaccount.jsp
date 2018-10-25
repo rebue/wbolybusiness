@@ -27,12 +27,20 @@
 	<div id="opt_main" class="mui-scroll-wrapper">
 		<div class="mui-content mui-scroll">
 			<div class="info-bar mui-table-view-cell phone-box">
+				<span class="mui-pull-left">身份证姓名：</span> 
+				<input style="border: 0px; outline: none; cursor: pointer; font-size: 0.875rem" name="bankAccountName" id="bankAccountName" placeholder="身份证姓名"/>
+			</div>
+			<div class="info-bar mui-table-view-cell phone-box">
+				<span class="mui-pull-left">身份证号码：</span> 
+				<input style="border: 0px; outline: none; cursor: pointer; font-size: 0.875rem" name="bankAccountName" id="bankAccountName" placeholder="身份证号码"/>
+			</div>
+			<div class="info-bar mui-table-view-cell phone-box">
 				<span class="mui-pull-left">账户名称：</span> 
-				<input type="number" name="phone" id="phone" placeholder="支付宝/银行卡真实姓名"/>
+				<input style="border: 0px; outline: none; cursor: pointer; font-size: 0.875rem" name="bankAccountName" id="bankAccountName" placeholder="支付宝/银行卡真实姓名"/>
 			</div>
 			<div class="info-bar mui-table-view-cell phone-box">
 				<span class="mui-pull-left">联系方式：</span> 
-				<input type="number" name="phone" id="phone" placeholder="手机号码(填写错误概不负责)"/>
+				<input style="border: 0px; outline: none; cursor: pointer; font-size: 0.875rem" name="contactTel" id="contactTel" placeholder="填写错误概不负责"/>
 			</div>
 			<div class="info-bar mui-table-view-cell">
 				<a href="#sheet" class="arrowdown mui-navigate-right"> 
@@ -42,19 +50,19 @@
 			</div>
 			<div class="info-bar mui-table-view-cell phone-box">
 				<span class="mui-pull-left">提现账号：</span> 
-				<input type="number" name="phone" id="phone" placeholder="支付宝/银行账号(填写错误概不负责)" />
+				<input oninput = "value=value.replace(/[^\d]/g,'')" style="border: 0px; outline: none; cursor: pointer; font-size: 0.875rem" name="bankAccountNo" id="bankAccountNo" placeholder="支付宝/银行账号(填写错误概不负责)" />
 			</div>
 			<div class="info-bar mui-table-view-cell phone-box">
 				<span class="mui-pull-left">开户银行：</span> 
-				<input type="number" name="phone" id="phone" placeholder="支付宝用户不用填写" />
+				<input style="border: 0px; outline: none; cursor: pointer; font-size: 0.875rem" name="openAccountBank" id="openAccountBank" placeholder="支付宝用户不用填写" />
 			</div>
 		</div>
 	</div>
 	<div id="sheet" class="mui-popover mui-popover-bottom mui-popover-action ">
 		<!-- 可选择菜单 -->
 		<ul class="mui-table-view btn-list">
-			<li class="mui-table-view-cell"><a data-value="1">支付宝</a></li>
-			<li class="mui-table-view-cell"><a data-value="2">银行卡</a></li>
+			<li class="mui-table-view-cell"><a data-value="2">支付宝</a></li>
+			<li class="mui-table-view-cell"><a data-value="1">银行卡</a></li>
 		</ul>
 		<!-- 取消菜单 -->
 		<ul class="mui-table-view">
@@ -66,18 +74,9 @@
 	</footer>
 
 	<script type="text/javascript" charset="utf-8">
-		var orderId = "${afterSaleData.orderId }";
-		var activityId = "${afterSaleData.activityId }";
-		var reason = 1;
+		// 提现类型
+		var withdrawType = 2;
 
-		var arr = new Array();
-		
-		var label = "点此上传凭证图片，最多3张";
-		var NumLimit = 3;
-		var SizeLimit = 9 * 1024 * 1024; // 15 M     
-		var SingleSizeLimit = 3 * 1024 * 1024; // 3 M 
-		var serverUrl = '${ctx}/app/Util/fileUpload.htm?key=59c23bdde5603ef993cf03fe64e448f1&configName=returnGoodsSavePath';//测试
-		
 		(function($, doc) {
 			mui.init();
 			$.ready(function() {
@@ -113,14 +112,50 @@
 					//关闭actionsheet
 					mui('#' + parent.id).popover('toggle');
 					info.innerHTML = a.innerHTML;
-					reason = a.getAttribute("data-value");
+					withdrawType = a.getAttribute("data-value");
 				});
-
-
+			});
+			
+			// 提交申请提现账号信息
+			mui(document).on("tap", "#ulbtn-box", function() {
+				// 账号名称
+				var bankAccountName = mui("#bankAccountName")[0].value;
+				console.log(bankAccountName);
+				// 联系方式
+				var contactTel = mui("#contactTel")[0].value;
+				console.log(contactTel);
+				// 提现账号
+				var bankAccountNo = mui("#bankAccountNo")[0].value;
+				console.log(bankAccountNo);
+				// 开户银行
+				var openAccountBank = mui("#openAccountBank")[0].value;
+				console.log(openAccountBank);
+				mui.ajax('${ctx}/wechat/user/submitApplyWithdrAwaccount.htm', {
+					type : 'post',
+					dataType : 'json',
+					data : {
+						bankAccountName : bankAccountName,
+						contactTel : contactTel,
+						withdrawType : withdrawType,
+						bankAccountNo : bankAccountNo,
+						openAccountBank : openAccountBank,
+					},
+					success : function(data) {
+						console.log(data);
+						if (data.result == 1) {
+							mui.alert(data.msg, ' ', function() {
+								window.location.href = "${ctx}/wechat/user/userCenter.htm?promoterId=${userId}"
+							});
+							return;
+						};
+						mui.toast(data.msg);
+					},
+					error : function() {
+						mui.alert("提交失败");
+					}
+				});
 			});
 		})(mui, document);
-
 	</script>
-	<script type="text/javascript" src="${ctx }/js/wechat/upload.js"></script>
 </body>
 </html>

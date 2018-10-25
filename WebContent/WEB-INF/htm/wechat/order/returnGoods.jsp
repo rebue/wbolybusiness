@@ -26,6 +26,7 @@
 	<div id="opt_main" class="mui-scroll-wrapper">
 		<div class="mui-content mui-scroll">
 			<div class="info-bar order-num mui-table-view-cell">订单号：${returnData['orderCode'] }</div>
+			<input type="hidden" id="orderState" value="${returnData['orderState'] }" >
 			<div class="order-detail-box mui-table-view-cell">
 				<div class="order-img-box">
 					<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=${returnData['onlineId'] }&promoterId=${userId}">
@@ -117,6 +118,17 @@
 		var SizeLimit = 9 * 1024 * 1024; // 15 M     
 		var SingleSizeLimit = 3 * 1024 * 1024; // 3 M 
 		var serverUrl = 'https://www.duamai.com/ise-svr/ise/upload'; //测试
+		
+		function selectType(){
+			var orderState = document.getElementById("orderState");
+			if(orderState.value==2){
+				returnType=1;
+			}else{
+				returnType=2;
+			}
+		}
+		
+		selectType();
 
 		(function($, doc) {
 			mui.init();
@@ -140,8 +152,7 @@
 					var textareas = document.querySelectorAll("textarea");
 					for (var i = 0; i < textareas.length; i++) {
 						textareas[i].blur();
-					}
-					;
+					};
 				});
 				
 				//可选择菜单
@@ -160,6 +171,20 @@
 					info.innerHTML = a.innerHTML;
 					returnType = a.getAttribute("data-value");
 				});
+				
+				var select = document.getElementById("orderState");
+				function returnType(){
+					if(select.value==2){
+						info.innerHTML="仅退款";
+					}else{
+						info.innerHTML="退货并退款";
+					}
+					
+					
+				}
+				
+				returnType();
+				
 
 				mui(document).on("tap", "#uploadBtn", function() {
 					if (mui("#text")[0].value != "") {
