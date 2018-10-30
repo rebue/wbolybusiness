@@ -188,11 +188,11 @@
 
 				mui(document).on("tap", "#uploadBtn", function() {
 					if (mui("#text")[0].value != "") {
-						if (mui(".filelist img").length > 0) {
+// 						if (mui(".filelist img").length > 0) {
 							uploader.upload(); //在uploader的上传成功事件里触发ajaxupdate();
-						} else {
-							mui.toast("请上传凭证图片");
-						}
+// 						} else {
+// 							mui.toast("请上传凭证图片");
+// 						}
 					} else {
 						mui.toast("请填写退货原因");
 					}
