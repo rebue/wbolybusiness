@@ -46,6 +46,7 @@
 		// 订单详情
 		function getOrderDetail() {
 			var json = JSON.parse(localStorage.getItem("${order_data}"));
+			
 			console.log(json);
 			if (json == null || json == "") {
 				mui.confirm("无法获取您的订单，现在去看看？", " ", [ '取消', '确定' ], function(e) {
@@ -68,17 +69,62 @@
 				html += '	<div class="mui-input-row mui-left">';
 				html += '		<div class="car-inner-box">';
 				html += '			<div class="car-inner-box-img">';
-				html += '				<img src="${goodsImgUrl}' + item.goodsQsmm + '" alt="" class="goodspic">';
+				if(item.subjectType==1){
+					html += '	<a href=""  class="full-return">';
+					html += '		<img src="${goodsImgUrl}' + item.goodsQsmm + '" alt="" class="goodspic">';
+					html += '	</a>';
+				}else{
+					html += '	<a href=""  class=\"\">';
+					html += '		<img src="${goodsImgUrl}' + item.goodsQsmm + '" alt="" class="goodspic">';
+					html += '	</a>';
+				}
 				html += '			</div>';
 				html += '			<div class="car-inner-body">';
 				html += '				<h5><a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + item.onlineId + '&promoterId=${userId}' + '">' + item.onlineTitle + '</a></h5>';
 				html += '				<p>规格：' + item.specName + '</p><br/>';
 				html += '				<div class="price-area">';
-				html += '					<span class="m-price">¥ <span>' + formatCurrency(item.buyPrice) + '</span></span>';
-				html += '					<span class="b-money"> 返 <span>' + formatCurrency(item.cashbackAmount) + '</span></span>';
-				html += '					<span class="numbox">数量：<span>' + item.buyCount + '</span></span>';
+				if(item.subjectType==1){
+					html += '					<span class="m-price">¥ <span>' + formatCurrency(item.buyPrice) + '</span></span>';
+					html += '					<span class="numbox">数量：<span>' + item.buyCount + '</span></span>';
+				}else{
+					html += '					<span class="m-price">¥ <span>' + formatCurrency(item.buyPrice) + '</span></span>';
+					html += '					<span class="b-money"> 返 <span>' + formatCurrency(item.cashbackAmount) + '</span></span>';
+					html += '					<span class="numbox">数量：<span>' + item.buyCount + '</span></span>';
+				}
+				
 				html += '				</div>';
 				html += '			</div>';
+				html += '<div class="button-box">';
+				    var realBuyCount = parseInt(item.buyCount) - parseInt(item.returnCount);
+				    var b = new Base64();
+					var unitJson ='{"orderCode":"' + json.orderCode + '","orderId":"' + json.id +'","orderDetailId":"' + item.id + '","onlineId":"' + item.onlineId + '","onlineTitle":"' + item.onlineTitle + '","goodsQsmm":"${goodsImgUrl}' + item.goodsQsmm + '","productId":"' + item.productId + '","buyPrice":"' + formatCurrency(item.buyPrice) + '","cashbackAmount":"' + formatCurrency(item.cashbackAmount) + '","buyCount":"' + realBuyCount + '","specName":"' + item.specName +'","orderState":"' + json.orderState + '"}';
+					if (json.orderState != 1 && json.orderState != -1){
+						if(item.returnState == 1){
+							if(json.orderState==2){
+								html+='<button class="mui-btn locked">退款中</button>'
+							}else if(json.orderState==3){
+								html+='<button class="mui-btn locked">退款中</button>'
+							}else if(json.orderState==4){
+								html+='<button class="mui-btn locked">退货/售后中</button>'
+							}
+							
+						}else if(item.returnState ==2){
+							html+='<button class="mui-btn locked">已退货</button>'
+						}else if(item.returnState == 0 || item.returnState == 3){
+							if(json.orderState==2){
+								html+='<a href="javascript:returnPage(\'' + b.encode(unitJson) + '\')"  class="mui-btn">退款</a>';
+							}else if(json.orderState==3){
+								html+='<a href="javascript:returnPage(\'' + b.encode(unitJson) + '\')"  class="mui-btn">退货退款</a>';
+							}else if(json.orderState==4){
+								if(new Date().getTime()-data.message[i].receivedTime>604800000){
+									html+='<a href="javascript:returnPage(\'' + b.encode(unitJson) + '\')"  class="mui-btn">售后</a>';
+								}else{
+									html+='<a href="javascript:returnPage(\'' + b.encode(unitJson) + '\')"  class="mui-btn">退货/售后</a>';
+								}
+							}
+						};
+					};
+				html += '</div>';
 				html += '		</div>';
 				html += '	</div>'
 				html += '</div>';
@@ -170,6 +216,8 @@
 				}
 			});
 		}
+		
+		
 	</script>
 </body>
 </html>
