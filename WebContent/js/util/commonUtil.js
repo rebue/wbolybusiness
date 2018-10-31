@@ -1,7 +1,6 @@
 document.write(" <script type='text/javascript' src='/wbolybusiness/js/util/base64.js'></script>");
 
 var areaPicker;
-
 /**
  * 所有门店数据
  */
@@ -313,6 +312,7 @@ function commentPage(gn) {
  *            退货数据
  */
 function returnPage(gn) {
+	 var b = new Base64();
 	if (gn == null) {
 		mui.toast("没有该商品信息");
 		return;

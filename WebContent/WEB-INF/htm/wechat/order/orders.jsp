@@ -149,11 +149,12 @@
 								html += '	<div class="car-inner-box">';
 								html += '<div class="car-inner-box-img">';
 								if(data.message[i].items[j].subjectType==1){
-									html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '&promoterId=${userId}' + '" class="full-return">';
+// 									html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '&promoterId=${userId}' + '" class="full-return">';
+									html += '	<a href="${ctx}/wechat/myorder/' + data.message[i].orderCode + '.htm"  class="full-return">';
 									html += '		<img src="${goodsImgUrl}' + goodsQsmm + '" alt="" class="goodspic">';
 									html += '	</a>';
 								}else{
-									html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].items[j].onlineId + '&promoterId=${userId}' + '">';
+									html += '	<a href="${ctx}/wechat/myorder/' + data.message[i].orderCode + '.htm"  class=\"\">';
 									html += '		<img src="${goodsImgUrl}' + goodsQsmm + '" alt="" class="goodspic">';
 									html += '	</a>';
 								}
@@ -165,10 +166,22 @@
 								if(data.message[i].items[j].subjectType==1){
 									html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
 									html += '		<span class="b-money"><span>'  + '</span></span>';
-									if(data.message[i].items[j].cashbackCommissionSlot==0){
-										html += '		<span class="numbox"><span style = "color:red">'+ '</span>获得免单</span>';
-									}else{
-										html += '		<span class="numbox">邀请<span style = "color:red">' + data.message[i].items[j].cashbackCommissionSlot + '</span>人可免单</span>';
+									html += '		<span class="b-money"> 返 <span>' + formatCurrency(data.message[i].items[j].cashbackAmount) + '</span></span>';
+									if(data.message[i].items[j].ordBuyRelation.length != 0){
+										var relation = '';
+										for(m = 0;m<data.message[i].items[j].ordBuyRelation.length;m++){
+											relation += '下家：'+data.message[i].items[j].ordBuyRelation[m].downlineUserNickName
+											if(!data.message[i].items[j].ordBuyRelation[m].isSignIn){
+												relation += ' 签收状态：未签收 \\n'
+											}else{
+												relation += ' 签收状态：已签收 \\n'
+											}
+										}
+										html += '	<a href="javascript:showRelation(\''+relation+'\')" style= "padding-left:30px">';
+										for(k=0;k<data.message[i].items[j].ordBuyRelation.length;k++){
+											html += '<span class="numbox"><img src= \''+data.message[i].items[j].ordBuyRelation[k].downlineUserWxFace +' \' width=\'25\' height=\'20\'></span>';
+										}
+										html += '</a>';
 									}
 								}else{
 									html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
@@ -182,33 +195,20 @@
 									if(data.message[i].orderState==2){
 										html+='<button class="mui-btn locked">退款中</button>'
 									}else if(data.message[i].orderState==3){
-										html+='<button class="mui-btn locked">退货退款中</button>'
+										html+='<button class="mui-btn locked">退款退款中</button>'
 									}else if(data.message[i].orderState==4){
 										html+='<button class="mui-btn locked">退货/售后中</button>'
 									}
-									
 								}else if(data.message[i].items[j].returnState ==2){
-									html+='<button class="mui-btn locked">已退货</button>'
-								}else if(data.message[i].items[j].returnState == 0 || data.message[i].items[j].returnState == 3){
-									var unitJson ='{"orderCode":"' + data.message[i].orderCode + '","orderId":"' + data.message[i].id +'","orderDetailId":"' + data.message[i].items[j].id + '","onlineId":"' + data.message[i].items[j].onlineId + '","onlineTitle":"' + data.message[i].items[j].onlineTitle + '","goodsQsmm":"${goodsImgUrl}' + goodsQsmm + '","productId":"' + data.message[i].items[j].productId + '","buyPrice":"' + formatCurrency(data.message[i].items[j].buyPrice) + '","cashbackAmount":"' + formatCurrency(data.message[i].items[j].cashbackAmount) + '","buyCount":"' + realBuyCount + '","specName":"' + data.message[i].items[j].specName + '","orderState":"' + data.message[i].orderState +'"}';
-									if (data.message[i].orderState != 1 && data.message[i].orderState != -1){
-										if(data.message[i].items[j].returnState == 0 || data.message[i].items[j].returnState == 3){
-											if(data.message[i].items[j].subjectType==1){
-												html+='<a href="${ctx}/wechat/goods/goodsDetail.htm?guideDisplay=none&onlineId='+  data.message[i].items[j].onlineId+ '&promoterId=${userId}'+ '"  class="mui-btn">邀请购买</a>';
-											}
-											if(data.message[i].orderState==2){
-												html+='<a href="javascript:returnPage(\'' + b.encode(unitJson) + '\')"  class="mui-btn">退款</a>';
-											}else if(data.message[i].orderState==3){
-												html+='<a href="javascript:returnPage(\'' + b.encode(unitJson) + '\')"  class="mui-btn">退货退款</a>';	
-											}else if(data.message[i].orderState==4){
-												if(new Date().getTime()-data.message[i].receivedTime>604800000){
-													html+='<a  href="javascript:returnPage(\'' + b.encode(unitJson) + '\')"  class="mui-btn">售后</a>';
-												}else{
-													html+='<a href="javascript:returnPage(\'' + b.encode(unitJson) + '\')"  class="mui-btn">退货/售后</a>';
-												}
-											}
-										};
-									};
+									html += '<button class="mui-btn locked">已退货</button>';
+								}else if(data.message[i].items[j].returnState == 0  || data.message[i].items[j].returnState == 3){
+									if(data.message[i].items[j].subjectType==1&&data.message[i].orderState > 1&&data.message[i].items[j].cashbackCommissionSlot == 2){
+										html+='<a href="${ctx}/wechat/goods/goodsDetail.htm?guideDisplay=none&onlineId='+  data.message[i].items[j].onlineId+ '&promoterId=${userId}'+ '"  class="mui-btn" style = "margin-top:63px">邀请2人</a>';
+									}else if (data.message[i].items[j].subjectType==1&&data.message[i].orderState > 1&&data.message[i].items[j].cashbackCommissionSlot == 1){
+										html+='<a href="${ctx}/wechat/goods/goodsDetail.htm?guideDisplay=none&onlineId='+  data.message[i].items[j].onlineId+ '&promoterId=${userId}'+ '"  class="mui-btn" style = "margin-top:63px">邀请1人</a>';
+									}else if(data.message[i].items[j].subjectType==1&&data.message[i].orderState > 1&&data.message[i].items[j].cashbackCommissionSlot == 0){
+										html+='<a href="${ctx}/wechat/goods/goodsDetail.htm?guideDisplay=none&onlineId='+  data.message[i].items[j].onlineId+ '&promoterId=${userId}'+ '"  class="mui-btn locked" style = "margin-top:63px">满足条件</a>';
+									}
 								};
 								html += '		</div>';
 								html += '	</div>';
@@ -308,7 +308,7 @@
 					if(mui("div.cd-box")[i].getAttribute("data-type")=="1"){
 						var label = "签收倒计时：";					
 					} else if(mui("div.cd-box")[i].getAttribute("data-type")=="2") {
-						var label = "返现倒计时：";
+						var label = "";
 					}else{
 						var label = "剩余支付时间：";	
 					};
@@ -319,7 +319,7 @@
 					if(mui("div.cd-box")[i].getAttribute("data-type") == "1"){
 						mui("div.cd-box p")[i].innerHTML="已签收";  
 					} else if (mui("div.cd-box")[i].getAttribute("data-type") == "2") {
-						mui("div.cd-box p")[i].innerHTML="已结算";  
+						mui("div.cd-box p")[i].innerHTML="";  
 					}else{
 						mui("div.cd-box p")[i].innerHTML="<span>订单超时未付款</span>"; 
 						mui("div.unit-pay")[i].innerHTML='<button class="mui-pull-right mui-btn">已关闭</button>'; 
@@ -440,11 +440,6 @@
 											}
 											html += '</a>';
 										}
-										if(data.message[i].items[j].cashbackCommissionSlot == 0){
-// 											html += '		<span class="numbox"><span style = "color:red">'+ '</span>已满足免单条件</span>';
-										}else{
-// 											html += '		<span class="numbox">邀请<span style = "color:red">' + data.message[i].items[j].cashbackCommissionSlot + '</span>人可免单</span><br/>';
-										}
 								}else{
 									html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
 									html += '		<span class="b-money"> 返 <span>' + formatCurrency(data.message[i].items[j].cashbackAmount) + '</span></span>';//*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
@@ -468,25 +463,9 @@
 										html+='<a href="${ctx}/wechat/goods/goodsDetail.htm?guideDisplay=none&onlineId='+  data.message[i].items[j].onlineId+ '&promoterId=${userId}'+ '"  class="mui-btn" style = "margin-top:63px">邀请2人</a>';
 									}else if (data.message[i].items[j].subjectType==1&&data.message[i].orderState > 1&&data.message[i].items[j].cashbackCommissionSlot == 1){
 										html+='<a href="${ctx}/wechat/goods/goodsDetail.htm?guideDisplay=none&onlineId='+  data.message[i].items[j].onlineId+ '&promoterId=${userId}'+ '"  class="mui-btn" style = "margin-top:63px">邀请1人</a>';
-									}else{
+									}else if(data.message[i].items[j].subjectType==1&&data.message[i].orderState > 1&&data.message[i].items[j].cashbackCommissionSlot == 0){
 										html+='<a href="${ctx}/wechat/goods/goodsDetail.htm?guideDisplay=none&onlineId='+  data.message[i].items[j].onlineId+ '&promoterId=${userId}'+ '"  class="mui-btn locked" style = "margin-top:63px">满足条件</a>';
 									}
-									var unitJson ='{"orderCode":"' + data.message[i].orderCode + '","orderId":"' + data.message[i].id +'","orderDetailId":"' + data.message[i].items[j].id + '","onlineId":"' + data.message[i].items[j].onlineId + '","onlineTitle":"' + data.message[i].items[j].onlineTitle + '","goodsQsmm":"${goodsImgUrl}' + goodsQsmm + '","productId":"' + data.message[i].items[j].productId + '","buyPrice":"' + formatCurrency(data.message[i].items[j].buyPrice) + '","cashbackAmount":"' + formatCurrency(data.message[i].items[j].cashbackAmount) + '","buyCount":"' + realBuyCount + '","specName":"' + data.message[i].items[j].specName +'","orderState":"' + data.message[i].orderState + '"}';
-									if (data.message[i].orderState != 1 && data.message[i].orderState != -1){
-										if(data.message[i].items[j].returnState == 0 || data.message[i].items[j].returnState == 3){
-											if(data.message[i].orderState==2){
-// 												html+='<a href="javascript:returnPage(\'' + b.encode(unitJson) + '\')"  class="mui-btn">退款</a>';
-											}else if(data.message[i].orderState==3){
-// 												html+='<a href="javascript:returnPage(\'' + b.encode(unitJson) + '\')"  class="mui-btn">退货退款</a>';
-											}else if(data.message[i].orderState==4){
-												if(new Date().getTime()-data.message[i].receivedTime>604800000){
-// 													html+='<a href="javascript:returnPage(\'' + b.encode(unitJson) + '\')"  class="mui-btn">售后</a>';
-												}else{
-// 													html+='<a href="javascript:returnPage(\'' + b.encode(unitJson) + '\')"  class="mui-btn">退货/售后</a>';
-												}
-											}
-										};
-									};
 								};
 								html += '</div>';
 								html+='</div>'
@@ -530,15 +509,15 @@
 								html += '	<a class="mui-pull-right mui-btn bg" href="javascript:aboutCinfirmReceipt(\'' + data.message[i].id + '\')">确认收货</a>';
 								html += '</div>';
 							} else if (data.message[i].orderState == 4) {
-// 								// 签收时间戳
-// 								var receivedTimes = data.message[i].receivedTimes;
-// 								// 自动结算时间
-// 								var automaticSettlement = parseInt(receivedTimes) + 86400 * 7;
-// 								html += '<div class="cd-box" data-type="2">';
-// 								html += '	<input type="hidden" value="' + receivedTimes + '" class="buytime">'; // 签收时间戳
-// 								html += '	<input type="hidden" value="' + automaticSettlement + '" class="endtime">'; // 签收时间加七天（七天返款）
-// 								html += '	<p><span class="grey"></span></p>';
-// 								html += '</div>';
+								// 签收时间戳
+								var receivedTimes = data.message[i].receivedTimes;
+								// 自动结算时间
+								var automaticSettlement = parseInt(receivedTimes) + 86400 * 7;
+								html += '<div class="cd-box" data-type="2">';
+								html += '	<input type="hidden" value="' + receivedTimes + '" class="buytime">'; // 签收时间戳
+								html += '	<input type="hidden" value="' + automaticSettlement + '" class="endtime">'; // 签收时间加七天（七天返款）
+								html += '	<p><span class="grey"></span></p>';
+								html += '</div>';
 								html += '<div class="unit-pay">';
 								html += '	<a class="mui-pull-right mui-btn bg"> 已签收</a>';
 								html += '</div>';

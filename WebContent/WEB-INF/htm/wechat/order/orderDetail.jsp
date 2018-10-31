@@ -116,7 +116,7 @@
 							}else if(json.orderState==3){
 								html+='<a href="javascript:returnPage(\'' + b.encode(unitJson) + '\')"  class="mui-btn">退货退款</a>';
 							}else if(json.orderState==4){
-								if(new Date().getTime()-data.message[i].receivedTime>604800000){
+								if(new Date().getTime()-json.receivedTime>604800000){
 									html+='<a href="javascript:returnPage(\'' + b.encode(unitJson) + '\')"  class="mui-btn">售后</a>';
 								}else{
 									html+='<a href="javascript:returnPage(\'' + b.encode(unitJson) + '\')"  class="mui-btn">退货/售后</a>';
