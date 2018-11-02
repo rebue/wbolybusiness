@@ -809,19 +809,8 @@ public class WeChatUserController extends SysController {
 	 */
 	@RequestMapping("/wechat/user/rulePage")
 	public ModelAndView rulePage(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		ModelAndView andView = new ModelAndView();
-		// 获取当前登录用户编号
-		String userId = SysCache.getWeChatUserByColumn(request, "userId");
-		if (userId != null && !userId.equals("") && !userId.equals("null")) {
-			andView.setViewName("/htm/wechat/user/rulePage");
-			return andView;
-		} else {
-			andView.setViewName("redirect:/wechat/oauth2/checkSignature/login.htm");
-			return andView;
-		}
+			return new ModelAndView("/htm/wechat/user/rulePage");
 	}
-	
-	
 
 	/**
 	 * 查询账号余额交易信息

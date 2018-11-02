@@ -66,7 +66,7 @@ public class SysAuth implements Filter {
 		System.out.println("拦截器获取到的推广者id为：" + promoterId);
 		if (urlDoFilter(servletRequest)) {
 			if (requestUrlss.contains("/wechat/oauth2/myPreReg.htm")
-					|| requestUrlss.contains("/wechat/oauth2/checkSignature.htm")) {
+					|| requestUrlss.contains("/wechat/oauth2/checkSignature.htm")|| requestUrlss.contains("/wechat/user/rulePage.htm")) {
 				chain.doFilter(servletRequest, servletResponse);
 			} else {
 //				CookiesUtil.setCookie("oAwIr04JK8GVF5xvNaOZ4IxwQhhQ", resp);
