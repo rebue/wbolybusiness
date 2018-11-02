@@ -800,20 +800,20 @@ public class WeChatUserController extends SysController {
 	}
 
 	/**
-	 * 跳转至实名认证页面结果页面
+	 * 跳转到全返规则页面
 	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 * @throws IOException
 	 */
-	@RequestMapping("/wechat/user/verifyResult")
-	public ModelAndView verifyResult(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	@RequestMapping("/wechat/user/rulePage")
+	public ModelAndView rulePage(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		ModelAndView andView = new ModelAndView();
 		// 获取当前登录用户编号
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
 		if (userId != null && !userId.equals("") && !userId.equals("null")) {
-			andView.setViewName("/htm/wechat/user/verifyResult");
+			andView.setViewName("/htm/wechat/user/rulePage");
 			return andView;
 		} else {
 			andView.setViewName("redirect:/wechat/oauth2/checkSignature/login.htm");

@@ -143,3 +143,15 @@
 	top: 100px !important;
 	bottom: auto !important;
 }
+
+
+/* 规则页面样式 */
+.box ,.little{   width:100%; }  
+
+.little .pf{ padding-left:38px;}
+
+.little h3{  font-weight:normal; background:#d84a61;  height:50px;margin:0px; padding:0px; font-family:"微软雅黑";  line-height:50px; color:#FFF;}
+
+.little .tip{padding-left:87px; background-image: url(/wbolybusiness/images/wechat/love.png); background-repeat:no-repeat; background-size: 38px 37px; background-position: 42px center; }
+
+.little img{width:100%;height:100%;}

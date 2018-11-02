@@ -20,8 +20,8 @@
 			</div>
 			<!--轮播结束-->
 			<!--中导航开始-->
-			<ul id="icon-grid-9" class="mui-table-view mui-grid-view mui-grid-9">
-<%-- 				<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
+	<%--		<ul id="icon-grid-9" class="mui-table-view mui-grid-view mui-grid-9">
+ 				<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
 					<a href="#" id="scanQRCode"> <span class="wboly-icon"> <img
 							src="${ctx }/images/wechat/richScan.png" alt="" />
 					</span>
@@ -52,8 +52,13 @@
 <%-- 							src="${ctx }/images/wechat/wechat.png" alt="" /> --%>
 <!-- 					</span> -->
 <!-- 						<div class="mui-media-body">公众号</div> -->
-<!-- 				</a></li> -->
-			</ul>
+<!-- 				</a></li> 
+			</ul>-->
+			<div class="rulepage " >
+				<a  href="${ctx }/wechat/user/rulePage.htm?userId=${userId}" 
+				style=" background-image: url(${ctx }/images/wechat/ruleImg.png);background-size:100% 100%;-moz-background-size:100% 100%;" >
+				</a>
+			</div>
 			<!--中导航开始-->
 			<h5 class="mui-content-padded wboly-title-bar">
 				每日热门
@@ -62,6 +67,7 @@
 					<span class="mui-icon mui-icon-arrowright"></span>
 				</div>
 			</h5>
+
 			<!--商品列表开始-->
 			<div id="index-goods-list"
 				class="mui-table-view mui-grid-view mui-grid-9">
