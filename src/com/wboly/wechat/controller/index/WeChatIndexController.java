@@ -19,6 +19,7 @@ import com.wboly.rpc.entity.IndexEntity;
 import com.wboly.system.sys.spring.SysController;
 import com.wboly.system.sys.system.SysCache;
 import com.wboly.system.sys.system.SysContext;
+import com.wboly.system.sys.util.CookiesUtil;
 import com.wboly.system.sys.util.JsonUtil;
 import com.wboly.system.sys.util.SessionUtil;
 import com.wboly.system.sys.util.WriterJsonUtil;
@@ -161,4 +162,24 @@ public class WeChatIndexController extends SysController {
 		this.render(response, results);
 	}
 
+	/**
+	 * @Name: 首页获取用户是否关注
+	 */
+	@RequestMapping(value = "/wechat/index/checkIsSubscribe")
+	public void checkIsSubscribe(HttpServletRequest request, HttpServletResponse response) {
+		// 获取当前登录用户编号
+		String openid = CookiesUtil.getCookieKey(request);
+//		String wxId = SysCache.getWeChatUserByColumn(request, "openid");
+		System.out.println("获取到的用户openId为：" + openid);
+		String results="";
+		try {
+			results = OkhttpUtils.get(SysContext.WXXURL + "wxx/request/issubscribe?openid="+openid);
+			System.out.println("获取到的用户是否关注返回值：" + results);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		this.render(response, results);
+	}
 }
+
+

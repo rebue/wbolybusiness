@@ -19,41 +19,11 @@
 				<div class="swiper-pagination"></div>
 			</div>
 			<!--轮播结束-->
-			<!--中导航开始-->
-	<%--		<ul id="icon-grid-9" class="mui-table-view mui-grid-view mui-grid-9">
- 				<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
-					<a href="#" id="scanQRCode"> <span class="wboly-icon"> <img
-							src="${ctx }/images/wechat/richScan.png" alt="" />
-					</span>
-						<div class="mui-media-body">扫一扫</div>
+			<div class = "tips" style = "height:28px;background-color:#f2f2f2;text-align:center;line-height:28px;display:;">
+				<a href="https://mp.weixin.qq.com/s/TTOM3jibBDp0mM2Ajegi6w"> 
+					<p>请点击关注公众号</p>
 				</a>
-				</li> --%>
-				<%-- <li style="margin-left:1.8rem" class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3"><a
-					href="${ctx }/wechat/goods/fullReturnGoodsList.htm"> <span
-						class="wboly-icon"> <img
-							src="${ctx }/images/wechat/concern.png" alt="" />
-					</span>
-						<div class="mui-media-body">拼全返</div></a></li>
-				<li style="margin-left:0.9rem" class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3"><a
-					href="${ctx }/wechat/user/myWalletPage"> <span
-						class="wboly-icon"> <img
-							src="${ctx }/images/wechat/my_wallet.png" alt="" />
-					</span>
-						<div class="mui-media-body">我的钱包</div></a></li> --%>
-				<%-- <li style="margin-left:0.9rem" class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3"><a
-					href="${ctx }/wechat/collect/collectPage.htm"> <span
-						class="wboly-icon"> <img
-							src="${ctx }/images/wechat/sign_in.png" alt="" />
-					</span>
-						<div class="mui-media-body">我的关注</div></a></li> --%>
-<!-- 				<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3"><a -->
-<!-- 					href="http://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzIwOTI0MjAxMg==#wechat_redirect"> -->
-<!-- 						<span class="wboly-icon"> <img -->
-<%-- 							src="${ctx }/images/wechat/wechat.png" alt="" /> --%>
-<!-- 					</span> -->
-<!-- 						<div class="mui-media-body">公众号</div> -->
-<!-- 				</a></li> 
-			</ul>-->
+			</div>
 			<div class="rulepage " >
 				<a  href="${ctx }/wechat/user/rulePage.htm?userId=${userId}" 
 				style=" background-image: url(${ctx }/images/wechat/ruleImg.png);background-size:100% 100%;-moz-background-size:100% 100%;" >
@@ -96,6 +66,17 @@
 		var mySwiper2;
 		var ide = 1;
 		var idess = 0;
+		$(document).ready(function checkIsSubscribe(){
+			console.info('333');
+			mui(".tips")[0].style.display = "none"
+			mui.ajax('${ctx}/wechat/index/checkIsSubscribe.htm',{
+				dataType:'json',// 服务器返回json格式数据
+				type:'post',// HTTP请求类型
+				success:function(data){
+					console.log(data);
+				}
+			})
+		});
 				
 		function pulldownRefresh() {
 			setTimeout(function() {
