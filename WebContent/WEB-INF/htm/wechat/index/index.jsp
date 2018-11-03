@@ -19,7 +19,7 @@
 				<div class="swiper-pagination"></div>
 			</div>
 			<!--轮播结束-->
-			<div class = "tips" style = "height:28px;background-color:#f2f2f2;text-align:center;line-height:28px;display:;">
+			<div class = "tips" style = "height:28px;background-color:#f2f2f2;text-align:center;line-height:28px;display:none;">
 				<a href="https://mp.weixin.qq.com/s/TTOM3jibBDp0mM2Ajegi6w"> 
 					<p>请点击关注公众号</p>
 				</a>
@@ -68,7 +68,7 @@
 		var idess = 0;
 		$(document).ready(function checkIsSubscribe(){
 			console.info('333');
-			mui(".tips")[0].style.display = "none"
+// 			mui(".tips")[0].style.display = ""
 			mui.ajax('${ctx}/wechat/index/checkIsSubscribe.htm',{
 				dataType:'json',// 服务器返回json格式数据
 				type:'post',// HTTP请求类型

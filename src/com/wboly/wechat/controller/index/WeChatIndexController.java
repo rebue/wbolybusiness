@@ -173,7 +173,7 @@ public class WeChatIndexController extends SysController {
 		System.out.println("获取到的用户openId为：" + openid);
 		String results="";
 		try {
-			results = OkhttpUtils.get(SysContext.WXXURL + "wxx/request/issubscribe?openid="+openid);
+			results = OkhttpUtils.get(SysContext.WXXURL + "wxx/request/issubscribe?openId="+openid);
 			System.out.println("获取到的用户是否关注返回值：" + results);
 		} catch (IOException e) {
 			e.printStackTrace();
