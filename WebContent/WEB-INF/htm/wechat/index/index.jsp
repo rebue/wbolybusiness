@@ -156,10 +156,20 @@
 				  var specId = this.getAttribute("data-specId");
 				  // 上线编号
 				  var onlineId = this.getAttribute("data-onlineId");
+				  
+				  // 供应商
+				  var supplierId= this.getAttribute("data-supplierId");
+				  // 压货类型
+				  var pledgeType= this.getAttribute("data-pledgeType");
+					
 				  mui.ajax('${ctx}/wechat/cart/listAddCart.htm',{
 						data:{
 							key:'59c23bdde5603ef993cf03fe64e448f1',
-							specId : specId, cartCount : 1, onlineId : onlineId
+							specId : specId,
+							cartCount : 1,
+							onlineId : onlineId,
+							supplierId:supplierId,
+							pledgeType :pledgeType
 						},
 						dataType:'json',//服务器返回json格式数据
 						type:'post',//HTTP请求类型
@@ -239,7 +249,7 @@
 							html +=	'		<span class="price">￥<em>' + formatCurrency(data[i].salePrice) + '</em></span>';
 							html +=	' 		<span class="back-money">返 <em>' + formatCurrency(data[i].cashbackAmount) + '</em></span>';
 						}
-						html +=	' 		<span class="mui-icon-extra mui-icon-extra-cart" id="cart" data-specId="' + data[i].specId + '" data-onlineId="' + data[i].onlineId + '"></span>';
+						html +=	' 		<span class="mui-icon-extra mui-icon-extra-cart" id="cart" data-specId="' + data[i].specId + '" data-pledgeType="' + data[i].pledgeType +'" data-supplierId="' + data[i].supplierId +'" data-onlineId="' + data[i].onlineId + '"></span>';
 						html +=	'	</p>';
 						html +=	'</div>';
 					}

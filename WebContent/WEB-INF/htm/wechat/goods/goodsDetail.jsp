@@ -174,7 +174,8 @@
 		//如果立即购买、收藏、添加购物车等动作需要某些数据,最好一进来就设值
 		//比如var stock = "${abc.def}";var price = "${ghi.jkl}"等;	
 		var commentType = "0"; //默认会员评价筛选的类型=全部;
-
+		var pledgeType="";
+		var supplierId="";
 		//图片放大初始化
 		mui.previewImage();
 
@@ -245,6 +246,8 @@
 						data : {
 							key : '59c23bdde5603ef993cf03fe64e448f1',
 							onlineId : "${onlineId}",
+							pledgeType : pledgeType,
+							supplierId : supplierId,
 							specId : skuIds,
 							cartCount : buyNumss
 						},
@@ -473,6 +476,8 @@
 				type : 'post',//HTTP请求类型
 				success : function(data) {
 					console.log(data);
+					pledgeType=data[0].pledgeType;
+					supplierId=data[0].supplierId;
 					var html = "";
 					var sboxHtml = "";
 					document.body.querySelector("#detail-content-ul").innerHTML = html;

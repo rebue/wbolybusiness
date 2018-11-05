@@ -127,11 +127,19 @@ public class WeChatCartController extends SysController {
 		String specId = request.getParameter("specId");
 		// 要加入购物车的数量
 		String cartCount = request.getParameter("cartCount");
+		// 供应商id
+		String supplierId = request.getParameter("supplierId");
+		// 压货类型
+		String pledgeType = request.getParameter("pledgeType");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("onlineId", onlineId);
 		map.put("onlineSpecId", specId);
 		map.put("userId", userId);
 		map.put("cartCount", cartCount);
+		if(supplierId !=null && pledgeType !=null) {
+			map.put("supplierId", supplierId);
+			map.put("pledgeType", pledgeType);
+		}
 		System.err.println("加入购物车的参数为：" + map.toString());
 		String results = OkhttpUtils.postByFormParams(SysContext.ONLINEURL + "/onl/cart", map);
 		System.err.println("加入购物车的返回值为：" + results);
