@@ -19,7 +19,7 @@
 				<div class="swiper-pagination"></div>
 			</div>
 			<!--轮播结束-->
-			<a href="https://mp.weixin.qq.com/s/TTOM3jibBDp0mM2Ajegi6w" style = "height:28px;width:100%;background-color:#FFFFE0;text-align:center;line-height:31px;display:flex;justify-content:center;position:fixed;top:0"> 
+			<a class= "tips" href="https://mp.weixin.qq.com/s/TTOM3jibBDp0mM2Ajegi6w" style = "height:28px;width:100%;background-color:#FFFFE0;text-align:center;line-height:31px;display:none;justify-content:center;position:fixed;top:0"> 
 				<img src="${ctx }/images/wechat/guanzhu.png" width="18px" height="18px" style = "margin-top:5px"/><span style = "color:red;font-size:14px">&nbsp;&nbsp;&nbsp;请点击关注公众号</span>
 			</a>
 			<div class="rulepage " >
@@ -72,7 +72,7 @@
 				success:function(data){
 					console.log(data);
 					if(!data){
-						mui(".tips")[0].style.display = ""
+						mui(".tips")[0].style.display = "flex"
 					}
 				}
 			})

@@ -55,8 +55,8 @@
 		<img src="${ctx }/images/wechat/guide.png" alt="" style="width: 100%;" />
 	</div>
 	<div id="goods-detail-content" class="mui-content mui-scroll-wrapper">
-			<div class = "tips">
-				<a id = "tip" style = "height:28px;background-color:#FFFFE0;text-align:center;line-height:31px;display:flex;justify-content:center;"> 
+			<div>
+				<a class = "tips" id = "tip" style = "height:28px;background-color:#FFFFE0;text-align:center;line-height:31px;display:none;justify-content:center;"> 
 					<img src="${ctx }/images/wechat/guanzhu.png" width="18px" height="18px" style = "margin-top:5px"/><span style = "font-size:14px">&nbsp;&nbsp;&nbsp;请点击关注公众号</span>
 				</a>
 			</div>
@@ -191,7 +191,7 @@
 				success:function(data){
 					console.log(data);
 					if(!data){
-						mui(".tips")[0].style.display = ""
+						mui(".tips")[0].style.display = "flex"
 					}
 				}
 			})
