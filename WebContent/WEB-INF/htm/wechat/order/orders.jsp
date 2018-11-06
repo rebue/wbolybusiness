@@ -203,9 +203,9 @@
 									html += '<button class="mui-btn locked">已退货</button>';
 								}else if(data.message[i].items[j].returnState == 0  || data.message[i].items[j].returnState == 3){
 									if(data.message[i].items[j].subjectType==1&&data.message[i].orderState > 1&&data.message[i].items[j].cashbackCommissionSlot == 2){
-										html+='<a href="${ctx}/wechat/goods/goodsDetail.htm?guideDisplay=none&onlineId='+  data.message[i].items[j].onlineId+ '&promoterId=${userId}'+ '"  class="mui-btn" style = "margin-top:63px">邀请2人</a>';
+										html+='<a href="${ctx}/wechat/goods/goodsDetail.htm?guideDisplay=none&onlineId='+  data.message[i].items[j].onlineId+ '&promoterId=${userId}'+ '"  class="mui-btn" style = "margin-top:63px">邀请2人免单</a>';
 									}else if (data.message[i].items[j].subjectType==1&&data.message[i].orderState > 1&&data.message[i].items[j].cashbackCommissionSlot == 1){
-										html+='<a href="${ctx}/wechat/goods/goodsDetail.htm?guideDisplay=none&onlineId='+  data.message[i].items[j].onlineId+ '&promoterId=${userId}'+ '"  class="mui-btn" style = "margin-top:63px">邀请1人</a>';
+										html+='<a href="${ctx}/wechat/goods/goodsDetail.htm?guideDisplay=none&onlineId='+  data.message[i].items[j].onlineId+ '&promoterId=${userId}'+ '"  class="mui-btn" style = "margin-top:63px">邀请1人免单</a>';
 									}else if(data.message[i].items[j].subjectType==1&&data.message[i].orderState > 1&&data.message[i].items[j].cashbackCommissionSlot == 0){
 										html+='<a href="${ctx}/wechat/goods/goodsDetail.htm?guideDisplay=none&onlineId='+  data.message[i].items[j].onlineId+ '&promoterId=${userId}'+ '"  class="mui-btn locked" style = "margin-top:63px">满足条件</a>';
 									}
@@ -460,9 +460,9 @@
 									html += '<button class="mui-btn locked">已退货</button>';
 								}else if(data.message[i].items[j].returnState == 0  || data.message[i].items[j].returnState == 3){
 									if(data.message[i].items[j].subjectType==1&&data.message[i].orderState > 1&&data.message[i].items[j].cashbackCommissionSlot == 2){
-										html+='<a href="${ctx}/wechat/goods/goodsDetail.htm?guideDisplay=none&onlineId='+  data.message[i].items[j].onlineId+ '&promoterId=${userId}'+ '"  class="mui-btn" style = "margin-top:63px">邀请2人</a>';
+										html+='<a href="${ctx}/wechat/goods/goodsDetail.htm?guideDisplay=none&onlineId='+  data.message[i].items[j].onlineId+ '&promoterId=${userId}'+ '"  class="mui-btn" style = "margin-top:63px">邀请2人免单</a>';
 									}else if (data.message[i].items[j].subjectType==1&&data.message[i].orderState > 1&&data.message[i].items[j].cashbackCommissionSlot == 1){
-										html+='<a href="${ctx}/wechat/goods/goodsDetail.htm?guideDisplay=none&onlineId='+  data.message[i].items[j].onlineId+ '&promoterId=${userId}'+ '"  class="mui-btn" style = "margin-top:63px">邀请1人</a>';
+										html+='<a href="${ctx}/wechat/goods/goodsDetail.htm?guideDisplay=none&onlineId='+  data.message[i].items[j].onlineId+ '&promoterId=${userId}'+ '"  class="mui-btn" style = "margin-top:63px">邀请1人免单</a>';
 									}else if(data.message[i].items[j].subjectType==1&&data.message[i].orderState > 1&&data.message[i].items[j].cashbackCommissionSlot == 0){
 										html+='<a href="${ctx}/wechat/goods/goodsDetail.htm?guideDisplay=none&onlineId='+  data.message[i].items[j].onlineId+ '&promoterId=${userId}'+ '"  class="mui-btn locked" style = "margin-top:63px">满足条件</a>';
 									}

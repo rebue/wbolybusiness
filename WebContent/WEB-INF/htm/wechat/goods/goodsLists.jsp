@@ -235,12 +235,18 @@
 					var specId = this.getAttribute("data-specId");
 					// 上线编号
 					var onlineId = this.getAttribute("data-onlineId");
+					// 供应商
+					var supplierId= this.getAttribute("data-supplierId");
+					// 压货类型
+					var pledgeType= this.getAttribute("data-pledgeType");
 					mui.ajax('${ctx}/wechat/cart/listAddCart.htm', {
 						data : {
 							key : '59c23bdde5603ef993cf03fe64e448f1',
 							specId : specId,
 							cartCount : 1,
-							onlineId : onlineId
+							onlineId : onlineId,
+							supplierId:supplierId,
+							pledgeType :pledgeType
 						},
 						dataType : 'json',//服务器返回json格式数据
 						type : 'post',//HTTP请求类型
@@ -342,11 +348,11 @@
 							strs = data[i].picPath.split(".");
 							html += '<div class="view-cell mui-col-xs-6 mui-col-sm-6">';
 							if(data[i].subjectType==0){
-								html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId='+ data[i].onlineId+ '&promoterId=${userId}'+ '" class="imghref">';
+								html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId='+ data[i].onlineId +'&pledgeType='+data[i].pledgeType+'&supplierId='+data[i].supplierId+'&promoterId=${userId}'+ '" class="imghref">';
 								html += '		<img src="${goodsImgUrl}' + data[i].picPath + '">';
 								html += '	</a>';
 							}else{
-								html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId='+ data[i].onlineId+ '&promoterId=${userId}'+ '" class="imghref fullReturn">';
+								html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId='+ data[i].onlineId +'&pledgeType='+data[i].pledgeType+'&supplierId='+data[i].supplierId+'&promoterId=${userId}'+ '" class="imghref fullReturn">';
 								html += '		<img src="${goodsImgUrl}' + data[i].picPath + '">';
 								html += '	</a>';
 							}
@@ -360,7 +366,7 @@
 								html += '			<span class="full-return-price">￥<em>'+ formatCurrency(data[i].salePrice)+ '</em></span>';
 								html += ' 		<span class="now-price">￥<em>0元'+ '</em></span>';
 							}
-							html += '			<span class="mui-icon-extra mui-icon-extra-cart" id="cart" data-specId="' + data[i].specId + '" data-onlineId="' + data[i].onlineId + '"></span>';
+							html += '			<span class="mui-icon-extra mui-icon-extra-cart" id="cart" data-specId="' + data[i].specId + '" data-pledgeType="' + data[i].pledgeType +'" data-supplierId="' + data[i].supplierId +'" data-onlineId="' + data[i].onlineId + '"></span>';
 							html += '		</p>';
 							html += '	</div>';
 							html += '</div>';
@@ -418,11 +424,11 @@
 								strs = data[i].picPath.split(".");
 								html += '<div class="view-cell mui-col-xs-6 mui-col-sm-6">';
 								if(data[i].subjectType==0){
-									html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId='+ data[i].onlineId+ '&promoterId=${userId}'+ '" class="imghref">';
+									html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId='+ data[i].onlineId +'&pledgeType='+data[i].pledgeType+'&supplierId='+data[i].supplierId+'&promoterId=${userId}'+ '" class="imghref">';
 									html += '		<img src="${goodsImgUrl}' + data[i].picPath + '">';
 									html += '	</a>';
 								}else{
-									html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId='+ data[i].onlineId+ '&promoterId=${userId}'+ '" class="imghref fullReturn">';
+									html += '	<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId='+ data[i].onlineId +'&pledgeType='+data[i].pledgeType+'&supplierId='+data[i].supplierId+'&promoterId=${userId}'+ '" class="imghref fullReturn">';
 									html += '		<img src="${goodsImgUrl}' + data[i].picPath + '">';
 									html += '	</a>';
 								}
@@ -436,10 +442,13 @@
 									html += '			<span class="full-return-price">￥<em>'+ formatCurrency(data[i].salePrice)+ '</em></span>';
 									html += ' 		<span class="now-price">￥<em>0元'+ '</em></span>';
 								}
-								html += '			<span class="mui-icon-extra mui-icon-extra-cart" id="cart" data-specId="' + data[i].specId + '" data-onlineId="' + data[i].onlineId + '"></span>';
+								html += '	<span class="mui-icon-extra mui-icon-extra-cart" id="cart" data-specId="' + data[i].specId + '" data-pledgeType="' + data[i].pledgeType +'" data-supplierId="' + data[i].supplierId +'" data-onlineId="' + data[i].onlineId + '"></span>';
+
 								html += '		</p>';
 								html += '	</div>';
 								html += '</div>';
+								html += '<input type="hidden" value="'+data[i].pledgeType+'" />'
+								html += '<input type="hidden" value="'+data[i].supplierId+'" />'
 							}
 						};
 					var htmls = document.createElement("div");
