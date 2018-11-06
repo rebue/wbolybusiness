@@ -88,18 +88,18 @@ public class WeChatUserController extends SysController {
 			return;
 		}
 
-		String addressId = request.getParameter("addressId");
-		if (addressId == null || addressId.equals("")) {
+		String id = request.getParameter("addressId");
+		if (id == null || id.equals("")) {
 			this.render(response, "{\"message\":\"请求参数有误\",\"flag\":false}");
 			return;
 		}
-		System.err.println("删除用户收货地址的参数为：" + addressId);
-		String results = OkhttpUtils.delete(SysContext.ORDERURL + "/ord/addr/" + addressId);
+		System.err.println("删除用户收货地址的参数为：" + id);
+		String results = OkhttpUtils.delete(SysContext.ORDERURL + "/ord/addr?id=" + id);
 		System.err.println("删除用户收货地址的返回值为：" + results);
 		ObjectMapper mapper = new ObjectMapper();
 		Map resultMap = mapper.readValue(results, Map.class);
-		boolean flag = (boolean) resultMap.get("success");
-		if (flag) {
+		Integer flag = (Integer) resultMap.get("result");
+		if (flag==1) {
 			this.render(response, "{\"message\":\"删除成功\",\"flag\":true}");
 			return;
 		}
