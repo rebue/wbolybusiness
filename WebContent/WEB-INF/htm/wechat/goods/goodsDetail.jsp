@@ -279,6 +279,7 @@
 								mui.toast("成功加入购物车！");
 								mui('#selectBox').popover('hide');
 								document.getElementById("cartnum").innerText = data.cartCount;
+								document.getElementById("cartnum").style.display='inline';
 							} else {
 								if ("您没有登录" == data.message) {
 									mui.confirm(data.message + ',请先登录哦', ' ', ['等等吧', '说走就走' ], function(e) {

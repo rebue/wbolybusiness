@@ -192,7 +192,12 @@ function LoadCartNum() {
 		dataType : 'json',// 服务器返回json格式数据
 		type : 'post',// HTTP请求类型
 		success : function(data) {
-			document.getElementById("cartnum").innerText = data;
+			if(data !=0){
+				document.getElementById("cartnum").innerText = data;
+			}else{
+				document.getElementById("cartnum").style.display='none';
+
+			}
 		},
 		error : function(xhr, type, errorThrown) {
 			// 异常处理；

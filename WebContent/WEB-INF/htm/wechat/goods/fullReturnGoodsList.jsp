@@ -217,6 +217,7 @@
 								mui.toast("加入购物车成功");
 								mui('#selectBox').popover('hide');
 								document.getElementById("cartnum").innerText = data.cartCount;
+								document.getElementById("cartnum").style.display='inline';
 							}else{
 								if("您没有登录" == data.message){
 									mui.confirm(data.message+',请先登录哦', ' ', ['取消', '登录'], function(e) {
