@@ -177,7 +177,7 @@
 												relation += ' 签收状态：已签收 \\n'
 											}
 										}
-										html += '	<a href="javascript:showRelation(\''+relation+'\')" style= "padding-left:30px">';
+										html += '	<a href="javascript:showRelation(\''+relation+'\')" style= "padding-right:10px">';
 										for(k=0;k<data.message[i].items[j].ordBuyRelation.length;k++){
 											html += '<span class="numbox"><img src= \''+data.message[i].items[j].ordBuyRelation[k].downlineUserWxFace +' \' width=\'25\' height=\'20\'></span>';
 										}
@@ -434,7 +434,7 @@
 													relation += ' 签收状态：已签收 \\n'
 												}
 											}
-											html += '	<a href="javascript:showRelation(\''+relation+'\')" style= "padding-left:30px">';
+											html += '	<a href="javascript:showRelation(\''+relation+'\')" style= "padding-right:10px">';
 											for(k=0;k<data.message[i].items[j].ordBuyRelation.length;k++){
 												html += '<span class="numbox"><img src= \''+data.message[i].items[j].ordBuyRelation[k].downlineUserWxFace +' \' width=\'25\' height=\'20\'></span>';
 											}
