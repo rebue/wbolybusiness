@@ -97,29 +97,36 @@
 					</li>
 					<li class="mui-table-view-cell no-padding">
 						<ul id="icon-grid-9" class="icon-grid mui-table-view mui-grid-view mui-grid-9">
-							<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
+							<li  class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
 								<a href="${ctx }/wechat/user/myWalletPage.htm?userId=${userId}">
 									<div class="mui-media-body">余额</div>
 								</a> 
 								<span class="money-show" id="balance">0.00</span>
 							</li>
-							<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
+							<li  class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
 								<a href="${ctx }/wechat/user/myWalletPage.htm?userId=${userId}">
 									<div class="mui-media-body">返现金</div>
 								</a> 
 								<span class="money-show" id="cashback">0.00</span>
 							</li>
-							<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
+							<li  class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
 								<a href="${ctx }/wechat/user/myWalletPage.htm?userId=${userId}">
 									<div class="mui-media-body">已全返</div>
 								</a> 
 								<span class="money-show" id="commissionTotal">0.00</span>
 							</li>
-							<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
+							<!-- 这里设置为display：none是为工具类js中使用了document.getElementById()，一旦这个元素不存在就会报错 ，也可以在工具类中去掉-->
+							<li style="display:none;"  class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
 								<a href="${ctx }/wechat/user/myWalletPage.htm?userId=${userId}">
 									<div class="mui-media-body">提现中</div>
 									<span class="money-show" id="withdrawing">0.00</span>
 								</a>
+							</li>  
+							<li  class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
+								<a href="${ctx }/wechat/user/myWalletPage.htm?userId=${userId}">
+									<div class="mui-media-body">待全返</div>
+								</a> 
+								<span class="money-show" id="commissioning">0.00</span>
 							</li>
 						</ul>
 					</li>
