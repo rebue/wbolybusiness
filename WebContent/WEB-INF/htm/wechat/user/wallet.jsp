@@ -25,7 +25,7 @@
 		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 		<h4 class="mui-title">我的钱包</h4>
 		<h5 class="mui-title" style="left: auto; font-size: 15px;">
-			<a id="withdraw">提现</a>
+			<a id="withdraw" style="color:#fe3000;" >提现</a>
 		</h5>
 	</header>
 	<div id="wallet_main">

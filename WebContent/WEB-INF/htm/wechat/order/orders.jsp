@@ -123,7 +123,7 @@
 							} else if (data.message[i].orderState == "") {
 								html+='<span class="status">全部订单</span>';
 							} else if (data.message[i].orderState == -1) {
-								html+='<span class="status">已取消</span>';
+								html+='<span style="color:#8f8f94;border:solid 1px #8f8f94;" class="status">已取消</span>';
 							} ;
 							html+='<span class="mui-pull-left spt">订单号：' + data.message[i].orderCode + '</span>';
 							html+='</a>';
@@ -164,7 +164,13 @@
 								html += '			<p>规格：'+ data.message[i].items[j].specName+'</p><br/>';
 								html += '			<div class="price-area">';
 								if(data.message[i].items[j].subjectType==1){
-									html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
+									if(data.message[i].orderState == -1){
+										html += '		<span style="color:#8f8f94;" class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
+
+									}else{
+										html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
+
+									}
 									html += '		<span class="b-money"><span>'  + '</span></span>';
 									html += '		<span class="b-money"> 返 <span>' + formatCurrency(data.message[i].items[j].cashbackAmount) + '</span></span>';
 									if(data.message[i].items[j].ordBuyRelation.length != 0){
@@ -184,7 +190,13 @@
 										html += '</a>';
 									}
 								}else{
-									html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
+									if(data.message[i].orderState == -1){
+										html += '		<span style="color:#8f8f94;" class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
+
+									}else{
+										html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
+
+									}
 									html += '		<span class="b-money"> 返 <span>' + formatCurrency(data.message[i].items[j].cashbackAmount) + '</span></span>';//*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
 									html += '		<span class="numbox">数量：<span>' + buyCount + '</span></span>';
 								}
@@ -218,8 +230,16 @@
 							};	
 							html += '</div>';
 							html += '<div class="unit-compute">';
-							html += '	<span class="mui-pull-right unit-price">合计：¥ ' + formatCurrency(data.message[i].orderMoney) + '</span>';
-							html += '	<span class="mui-pull-right unit-back">返现：¥ ' + formatCurrency(retailBacLimit) + '</span>';								
+							if(data.message[i].orderState == -1){
+								html += '	<span style="color:#8f8f94;" class="mui-pull-right unit-price">合计：¥ ' + formatCurrency(data.message[i].orderMoney) + '</span>';
+
+							}else{
+								html += '	<span class="mui-pull-right unit-price">合计：¥ ' + formatCurrency(data.message[i].orderMoney) + '</span>';
+
+							}
+							if(retailBacLimit !=0){
+								html += '	<span class="mui-pull-right unit-back">返现：¥ '+ formatCurrency(retailBacLimit) + '</span>'		
+							}
 							html += '	<span class="mui-pull-right unit-num">共' + totalCount + '件</span>';
 							html += '</div>';
 							html += '<div class="opt-box">';
@@ -380,7 +400,7 @@
 							}else if (data.message[i].orderState == 5) {
 								html += '<span class="status">已结算</span>';
 							}else if (data.message[i].orderState == -1) {
-								html += '<span class="status">已取消</span>';
+								html += '<span style="color:#8f8f94;border:solid 1px #8f8f94;"    class="status">已取消</span>';
 							};
 							html += '	 <span class="mui-pull-left spt">订单号：' + data.message[i].orderCode + '</span>';
 							html += ' </a>';
@@ -421,7 +441,13 @@
 								html += '	<p>规格：' + data.message[i].items[j].specName 	+ '</p><br/>';
 								html += '	<div class="price-area">';
 								if(data.message[i].items[j].subjectType==1){
-									html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
+									if(data.message[i].orderState == -1){
+										html += '		<span style="color:#8f8f94;" class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
+
+									}else{
+										html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
+
+									}
 									html += '		<span class="numbox">数量：<span>' + buyCount + '</span></span>';
 									html += '		<span class="b-money"><span>'  + '</span></span>';//*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
 										if(data.message[i].items[j].ordBuyRelation.length != 0){
@@ -441,7 +467,13 @@
 											html += '</a>';
 										}
 								}else{
-									html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
+									if(data.message[i].orderState == -1){
+										html += '		<span style="color:#8f8f94;" class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
+
+									}else{
+										html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
+
+									}
 									html += '		<span class="b-money"> 返 <span>' + formatCurrency(data.message[i].items[j].cashbackAmount) + '</span></span>';//*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
 									html += '		<span class="numbox">数量：<span>' + buyCount + '</span></span>';
 								}
@@ -475,8 +507,16 @@
 							};	
 							html += '</div>'
 							html += '<div class="unit-compute">'
-							html += '	<span class="mui-pull-right unit-price">合计：¥ '+ formatCurrency(data.message[i].realMoney) + '</span>'
-							html += '	<span class="mui-pull-right unit-back">返现：¥ '+ formatCurrency(retailBacLimit) + '</span>'								
+							if(data.message[i].orderState == -1){
+								html += '	<span style="color:#8f8f94;" class="mui-pull-right unit-price">合计：¥ ' + formatCurrency(data.message[i].orderMoney) + '</span>';
+
+							}else{
+								html += '	<span class="mui-pull-right unit-price">合计：¥ ' + formatCurrency(data.message[i].orderMoney) + '</span>';
+
+							}
+							if(retailBacLimit !=0){
+								html += '	<span class="mui-pull-right unit-back">返现：¥ '+ formatCurrency(retailBacLimit) + '</span>'		
+							}
 							html += '	<span class="mui-pull-right unit-num">共' + totalCount + '件</span>'
 							html += '</div>'
 							html += '<div class="opt-box">'
