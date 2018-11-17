@@ -198,7 +198,8 @@
 					});
 				}
 				getMoney();
-				
+				//获取所有的订单及详情来计算待全返金额。
+				AjaxGetData();
 			    function setCookie(name, value) {
 			        var exp = new Date();
 			        exp.setTime(exp.getTime() + 60 * 60 * 1000);
@@ -233,6 +234,38 @@
 			});
 		})(mui, document);
 		
+		//初始化待全返的金额
+		var allCommissioning=0;
+		//ajax订单数据
+		function AjaxGetData(){
+			mui.ajax('${ctx}/wechat/order/getOrders.htm',{ 
+				data:{
+					"orderState":0,//订单状态,0就是查全部
+					"key":"59c23bdde5603ef993cf03fe64e448f1",
+					"limit":1000,
+					"start":0
+				},
+				dataType:'json',
+				type:'post',       
+				success:function(data){
+					for(var i = 0; i < data.message.length; i++){
+						if(data.message[i].orderState !=-1 && data.message[i].orderState !=5){
+							for (j = 0; j < data.message[i].items.length; j++) {
+								if(data.message[i].items[j].subjectType==1  && data.message[i].items[j].returnState ==0 ){
+									allCommissioning+=(data.message[i].items[j].buyCount * data.message[i].items[j].buyPrice);
+								}
+								if(data.message[i].items[j].returnState ==3){
+									allCommissioning+=(data.message[i].items[j].buyCount-data.message[i].items[j].returnCount) * data.message[i].items[j].buyPrice;
+								}
+							}
+						}
+					}
+					document.getElementById("commissioning").innerHTML = formatCurrency(allCommissioning);
+
+				}
+			
+		})
+	}
 
 		
 	</script>

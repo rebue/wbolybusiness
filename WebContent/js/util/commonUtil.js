@@ -372,12 +372,16 @@ function getMoney() {
 			if (data.flag) {
 				document.getElementById("balance").innerHTML = formatCurrency(data.message.balance);
 				document.getElementById("cashback").innerHTML = formatCurrency(data.message.cashback);
-				if (data.message.commissioning != 0) {
-					document.getElementById("commissioning").innerHTML = formatCurrency(data.message.commissioning);
+//				if (data.message.commissioning != 0) {
+//					document.getElementById("commissioning").innerHTML = formatCurrency(data.message.commissioning);
+//				}
+				console.log(document.getElementById("commissionTotal"));
+				if(document.getElementById("commissionTotal") !=null){
+					document.getElementById("commissionTotal").innerHTML = formatCurrency(data.message.commissionTotal);
 				}
-				document.getElementById("commissionTotal").innerHTML = formatCurrency(data.message.commissionTotal);
 				document.getElementById("withdrawing").innerHTML = formatCurrency(data.message.withdrawing);
 				return;
+				
 			}
 			mui.toast(data.message);
 		},
