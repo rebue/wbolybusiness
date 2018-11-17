@@ -1,6 +1,7 @@
 package com.wboly.wechat.controller.order;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,8 @@ import com.wboly.system.sys.system.SysCache;
 import com.wboly.system.sys.system.SysContext;
 import com.wboly.system.sys.util.Base64EnOut;
 import com.wboly.system.sys.util.JsonUtil;
+import com.wboly.wechat.entity.OrderDetailTo;
+import com.wboly.wechat.entity.OrderTo;
 
 import rebue.wheel.NetUtils;
 import rebue.wheel.OkhttpUtils;
@@ -39,7 +42,7 @@ import rebue.wheel.OkhttpUtils;
 public class WeChatOrderController extends SysController {
 
 	private static final Logger _log = LoggerFactory.getLogger(WeChatOrderController.class);
-	
+
 	/**
 	 * @Name: 所有订单售后页面跳转
 	 * @Author: nick
@@ -402,43 +405,50 @@ public class WeChatOrderController extends SysController {
 
 	/**
 	 * @throws IOException
-	 * @Name: 生成门店订单
+	 * @Name: 生成订单
 	 * @Author: nick
 	 */
 	@SuppressWarnings("rawtypes")
 	@RequestMapping("/wechat/order/createOrder")
-	public void CreateShopOrder(HttpServletRequest request, HttpServletResponse response)
-			throws TException, IOException {
+	public void CreateShopOrder(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam Map<String, Object> map) throws TException, IOException {
+		_log.info("生成订单的请求参数为: {}", map);
 		// 当前用户编号
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
-		// 当前用户名称
-		String userName = SysCache.getWeChatUserByColumn(request, "userName");
-		String jsonData = request.getParameter("jsonData");
-		String goodsInfo = request.getParameter("goodsInfo");
-		System.out.println("生成订单的商品信息=====" + goodsInfo);
-		System.out.println("生成订单的总金额、总返现金、总数量、收货地址编号=====" + jsonData);
-		List<Map<String, Object>> list = JsonUtil.listMaps(jsonData);
-		// 将goodsInfo转为List<Map>
-		List<Map<String, Object>> goodsList = JsonUtil.listMaps(goodsInfo);
-		goodsList.get(0).put("totalPrice", list.get(0).get("totalPrice"));
-		goodsList.get(0).put("totalBack", list.get(0).get("totalBack"));
-		goodsList.get(0).put("totalNumber", list.get(0).get("totalNumber"));
-		goodsList.get(0).put("address", list.get(0).get("address"));
-		goodsList.get(0).put("userId", userId);
-		goodsList.get(0).put("userName", userName);
-		goodsList.get(0).put("orderMessages", list.get(0).get("orderMessages"));
+		_log.info("生成订单获取到的用户编号为: {}", userId);
+		if (userId == null || userId.equals("") || userId.equals("null")) {
+			this.render(response, "{\"message\":\"您未登录,请登录后再试...\",\"flag\":false}");
+			return;
+		}
 		ObjectMapper mapper = new ObjectMapper();
-		String goodsJson = mapper.writeValueAsString(goodsList);
-		System.err.println("用户下订单的参数为=====" + goodsJson);
-		String results = OkhttpUtils
-				.post(SysContext.ORDERURL + "/ord/order?orderJson=" + java.net.URLEncoder.encode(goodsJson, "UTF-8"));
-		System.err.println("用户下订单返回值为：" + results);
+		OrderTo orderTo = new OrderTo();
+		orderTo.setUserId(Long.parseLong(userId));
+		orderTo.setAddrId(Long.parseLong(String.valueOf(map.get("addrId"))));
+		orderTo.setOrderMessages(String.valueOf(map.get("orderMessages")));
+		_log.info("生成订单将订单详情转换为List<Map>的参数为: {}", String.valueOf(map.get("details")));
+		List<Map<String, Object>> detailList = JsonUtil.listMaps(String.valueOf(map.get("details")));
+		_log.info("生成订单将订单详情转换为List<Map>的返回值为: {}", detailList.toString());
+		List<OrderDetailTo> detailsList = new ArrayList<OrderDetailTo>();
+		for (int i = 0; i < detailList.size(); i++) {
+			System.out.println(String.valueOf(detailList.get(i)));
+			OrderDetailTo orderDetailTo = new OrderDetailTo();
+			orderDetailTo.setOnlineId(Long.parseLong(String.valueOf(detailList.get(i).get("onlineId"))));
+			orderDetailTo.setOnlineSpecId(Long.parseLong(String.valueOf(detailList.get(i).get("onlineSpecId"))));
+			orderDetailTo.setCartId(Long.parseLong(String.valueOf(detailList.get(i).get("cartId"))));
+			orderDetailTo.setBuyCount(Integer.parseInt(String.valueOf(detailList.get(i).get("buyCount"))));
+			detailsList.add(orderDetailTo);
+		}
+		orderTo.setDetails(detailsList);
+		_log.info("生成订单请求ord的参数为: {}", orderTo);
+		System.err.println("用户下订单的参数为=====" + orderTo);
+		String results = OkhttpUtils.postByJsonParams(SysContext.ORDERURL + "/ord/order", orderTo);
+		_log.info("生成订单请求ord的参数为: {}", results);
 		if (results != null && !results.equals("") && !results.equals("null") && !results.equals("{}")) {
 			Map resultMap = mapper.readValue(results, Map.class);
 			int result = Integer.parseInt(String.valueOf(resultMap.get("result")));
 			if (result > 0) {
-				this.render(response, "{\"message\":\"" + resultMap.get("msg") + "\",\"orderId\":\""
-						+ resultMap.get("orderId") + "\",\"flag\":true}");
+				this.render(response, "{\"message\":\"" + resultMap.get("msg") + "\",\"payOrderId\":\""
+						+ resultMap.get("payOrderId") + "\",\"flag\":true}");
 			} else {
 				this.render(response, "{\"message\":\"" + resultMap.get("msg") + "\",\"flag\":false}");
 			}
@@ -574,9 +584,10 @@ public class WeChatOrderController extends SysController {
 		System.out.println("获取用户订单物流信息返回值为：" + results);
 		this.render(response, "{\"message\":" + results + ",\"flag\":true}");
 	}
-	
+
 	/**
 	 * 取消退货
+	 * 
 	 * @param request
 	 * @param response
 	 * @throws IOException
@@ -599,14 +610,20 @@ public class WeChatOrderController extends SysController {
 		_log.info("取消退货的返回值为：{}", result);
 		this.render(response, "{\"message\":" + result + ",\"flag\":true}");
 	}
+
+	/**
+	 * 修改支付订单Id
+	 * @param request
+	 * @param response
+	 * @param orderId
+	 * @throws IOException 
+	 */
+	@RequestMapping("/wechat/order/modifyPayOrderId")
+	public void modifyPayOrderId(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("orderId") String orderId) throws IOException {
+		_log.info("修改支付订单Id的参数为: {}", orderId);
+		String results = OkhttpUtils.put(SysContext.ORDERURL + "/ord/order/modifypayorderid?id=" + orderId);
+		_log.info("修改支付订单id的返回值为: {}", results);
+		this.render(response, results);
+	}
 }
-
-
-
-
-
-
-
-
-
-

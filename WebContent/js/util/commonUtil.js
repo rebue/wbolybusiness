@@ -192,11 +192,10 @@ function LoadCartNum() {
 		dataType : 'json',// 服务器返回json格式数据
 		type : 'post',// HTTP请求类型
 		success : function(data) {
-			if(data !=0){
+			if (data != 0) {
 				document.getElementById("cartnum").innerText = data;
-			}else{
-				document.getElementById("cartnum").style.display='none';
-
+			} else {
+				document.getElementById("cartnum").style.display = 'none';
 			}
 		},
 		error : function(xhr, type, errorThrown) {
@@ -226,14 +225,14 @@ function commonAddress() {
 				html += '<li class="mui-table-view-cell">';
 				html += '	<div class="mui-table mui-navigate-right">';
 				html += ' 		<div class="mui-table-cell mui-col-xs-8 mui-col-sm-8">';
-				html += ' 			<h5 class="mui-ellipsis" id="receiver">'+ data.message[0].receiverName + '</h5>	';
+				html += ' 			<h5 class="mui-ellipsis" id="receiver">' + data.message[0].receiverName + '</h5>';
 				html += '			<input type="hidden" name="addressId" value="' + data.message[0].id + '"/>';
 				html += '		</div>';
 				html += '		<div class="mui-table-cell mui-col-xs-4  mui-col-sm-4 mui-text-right">';
 				html += ' 			<span class="mui-h5" id="receiver-phone">' + data.message[0].receiverMobile + '</span>';
 				html += ' 		</div>';
 				html += '	 </div>';
-				html += 	'<p class="mui-h6 mui-ellipsis" id="receiver-add">' + data.message[0].receiverProvince +  data.message[0].receiverCity + data.message[0].receiverExpArea + '-' + data.message[0].receiverAddress + '</p>';
+				html += '	<p class="mui-h6 mui-ellipsis" id="receiver-add">' + data.message[0].receiverProvince + data.message[0].receiverCity + data.message[0].receiverExpArea + '-' + data.message[0].receiverAddress + '</p>';
 				html += '</li>';
 				document.body.querySelector("#AddList").innerHTML = html;
 			} else {
@@ -317,7 +316,7 @@ function commentPage(gn) {
  *            退货数据
  */
 function returnPage(gn) {
-	 var b = new Base64();
+	var b = new Base64();
 	if (gn == null) {
 		mui.toast("没有该商品信息");
 		return;
@@ -332,12 +331,30 @@ function returnPage(gn) {
  */
 function payPage(key) {
 	loading(1);
-	/*
-	 * Post("/wbolybusiness/wechat/pay/paycenterPage.htm", { payOrderId:key },
-	 * 0);
-	 */
-	window.location.href = "/wbolybusiness/wechat/pay/center/" + key + ".htm";
-	loading(2);
+	mui.ajax('/wbolybusiness/wechat/order/modifyPayOrderId.htm', {
+		data: {
+			key : '59c23bdde5603ef993cf03fe64e448f1',
+			orderId: key
+		},
+		dataType : 'json',// 服务器返回json格式数据
+		type : 'post',// HTTP请求类型
+		success : function(data) {
+			console.log(data);
+			if (data.result == 1) {
+				window.location.href = "/wbolybusiness/wechat/pay/center/" + data.msg + ".htm";
+			}
+			mui.toast(data.msg);
+			loading(2);
+		},
+		error : function(xhr, type, errorThrown) {
+			// 异常处理；
+			console.log(type);
+			if (type == "timeout") {
+				mui.toast("请求超时");
+			}
+		}
+	})
+	
 };
 
 /**

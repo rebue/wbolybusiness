@@ -223,7 +223,7 @@
 						var unitJson = '{"salePrice":"' + salePrice + '","cashbackAmount":"'
 								+ cashbackAmount + '","onlineId":"' + onlineId
 								+ '","onlineSpecId":"' + onlineSpecId + '","cartId":"' + cartId
-								+ '","number":"' + number + '","onlineTitle":"' + onlineTitle
+								+ '","buyCount":"' + number + '","onlineTitle":"' + onlineTitle
 								+ '","onlineSpec":"' + onlineSpec + '","productId":"' + productId
 								+ '","subjectType":"' + subjectType + '","supplierId":"' + supplierId
 								+ '","subjectType":"' + subjectType + '","picPath":"' + picPath + '"}';

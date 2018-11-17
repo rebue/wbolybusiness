@@ -13,6 +13,8 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,6 +43,8 @@ import rebue.wheel.OkhttpUtils;
  */
 @Controller
 public class WeChatPayController extends SysController {
+
+	private static final Logger _log = LoggerFactory.getLogger(WeChatPayController.class);
 
 	/**
 	 * @Name: 微信支付授权，先获取 code，跳转 url 通过 code 获取 openId
@@ -75,9 +79,9 @@ public class WeChatPayController extends SysController {
 	 * @Name: 微信支付
 	 * @Author: knick
 	 */
-	@RequestMapping(value = "/wechat/pay/toPay", params = { "orderId" })
+	@RequestMapping(value = "/wechat/pay/toPay", params = { "payOrderId" })
 	public ModelAndView wechatToPay(HttpServletRequest request, HttpServletResponse response, Model model,
-			@RequestParam("orderId") String orderId) throws InterruptedException, IOException {
+			@RequestParam("payOrderId") String payOrderId) throws InterruptedException, IOException {
 
 		ModelAndView mav = new ModelAndView();
 
@@ -101,23 +105,19 @@ public class WeChatPayController extends SysController {
 			return mav;
 		}
 
-		if (null == orderId || "null".equals(orderId) || "".equals(orderId)) {
-			orderId = "0";
+		if (null == payOrderId || "null".equals(payOrderId) || "".equals(payOrderId)) {
+			payOrderId = "0";
 		}
 
-		System.err.println("微信支付订单:" + orderId);
+		System.err.println("微信支付订单:" + payOrderId);
 
-		Map<String, Object> map = new HashMap<String, Object>();
+		
 		String buyerUid = SysCache.getWeChatUserByColumn(request, "userId");
-		map.put("orderId", orderId);
-
-		System.err.println("微信订单的参数为：" + String.valueOf(map));
-		String orderdetail = OkhttpUtils.get(SysContext.ORDERURL + "/ord/orderdetail/info", map);
+		_log.info("获取微信预支付id根据订单支付id查询订单信息的参数为: {}", payOrderId);
+		String orderdetail = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/listselective?payOrderId=" + payOrderId);
+		_log.info("获取微信预支付id根据订单支付id查询订单信息的返回值为: {}", orderdetail);
 		List<Map<String, Object>> orderdetailInfo = JsonUtil.listMaps(orderdetail);
-		Map<String, Object> ordMap = new HashMap<String, Object>();
-		ordMap.put("id", orderId);
-		String order = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/info", ordMap);
-		List<Map<String, Object>> orderInfo = JsonUtil.listMaps(order);
+		_log.info("获取微信预支付id根据订单支付id查询订单信息返回值转换为list<Map>的返回值为: {}", String.valueOf(orderdetailInfo));
 		if (orderdetailInfo == null || orderdetailInfo.size() < 1) {
 			System.err.println("该订单号不存在");
 			mav.addObject("page", "{\"message\":\"该订单信息不存在。\",\"flag\":false,\"page\":2}");
@@ -131,11 +131,10 @@ public class WeChatPayController extends SysController {
 			goodsName.append(orderdetailInfo.get(i).get("onlineTitle") + ",");
 		}
 
-		map.clear();
-
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", buyerUid);
 		map.put("wxId", openid); // 用户微信id（根据不同情况可能是unionid或者openid）
-		map.put("orderId", orderId);// 订单编号
+		map.put("orderId", payOrderId);// 订单编号
 		map.put("tradeTitle", "大卖网络-商品购买"); // 支付交易标题
 		String[] goodsNames = String.valueOf(goodsName).split(",");
 		String tradeDetail = "";
@@ -144,8 +143,13 @@ public class WeChatPayController extends SysController {
 		} else {
 			tradeDetail = goodsNames[0];
 		}
+
+		if (tradeDetail.length() > 150) {
+			tradeDetail = tradeDetail.substring(0, tradeDetail.length() - 10) + "等。。。";
+		}
+
 		map.put("tradeDetail", "购买商品为：" + tradeDetail); // 支付交易详情
-		map.put("tradeAmount", orderInfo.get(0).get("realMoney")); // 支付交易金额（单位为元）
+		map.put("tradeAmount", orderdetailInfo.get(0).get("realMoney")); // 支付交易金额（单位为元）
 		map.put("ip", IpUtil.getIp(request)); // 用户ip地址
 
 		// String finalsign = "";
@@ -198,7 +202,7 @@ public class WeChatPayController extends SysController {
 		mav.addObject("packageValue", packages);
 		mav.addObject("signType", WxConfig.signType);
 		mav.addObject("sign", finalsign1);
-		mav.addObject("orderId", orderId);
+		mav.addObject("orderId", payOrderId);
 		mav.setViewName("/htm/wechat/pay/payPage");
 		return mav;
 	}
@@ -240,7 +244,6 @@ public class WeChatPayController extends SysController {
 	 * @Name: 跳转至支付页面
 	 * @Author: nick
 	 */
-	@SuppressWarnings("rawtypes")
 	@RequestMapping(value = "/wechat/pay/paycenterPage")
 	public ModelAndView payPage(HttpServletRequest request) throws IOException {
 		ModelAndView mav = new ModelAndView();
@@ -263,19 +266,24 @@ public class WeChatPayController extends SysController {
 			return mav;
 		} else {
 			mav.addObject("payOrderId", orderId);
-			Map<String, Object> orderMap = new HashMap<String, Object>();
-			orderMap.put("id", orderId);
-			String results = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/getbyid" , orderMap);
-			System.out.println("查询订单信息的返回值为：" + results);
-			ObjectMapper mapper = new ObjectMapper();
-			Map map = mapper.readValue(results, Map.class);
-			if (map != null && map.size() > 0) {
-				mav.addObject("orderMoney", map.get("realMoney"));
-			} else {
-				mav.addObject("orderMoney", "0.00");
+			String order = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/listselective?payOrderId=" + orderId);
+			List<Map<String, Object>> orderdetailInfo = JsonUtil.listMaps(order);
+			_log.info("获取微信预支付id根据订单支付id查询订单信息返回值转换为list<Map>的返回值为: {}", String.valueOf(orderdetailInfo));
+			if (orderdetailInfo == null || orderdetailInfo.size() < 1) {
+				System.err.println("该订单号不存在");
+				mav.addObject("page", "{\"message\":\"该订单信息不存在。\",\"flag\":false,\"page\":2}");
+				mav.setViewName("/htm/wechat/prompt/alert");
+				return mav;
 			}
+			// 订单总金额
+			BigDecimal orderMoney = new BigDecimal("0");
+			for (int i = 0; i < orderdetailInfo.size(); i++) {
+				orderMoney = orderMoney.add(new BigDecimal(String.valueOf(orderdetailInfo.get(i).get("realMoney"))))
+						.setScale(4, BigDecimal.ROUND_HALF_UP);
+			}
+			_log.info("跳转至支付页面获取到的订单实际金额为: {}", orderMoney);
+			mav.addObject("orderMoney", orderMoney);
 		}
-
 		return mav;
 	}
 
@@ -314,7 +322,7 @@ public class WeChatPayController extends SysController {
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		map.put("id", orderId);
 		map.put("orderId", orderId);
 		map.put("buyerUid", buyerUid);
@@ -322,25 +330,18 @@ public class WeChatPayController extends SysController {
 		map.put("mac", MacAddressUtil.getLocalMac()); // 用户mac地址
 		map.put("ip", IpUtil.getIp(request)); // 用户ip地址
 		map.put("userId", buyerUid);
-
-		// 查询订单是否存在
-		String results = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/info", map);
-		List<Map<String, Object>> orderDataList = JsonUtil.listMaps(results);
-		if (orderDataList.size() == 0) {
-			this.render(response, "{\"message\":\"该订单不存在\",\"flag\":false}");
-			return;
-		}
-		String orderCode = (String)orderDataList.get(0).get("orderCode");
-		map.put("orderCode", orderCode);
-		BigDecimal decimal = new BigDecimal(String.valueOf(orderDataList.get(0).get("realMoney")));
-		map.put("tradeAmount", decimal.toString());
-		// 获取商品订单详情
-		String orderdetail = OkhttpUtils.get(SysContext.ORDERURL + "/ord/orderdetail/info", map);
+		_log.info("获取v支付预支付id根据支付订单id查询订单信息的参数为: {}", orderId);
+		// 获取商品订单
+		String orderdetail = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/listselective?payOrderId=" + orderId);
+		_log.info("获取v支付预支付id根据支付订单id查询订单信息的返回值为: {}", orderdetail);
 		List<Map<String, Object>> orderInventoryList = JsonUtil.listMaps(orderdetail);
 		if (orderInventoryList.size() == 0) {
 			this.render(response, "{\"message\":\"该订单不存在\",\"flag\":false}");
 			return;
 		}
+		map.put("orderCode", orderId);
+		BigDecimal decimal = new BigDecimal(String.valueOf(orderInventoryList.get(0).get("realMoney")));
+		map.put("tradeAmount", decimal.toString());
 
 		String goodsNames = "";// 商品名称
 		if (orderInventoryList.size() >= 2) {
@@ -349,8 +350,12 @@ public class WeChatPayController extends SysController {
 		} else {
 			goodsNames = String.valueOf(orderInventoryList.get(0).get("onlineTitle"));
 		}
+
+		if (goodsNames.length() > 150) {
+			goodsNames = goodsNames.substring(0, goodsNames.length() - 10) + "等。。。";
+		}
 		map.put("tradeDetail", "您在大卖网络购买的商品订单为：" + orderId + "，所购买的商品为：" + goodsNames);
-		
+
 		System.err.println("微信端获取v支付预支付Id的参数为：{}" + String.valueOf(map));
 		// 获取v支付预支付Id
 		String vpayPrepaymentResult = OkhttpUtils.postByJsonParams(SysContext.VPAYURL + "/vpay/prepay", map);
@@ -379,9 +384,8 @@ public class WeChatPayController extends SysController {
 	 * 门店订单使用v支付支付
 	 * 
 	 * @param request
-	 * @param response
-	 *            2018年1月18日14:12:15
-	 * @throws IOException 
+	 * @param response 2018年1月18日14:12:15
+	 * @throws IOException
 	 */
 	@RequestMapping(value = "/wechat/pay/shopOrderPay", method = RequestMethod.POST)
 	public void shopOrderPay(HttpServletRequest request, HttpServletResponse response) throws IOException {

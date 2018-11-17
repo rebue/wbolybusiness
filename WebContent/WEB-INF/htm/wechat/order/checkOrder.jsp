@@ -111,18 +111,23 @@
 						mui.toast("没有商品信息");
 						return;
 					}
-					
-					var jsonData = new Array();
-					var jsons = JSON.parse('[{"totalPrice":"' + json.totalPrice + '","totalBack":"' + json.totalBack + '","totalNumber":"' + json.totalNumber + '", "address":"' + addressId + '","orderMessages":"' + message + '"}]')
-					jsonData.push(jsons[0]);
-					console.log(jsonData);
-					console.log(json.info);
+					var details = new Array();
+					for (var i = 0; i < json.info.length; i++) {
+						details.push({
+							onlineId: json.info[i].onlineId,
+							onlineSpecId: json.info[i].onlineSpecId,
+							cartId: json.info[i].cartId,
+							buyCount: json.info[i].buyCount,
+						})
+					}
+					console.log(details);
 					loading(1);
 					mui.ajax('${ctx}/wechat/order/createOrder.htm', {
 						data : {
-							key : '59c23bdde5603ef993cf03fe64e448f1',
-							jsonData : JSON.stringify(jsonData),
-							goodsInfo : JSON.stringify(json.info)
+							// key : '59c23bdde5603ef993cf03fe64e448f1',
+							orderMessages: message,
+							addrId: addressId,
+							details : JSON.stringify(details)
 						},
 						dataType : 'json',//服务器返回json格式数据
 						type : 'post',//HTTP请求类型
@@ -131,7 +136,7 @@
 							console.log(data);
 							loading(2);
 							if (data.flag) {
-								window.location.href = "${ctx}/wechat/pay/center/" + data.orderId + ".htm?promoterId=${userId}";
+								window.location.href = "${ctx}/wechat/pay/center/" + data.payOrderId + ".htm?promoterId=${userId}";
 								return;
 							}
 							mui.toast(data.message);
@@ -228,7 +233,7 @@
 						html += '  				<span class="b-money"> 返 <span>' + formatCurrency(item.cashbackAmount) + '</span> 元</span>';
 					}
 					html += '			</div>';
-					html += '			<div class="numbox">数量：<span>' + item.number + '</span></div>';
+					html += '			<div class="numbox">数量：<span>' + item.buyCount + '</span></div>';
 					html += '		</div>';
 					html += '	</div>';
 					html += '</div>';

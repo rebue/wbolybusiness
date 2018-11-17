@@ -138,7 +138,7 @@
 					}
 
 					if (payby == 1) {
-						window.location.href = "${ctx }/wechat/pay/toPay.htm?orderId=${payOrderId}&promoterId=${userId}"
+						window.location.href = "${ctx }/wechat/pay/toPay.htm?payOrderId=${payOrderId}&promoterId=${userId}"
 						return;
 					}
 
