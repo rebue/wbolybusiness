@@ -298,8 +298,7 @@
 						return false;
 					};
 
-					if (_mobile != "" && _mobile != null
-							&& mobile.test(_mobile)) {
+					if (_mobile != "" && _mobile != null ) {
 						check = true;
 					} else {
 						mui.toast("请填写正确的手机号码");
