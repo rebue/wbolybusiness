@@ -30,8 +30,7 @@
 	</div>
 
 	<script type="text/javascript" charset="utf-8">
-    var b = new Base64();
-	var unitJson="";
+		
 		(function($, doc) {
 			mui.init([ getOrderDetail() ]);
 			$.ready(function() {
@@ -43,9 +42,11 @@
 					bounce : false
 				});
 				// 退货
-				document.getElementById('returnButtom').addEventListener('tap',function(){
-					returnPage(b.encode(unitJson));
+				mui('body').on('tap','.returnButtom',function(){
+					var data=this.getAttribute('data-json');
+					returnPage(data);
 				});
+				
 				
 			});
 		})(mui, document);
@@ -54,7 +55,6 @@
 		function getOrderDetail() {
 			var json = JSON.parse(localStorage.getItem("${order_data}"));
 			
-			console.log(json);
 			if (json == null || json == "") {
 				mui.confirm("无法获取您的订单，现在去看看？", " ", [ '取消', '确定' ], function(e) {
 					if (e.index == 1) {
@@ -71,7 +71,6 @@
 				var strs = new Array();
 				// 根据逗号获取图片后缀
 				strs = item.goodsQsmm.split(".");
-				console.log(strs);
 				html += '<div class="mui-input-group">';
 				html += '	<div class="mui-input-row mui-left">';
 				html += '		<div class="car-inner-box">';
@@ -103,9 +102,10 @@
 				html += '			</div>';
 				html += '<div class="button-box">';
 				    var realBuyCount = parseInt(item.buyCount) - parseInt(item.returnCount);
-				     b = new Base64();
-					 unitJson ='{"orderCode":"' + json.orderCode + '","orderId":"' + json.id +'","orderDetailId":"' + item.id + '","onlineId":"' + item.onlineId + '","onlineTitle":"' + item.onlineTitle + '","goodsQsmm":"${goodsImgUrl}' + item.goodsQsmm + '","productId":"' + item.productId + '","buyPrice":"' + formatCurrency(item.buyPrice) + '","cashbackAmount":"' + formatCurrency(item.cashbackAmount) + '","buyCount":"' + realBuyCount + '","specName":"' + item.specName +'","orderState":"' + json.orderState + '"}';
-					if (json.orderState != 1 && json.orderState != -1){
+				    var b = new Base64();
+				 	var unitJson ='{"orderCode":"' + json.orderCode + '","orderId":"' + json.id +'","orderDetailId":"' + item.id + '","onlineId":"' + item.onlineId + '","onlineTitle":"' + item.onlineTitle + '","goodsQsmm":"${goodsImgUrl}' + item.goodsQsmm + '","productId":"' + item.productId + '","buyPrice":"' + formatCurrency(item.buyPrice) + '","cashbackAmount":"' + formatCurrency(item.cashbackAmount) + '","buyCount":"' + realBuyCount + '","specName":"' + item.specName +'","orderState":"' + json.orderState + '"}';
+
+				 	if (json.orderState != 1 && json.orderState != -1){
 						if(item.returnState == 1){
 							if(json.orderState==2){
 								html+='<button class="mui-btn locked">退款中</button>'
@@ -119,14 +119,19 @@
 							html+='<button class="mui-btn locked">已退货</button>'
 						}else if(item.returnState == 0 || item.returnState == 3){
 							if(json.orderState==2){
-								html+='<a id="returnButtom" class="mui-btn">退款</a>';
+								
+								html+='<a  class="mui-btn returnButtom " data-json="'+b.encode(unitJson) +'" >退款</a>';
 							}else if(json.orderState==3){
-								html+='<a id="returnButtom" class="mui-btn">退货退款</a>';
+								aa+=1;
+								html+='<a  class="mui-btn returnButtom " data-json="'+b.encode(unitJson) +'"  >退货退款</a>';
+
 							}else if(json.orderState==4){
+								aa+=1;
 								if(new Date().getTime()-json.receivedTime>604800000){
-									html+='<a id="returnButtom"  class="mui-btn">售后</a>';
+									html+='<a   class="mui-btn returnButtom " data-json="'+b.encode(unitJson) +'"  >售后</a>';
+
 								}else{
-									html+='<a id="returnButtom"  class="mui-btn">退货/售后</a>';
+									html+='<a   class="mui-btn returnButtom " data-json="'+b.encode(unitJson) +'" >退货/售后</a>';
 								}
 							}
 						};
