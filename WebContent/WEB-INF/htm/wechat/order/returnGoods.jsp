@@ -26,7 +26,8 @@
 	<div id="opt_main" class="mui-scroll-wrapper">
 		<div class="mui-content mui-scroll">
 			<div class="info-bar order-num mui-table-view-cell">订单号：${returnData['orderCode'] }</div>
-			<input type="hidden" id="orderState" value="${returnData['orderState'] }" >
+			<input type="hidden" id="orderState"
+				value="${returnData['orderState'] }">
 			<div class="order-detail-box mui-table-view-cell">
 				<div class="order-img-box">
 					<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=${returnData['onlineId'] }&promoterId=${userId}">
@@ -37,7 +38,8 @@
 					<h5>
 						<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=${returnData['onlineId'] }&promoterId=${userId}">${returnData['onlineTitle'] }</a>
 					</h5>
-					<h6>规格： ${returnData['specName'] }</h6><br/>
+					<h6>规格： ${returnData['specName'] }</h6>
+					<br />
 					<div class="price-box">
 						<span id="price" class="mui-pull-left">¥${returnData['buyPrice'] }</span>
 						<div class="mui-numbox" id="mui-numbox" data-numbox-min="1" data-numbox-max="${returnData['buyCount'] }">
@@ -54,7 +56,7 @@
 					<span class="r-info mui-pull-left" id="r-info"></span>
 				</a>
 			</div>
-			
+
 			<div class="comment-text mui-table-view-cell mui-input-row">
 				<textarea name="text" rows="5" maxlength="150" placeholder="亲，写点退货原因吧，您的信息对商家有很大帮助" id="text"></textarea>
 			</div>
@@ -83,7 +85,8 @@
 			</div>
 		</div>
 	</div>
-	<div id="sheet" class="mui-popover mui-popover-bottom mui-popover-action ">
+	<div id="sheet"
+		class="mui-popover mui-popover-bottom mui-popover-action ">
 		<!-- 可选择菜单 -->
 		<ul class="mui-table-view btn-list">
 			<li class="mui-table-view-cell"><a data-value="1">仅退款</a></li>
@@ -117,17 +120,18 @@
 		var NumLimit = 3;
 		var SizeLimit = 9 * 1024 * 1024; // 15 M     
 		var SingleSizeLimit = 3 * 1024 * 1024; // 3 M 
-		var serverUrl = 'https://www.duamai.com/ise-svr/ise/upload'; //测试
-		
-		function selectType(){
+		// var serverUrl = 'https://www.duamai.com/ise-svr/ise/upload'; //测试
+		var serverUrl = 'http://192.168.1.201/ise-svr/ise/upload'; //测试
+
+		function selectType() {
 			var orderState = document.getElementById("orderState");
-			if(orderState.value==2){
-				returnType=1;
-			}else{
-				returnType=2;
+			if (orderState.value == 2) {
+				returnType = 1;
+			} else {
+				returnType = 2;
 			}
 		}
-		
+
 		selectType();
 
 		(function($, doc) {
@@ -154,15 +158,14 @@
 						textareas[i].blur();
 					};
 				});
-				
+
 				//可选择菜单
 				var info = document.getElementById("r-info");
 				mui(document).on('tap', '.mui-popover-action .btn-list li>a', function() {
-					var a = this,
-						parent;
+					var a = this, parent;
 					//根据点击按钮，反推当前是哪个actionsheet
-					for(parent = a.parentNode; parent != document.body; parent = parent.parentNode) {
-						if(parent.classList.contains('mui-popover-action')) {
+					for (parent = a.parentNode; parent != document.body; parent = parent.parentNode) {
+						if (parent.classList.contains('mui-popover-action')) {
 							break;
 						}
 					}
@@ -171,28 +174,21 @@
 					info.innerHTML = a.innerHTML;
 					returnType = a.getAttribute("data-value");
 				});
-				
+
 				var select = document.getElementById("orderState");
-				function returnType(){
-					if(select.value==2){
-						info.innerHTML="仅退款";
-					}else{
-						info.innerHTML="退货并退款";
+				function returnType() {
+					if (select.value == 2) {
+						info.innerHTML = "仅退款";
+					} else {
+						info.innerHTML = "退货并退款";
 					}
-					
-					
 				}
-				
+
 				returnType();
-				
 
 				mui(document).on("tap", "#uploadBtn", function() {
 					if (mui("#text")[0].value != "") {
-// 						if (mui(".filelist img").length > 0) {
-							uploader.upload(); //在uploader的上传成功事件里触发ajaxupdate();
-// 						} else {
-// 							mui.toast("请上传凭证图片");
-// 						}
+						uploader.upload(); //在uploader的上传成功事件里触发ajaxupdate();
 					} else {
 						mui.toast("请填写退货原因");
 					}
@@ -203,7 +199,7 @@
 		function ajaxupdate() {
 			if (returnType == 0) {
 				mui.toast("请选择退货类型");
-				return ;
+				return;
 			}
 			// 退货数量
 			var returnNum = mui("#mui-numbox").numbox().getValue();
@@ -215,24 +211,17 @@
 				mui.toast("退货数量不能大于订单数量");
 				return;
 			};
-			// 购买单价
-			var buyPrice = "${returnData['buyPrice'] }";
-			// 退货金额
-			var returnPrice = parseFloat(buyPrice * returnNum);
 			mui.ajax('${ctx}/wechat/order/returnGoods.htm', { //url测试的
 				type : 'post',
 				dataType : 'json',
 				data : {
 					orderId : orderId,
-					orderCode : orderCode,
 					orderDetailId : orderDetailId,
-					onlineId : onlineId,
-					returnReason : returnReason,
-					returnNum : returnNum,
-					specName : specName,
-					returnPrice : returnPrice,
-					returnImg : arr.join(","),
+					returnCount : returnNum,
 					returnType : returnType,
+					returnReason : returnReason,
+					returnPicPath : arr.join(","),
+					applicationOpId: "${userId}",
 				},
 				success : function(data) {
 					console.log(data);

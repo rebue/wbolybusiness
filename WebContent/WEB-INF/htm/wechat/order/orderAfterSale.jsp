@@ -150,7 +150,7 @@
 								}else{
 									html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
 									html += '		<span class="b-money"> 返 <span>' + formatCurrency(data.message[i].items[j].cashbackAmount) + '</span></span>';//*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
-									html += '		<span class="numbox">数量：<span>' + buyCount + '</span></span>';
+									html += '		<span class="numbox">数量：<span>' + data.message[i].items[j].buyCount + '</span></span>';
 								}
 								html += '	</div>'
 								html += '</div>'									
@@ -339,7 +339,7 @@
 								}else{
 									html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
 									html += '		<span class="b-money"> 返 <span>' + formatCurrency(data.message[i].items[j].cashbackAmount) + '</span></span>';//*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
-									html += '		<span class="numbox">数量：<span>' + buyCount + '</span></span>';
+									html += '		<span class="numbox">数量：<span>' + data.message[i].items[j].buyCount + '</span></span>';
 								}
 								html += '	</div>'
 								html += '</div>'									

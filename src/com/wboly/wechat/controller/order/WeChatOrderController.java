@@ -182,18 +182,19 @@ public class WeChatOrderController extends SysController {
 	@RequestMapping(value = "/wechat/order/returnGoods")
 	public void ReturnPartofGoods(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam Map<String, Object> map) throws TException, IOException {
+		_log.info("添加用户退货信息的请求参数为：{}", String.valueOf(map));
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
 		if (userId.equals("")) {
 			this.render(response, "{\"msg\":\"您没有登录\",\"result\":-11}");
 			return;
 		}
-
-		map.put("userId", userId);
-		System.err.println("添加用户退货信息的参数为：" + String.valueOf(map));
+		map.put("applicationOpId", userId);
+		_log.info("添加用户退货信息的参数为：{}", String.valueOf(map));
 		// 添加用户退货信息
-		String results = OkhttpUtils.postByFormParams(SysContext.ORDERURL + "/ord/return", map);
-		System.err.println("添加用户退货信息的返回值为：" + results);
+		String results = OkhttpUtils.postByJsonParams(SysContext.ORDERURL + "/ord/return", map);
+		_log.info("添加用户退货信息的返回值为：{}", results);
 		if (results == null || results.equals("") || results.equals("[]")) {
+			_log.error("添加用户退货信息出错，返回值为：{}", results);
 			this.render(response, "{\"msg\":\"提交失败\",\"result\":-10}");
 			return;
 		}
