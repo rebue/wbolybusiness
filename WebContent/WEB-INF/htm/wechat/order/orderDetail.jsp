@@ -122,11 +122,9 @@
 								
 								html+='<a  class="mui-btn returnButtom " data-json="'+b.encode(unitJson) +'" >退款</a>';
 							}else if(json.orderState==3){
-								aa+=1;
 								html+='<a  class="mui-btn returnButtom " data-json="'+b.encode(unitJson) +'"  >退货退款</a>';
 
 							}else if(json.orderState==4){
-								aa+=1;
 								if(new Date().getTime()-json.receivedTime>604800000){
 									html+='<a   class="mui-btn returnButtom " data-json="'+b.encode(unitJson) +'"  >售后</a>';
 
