@@ -111,7 +111,6 @@ public class WeChatPayController extends SysController {
 
 		System.err.println("微信支付订单:" + payOrderId);
 
-		
 		String buyerUid = SysCache.getWeChatUserByColumn(request, "userId");
 		_log.info("获取微信预支付id根据订单支付id查询订单信息的参数为: {}", payOrderId);
 		String orderdetail = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/listselective?payOrderId=" + payOrderId);
@@ -148,8 +147,15 @@ public class WeChatPayController extends SysController {
 			tradeDetail = tradeDetail.substring(0, tradeDetail.length() - 10) + "等。。。";
 		}
 
+		// 订单真实总金额
+		BigDecimal realMoney = BigDecimal.ZERO;
+		for (int i = 0; i < orderdetailInfo.size(); i++) {
+			realMoney = realMoney
+					.add(BigDecimal.valueOf(Double.parseDouble(orderdetailInfo.get(i).get("realMoney").toString())));
+		}
+
 		map.put("tradeDetail", "购买商品为：" + tradeDetail); // 支付交易详情
-		map.put("tradeAmount", orderdetailInfo.get(0).get("realMoney")); // 支付交易金额（单位为元）
+		map.put("tradeAmount", realMoney); // 支付交易金额（单位为元）
 		map.put("ip", IpUtil.getIp(request)); // 用户ip地址
 
 		// String finalsign = "";
@@ -339,9 +345,16 @@ public class WeChatPayController extends SysController {
 			this.render(response, "{\"message\":\"该订单不存在\",\"flag\":false}");
 			return;
 		}
+
+		// 订单真实总金额
+		BigDecimal realMoney = BigDecimal.ZERO;
+		for (int i = 0; i < orderInventoryList.size(); i++) {
+			realMoney = realMoney
+					.add(BigDecimal.valueOf(Double.parseDouble(orderInventoryList.get(i).get("realMoney").toString())));
+		}
+
 		map.put("orderCode", orderId);
-		BigDecimal decimal = new BigDecimal(String.valueOf(orderInventoryList.get(0).get("realMoney")));
-		map.put("tradeAmount", decimal.toString());
+		map.put("tradeAmount", realMoney);
 
 		String goodsNames = "";// 商品名称
 		if (orderInventoryList.size() >= 2) {

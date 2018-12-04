@@ -42,7 +42,7 @@
 					<br />
 					<div class="price-box">
 						<span id="price" class="mui-pull-left">¥${returnData['buyPrice'] }</span>
-						<div class="mui-numbox" id="mui-numbox" data-numbox-min="1" data-numbox-max="${returnData['buyCount'] }">
+						<div class="mui-numbox" id="mui-numbox" data-numbox-min="0" data-numbox-max="${returnData['buyCount'] }">
 							<button class="mui-btn mui-btn-numbox-minus" id="btn-minus" type="button">-</button>
 							<input id="count" class="mui-input-numbox" type="number" value="${returnData['buyCount'] }">
 							<button class="mui-btn mui-btn-numbox-plus" id="btn-plus" type="button">+</button>
@@ -203,12 +203,13 @@
 			}
 			// 退货数量
 			var returnNum = mui("#mui-numbox").numbox().getValue();
-			// 该规格订单数量
-			var num = "${returnData['buyCount'] }";
+			// 订单详情实际成交金额
+			var actualAmount = "${returnData['actualAmount'] }";
+			console.log(actualAmount)
 			// 退货原因
 			var returnReason = mui("#text")[0].value;
-			if (returnNum > num) {
-				mui.toast("退货数量不能大于订单数量");
+			if (actualAmount <= 0) {
+				mui.toast("该订单详情已退完");
 				return;
 			};
 			mui.ajax('${ctx}/wechat/order/returnGoods.htm', { //url测试的
