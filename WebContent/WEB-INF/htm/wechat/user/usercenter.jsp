@@ -249,7 +249,7 @@
 				type:'post',       
 				success:function(data){
 					for(var i = 0; i < data.message.length; i++){
-						if(data.message[i].orderState !=-1 && data.message[i].orderState !=5){
+						if(data.message[i].orderState !=-1 && data.message[i].orderState !=5 && data.message[i].orderState !=1 ){
 							for (j = 0; j < data.message[i].items.length; j++) {
 								if(data.message[i].items[j].subjectType==1  && data.message[i].items[j].returnState ==0 ){
 									allCommissioning+=(data.message[i].items[j].buyCount * data.message[i].items[j].buyPrice);
