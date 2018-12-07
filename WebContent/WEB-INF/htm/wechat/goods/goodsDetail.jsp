@@ -91,7 +91,8 @@
 				</div>
 				<div class="mui-slider-group">
 					<div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
-						<div id="tuwen" class="detail-item-box"></div>
+						<div id="tuwen" class="detail-item-box">
+						</div>
 					</div>
 
 					<div id="item2mobile" class="mui-slider-item mui-control-content">
@@ -215,6 +216,13 @@
 	
 				LoadAds();
 				LoadGoodsContent();
+				
+				// 匹配购买关系流程
+				mui(document).on('tap', '#exemptionProcess', function() {
+					console.log("4545454")
+					window.location.href="${ctx }/wechat/user/rulePage.htm?userId=${userId}";
+				});
+				
 				LoadGoodsSku();
 // 				mui('#selectBox').popover('show');
 				SaveSKU();
@@ -536,8 +544,12 @@
 					// 商品详情图片
 					//第二个参数中的 g 表示全部匹配,i表示忽略大小写
 					var regS = new RegExp("src", "g");
+					var exemptionProcess = '<a id="exemptionProcess">';
+						exemptionProcess += '	<img src="${ctx }/images/wechat/exemptionProcess.png">';
+						exemptionProcess += '</a>';
+					var onlineDetail = exemptionProcess + data[0].onlineDetail;
 					//服务器返回响应
-					document.body.querySelector("#tuwen").innerHTML = data[0].onlineDetail.replace(regS, "data-url");
+					document.body.querySelector("#tuwen").innerHTML = onlineDetail.replace(regS, "data-url");
 					$("img").scrollLoading();
 				}
 			});
