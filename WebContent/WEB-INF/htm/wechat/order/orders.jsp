@@ -124,7 +124,7 @@
 							} else if (data.message[i].orderState == -1) {
 								html += '	<span style="color:#8f8f94;border:solid 1px #8f8f94;" class="status">已取消</span>';
 							};
-							html+='			<span class="mui-pull-left spt">订单号：' + data.message[i].id + '</span>';
+							html+='			<span class="mui-pull-left spt">订单号：' + data.message[i].orderCode + '</span>';
 							html+='		</a>';
 							html+='</div>';
 							html+='<div class="mui-input-group">';
@@ -394,7 +394,7 @@
 							}else if (data.message[i].orderState == -1) {
 								html += '<span style="color:#8f8f94;border:solid 1px #8f8f94;"    class="status">已取消</span>';
 							};
-							html += '	 <span class="mui-pull-left spt">订单号：' + data.message[i].id + '</span>';
+							html += '	 <span class="mui-pull-left spt">订单号：' + data.message[i].orderCode + '</span>';
 							html += ' </a>';
 							html += '</div>';
 							html += '<div class="mui-input-group">';
