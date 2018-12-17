@@ -473,10 +473,10 @@ public class WeChatOrderController extends SysController {
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
 		if (userId != null && !userId.equals("") && !userId.equals("null")) {
 			// 订单编号
-			String orderCode = request.getParameter("orderId");
+			String orderId = request.getParameter("orderId");
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("userId", userId);
-			map.put("orderCode", orderCode);
+			map.put("orderId", orderId);
 			map.put("receivedOpId", userId);
 			map.put("mac", NetUtils.getFirstMacAddrOfLocalHost());
 			map.put("ip", NetUtils.getFirstIpOfLocalHost());
