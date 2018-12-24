@@ -6,7 +6,7 @@
 	<!-- 订单详情页规则 -->
 	<rule>
 		<!--参数: 订单号 -->
-		<from>^/wechat/myorder/([0-9a-zA-Z]+).htm$</from>
+		<from>^/wechat/myorder/([0-9a-zA-Z\-]+).htm$</from>
 		<to>/wechat/order/myOrderDetail.htm\?key=59c23bdde5603ef993cf03fe64e448f1&amp;order_data=$1</to>
 	</rule>
 
