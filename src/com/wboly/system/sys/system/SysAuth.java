@@ -46,7 +46,7 @@ public class SysAuth implements Filter {
 			+"/wechat/order/getOrderLogisticInfo.htm, /wechat/order/getCashBack.htm, /wechat/user/applyWithdrAwaccountPage.htm, /wechat/user/applyWithdrAwaccountPage.htm,"
 			+ "/wechat/user/submitApplyWithdrAwaccount.htm, /wechat/order/cancelReturn.htm, /wechat/user/updatepaypwdpage.htm, /wechat/user/payPwIsExis.htm,"
 			+ "/wechat/user/setPayPassword.htm, /wechat/user/changePayPassword.htm, /wechat/user/applyWithdraw.htm, /wechat/user/withdrawRecord.htm, /wechat/user/getWithdrawRecord.htm,"
-			+"/wechat/index/checkIsSubscribe.htm, /wechat/order/modifyPayOrderId.htm";
+			+"/wechat/index/checkIsSubscribe.htm,/wechat/order/modifyPayOrderId.htm,/wechat/order/commissionTotal.htm";
 
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
 			throws IOException, ServletException {
@@ -70,10 +70,11 @@ public class SysAuth implements Filter {
 					|| requestUrlss.contains("/wechat/oauth2/checkSignature.htm")|| requestUrlss.contains("/wechat/user/rulePage.htm")) {
 				chain.doFilter(servletRequest, servletResponse);
 			} else {
-//				CookiesUtil.setCookie("oAwIr04JK8GVF5xvNaOZ4IxwQhhQ", resp);
+				CookiesUtil.setCookie("oNklT0bp29pc3Qtk0UEdnCVzotKU", resp);
 				// 获取当前登录用户编号
 				String userId = SysCache.getWeChatUserByColumn(request, "userId");
 				System.out.println("拦截器获取到的当前用户id为：" + userId);
+				request.getSession().setAttribute("userId", userId);
 				// 上线id
 				String onlineId = request.getParameter("onlineId");
 				if (!StringUtils.isAnyBlank(promoterId, onlineId) && !userId.equals(promoterId)) {

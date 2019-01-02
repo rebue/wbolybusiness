@@ -190,8 +190,7 @@
 				accountTrade(0);
 				setconHeight();
 				getMoney();
-				//获取所有的订单及详情来计算待全返金额。
-				AjaxGetData();
+
 				//标签选中状态
 				mui(document).on('tap', '.tab-slider .mui-control-item', function(e) {
 					var left = this.offsetLeft;
@@ -229,6 +228,22 @@
 				document.getElementById('withdraw').addEventListener('tap',function(){
 					window.location.href="${ctx}/wechat/user/wechatWithdraw.htm";
 				});
+				
+				//设置待全返金额
+				var initCommissionTotal=0;
+				$.ajax({
+					url : "${ctx }/wechat/order/commissionTotal.htm?userId=${userId}",
+					type : "get",
+					dataType : 'json',//服务器返回json格式数据
+					success : function(data) {
+						if(data !=null && data !=""){
+							document.getElementById("commissioning").innerHTML = formatCurrency(data);	
+						}else{
+							document.getElementById("commissioning").innerHTML = initCommissionTotal;
+
+						}
+					}
+				})
 			});
 		})(mui, document, jQuery);
 
@@ -601,38 +616,7 @@
 			};
 		}
 		
-		//初始化待全返的金额
-		var allCommissioning=0;
-		//ajax订单数据
-		function AjaxGetData(){
-			mui.ajax('${ctx}/wechat/order/getOrders.htm',{ 
-				data:{
-					"orderState":0,//订单状态,0就是查全部
-					"key":"59c23bdde5603ef993cf03fe64e448f1",
-					"limit":1000,
-					"start":0
-				},
-				dataType:'json',
-				type:'post',       
-				success:function(data){
-					for(var i = 0; i < data.message.length; i++){
-						if(data.message[i].orderState !=-1 && data.message[i].orderState !=5 && data.message[i].orderState !=1 ){
-							for (j = 0; j < data.message[i].items.length; j++) {
-								if(data.message[i].items[j].subjectType==1  && data.message[i].items[j].returnState ==0 ){
-									allCommissioning+=(data.message[i].items[j].buyCount * data.message[i].items[j].buyPrice);
-								}
-								if(data.message[i].items[j].returnState ==3){
-									allCommissioning+=(data.message[i].items[j].buyCount-data.message[i].items[j].returnCount) * data.message[i].items[j].buyPrice;
-								}
-							}
-						}
-					}
-					document.getElementById("commissioning").innerHTML = formatCurrency(allCommissioning);
 
-				}
-			
-		})
-	}
 	</script>
 </body>
 </html>

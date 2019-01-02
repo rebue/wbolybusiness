@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -625,6 +626,19 @@ public class WeChatOrderController extends SysController {
 		_log.info("修改支付订单Id的参数为: {}", orderId);
 		String results = OkhttpUtils.put(SysContext.ORDERURL + "/ord/order/modifypayorderid?id=" + orderId);
 		_log.info("修改支付订单id的返回值为: {}", results);
+		this.render(response, results);
+	}
+	
+	/**
+	 * @Name: 根据用户id获取用户待结算全返金额
+	 * @Author: nick
+	 */
+	@RequestMapping(value = "/wechat/order/commissionTotal", method = RequestMethod.GET)
+	public void UserCommissionTotal(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		_log.info("根据用户id获取用户待结算全返金额");		
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+		_log.info("根据用户id获取用户待结算全返金额参数为-------------: {}",userId);		
+		String results = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/commissionTotal?userId=" + userId);
 		this.render(response, results);
 	}
 }
