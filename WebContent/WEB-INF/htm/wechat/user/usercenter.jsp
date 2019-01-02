@@ -186,10 +186,10 @@
 							<span class="mui-icon mui-icon-paperplane mui-pull-left"></span> 申请实名认证
 						</a>
 					</li> --%>
-					<li class="mui-table-view-cell"><a
+					<li  style="display:none;" class="mui-table-view-cell"><a
 						href="javascript:guideDiv();"
 						class="mui-navigate-right weixinshare"> <span
-							class="mui-icon mui-icon-redo mui-pull-left"></span> 分享给好友
+							class="mui-icon mui-icon-redo mui-pull-left"></span> 
 					</a></li>
 				</ul>
 			</div>
