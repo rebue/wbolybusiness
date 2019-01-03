@@ -41,9 +41,9 @@
 				$("#bankAccountNo").attr("disabled", true);
 				$("#contactTel").attr("disabled", true);
 				$("#openAccountBank").attr("disabled", true);
+				// 隐藏身份证号
+				$("#idCards").hide();
 			}
-			// 隐藏身份证号
-			$("#idCards").hide();
 		}
 
 		// 提现提交
