@@ -27,8 +27,7 @@
 <script src="${ctx }/js/util/commonUtil.js"></script>
 </head>
 <body>
-	<div id="home_index" class="weixin-index"
-		onclick="window.location.href='${ctx}/wechat/index/indexInfo.htm?promoterId=${userId}'">
+	<div id="home_index" class="weixin-index" onclick="window.location.href='${ctx}/wechat/index/indexInfo.htm?promoterId=${userId}'">
 		<span class="mui-icon mui-icon-home"></span> <span class="text">首页</span>
 	</div>
 	<header class="mui-bar mui-bar-nav goods-detail-head">
@@ -40,7 +39,7 @@
 			<span class="mui-tab-label">联系商家</span>
 		</a> 
 		<a class="mui-tab-item-wboly smaller tab-cart" href="${ctx }/wechat/cart/shoppingcart.htm?promoterId=${userId}">
-			<span id="cartnum" class="mui-badge mui-badge-danger">0</span> 
+			<span id="cartnum" class="mui-badge mui-badge-danger">0</span>
 			<span class="mui-icon mui-icon-extra mui-icon-extra-cart"></span> 
 			<span class="mui-tab-label">购物车</span>
 		</a> 
@@ -50,17 +49,17 @@
 		</a>
 		<button class="bottombtn mui-pull-right" id="addcartbtn">加入购物车</button>
 	</nav>
-	<div id="guideDiv"
-		style="position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); display: ${guideDisplay}; z-index: 99;">
+	<div id="guideDiv" style="position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); display: ${guideDisplay}; z-index: 99;">
 		<img src="${ctx }/images/wechat/guide.png" alt="" style="width: 100%;" />
 	</div>
 	<div id="goods-detail-content" class="mui-content mui-scroll-wrapper">
-			<div>
-				<a class = "tips" id = "tip" style = "height:28px;background-color:#FFFFE0;text-align:center;line-height:31px;display:none;justify-content:center;"> 
-					<img src="${ctx }/images/wechat/guanzhu.png" width="18px" height="18px" style = "margin-top:5px"/><span style = "font-size:14px">&nbsp;&nbsp;&nbsp;请点击关注公众号</span>
-				</a>
-			</div>
-			<div class="mui-scroll">
+		<div>
+			<a class="tips" id="tip" style="height: 28px; background-color: #FFFFE0; text-align: center; line-height: 31px; display: none; justify-content: center;">
+				<img src="${ctx }/images/wechat/guanzhu.png" width="18px" height="18px" style="margin-top: 5px" />
+				<span style="font-size: 14px">&nbsp;&nbsp;&nbsp;请点击关注公众号</span>
+			</a>
+		</div>
+		<div class="mui-scroll">
 			<!--轮播开始-->
 			<!-- 详情页如果需要加图片的限购 则在下面这个div 的class 加上 limit -->
 			<div id="slider" class="swiper-container  goods-detail-slider">
@@ -90,9 +89,9 @@
 					<div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-xs-4"></div>
 				</div>
 				<div class="mui-slider-group">
-					<div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
-						<div id="tuwen" class="detail-item-box">
-						</div>
+					<div id="item1mobile"
+						class="mui-slider-item mui-control-content mui-active">
+						<div id="tuwen" class="detail-item-box"></div>
 					</div>
 
 					<div id="item2mobile" class="mui-slider-item mui-control-content">
@@ -117,7 +116,8 @@
 
 		<!--悬浮选项卡开始-->
 		<div id="fixedTab2">
-			<div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+			<div id="sliderSegmentedControl"
+				class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
 				<a class="mui-control-item mui-active" href="#item1mobile"> 图文详情</a>
 				<!-- <a class="mui-control-item" href="#item2mobile"> 产品参数 </a>  -->
 			</div>
@@ -135,7 +135,6 @@
 				<h5>${goodsBase['goodsName']}</h5>
 				<div class="sbox_price_bar">
 					<!--以下三个数字是在弹出窗口后,通过AJAX方法【AjaxUpdate()】获取并设值-->
-					
 				</div>
 				<div class="skuNameShow">请选择商品规格、购买数量</div>
 			</div>
@@ -145,13 +144,22 @@
 			<div class="mui-scroll" id="scroll-body">
 				<ul class="mui-table-view" id="sku_box">
 					<li class="mui-table-view-cell sku_unit"></li>
-					<li class="mui-table-view-cell buynum_bar">
-						<span class="buynum_tit">购买数量</span>
+					<li class="mui-table-view-cell buynum_bar"><span
+						class="buynum_tit">购买数量</span>
 						<div class="mui-numbox" id="mui-numbox" data-numbox-min="1" data-numbox-max="100">
 							<!-- 大数字为默认SKU库存，或当前选中SKU的库存 -->
 							<button class="mui-btn mui-btn-numbox-minus" id="btn-minus" type="button">-</button>
 							<input id="buyNum" class="mui-input-numbox" type="number" value="1">
 							<button class="mui-btn mui-btn-numbox-plus" id="btn-plus" type="button">+</button>
+						</div></li>
+					<li class="mui-table-view-cell buynum_bar">
+						<div style="margin-left: 148px; color: red; font-size: 0.9rem; font-weight: 700; line-height: 1rem;">
+							<span>首单积分:&nbsp;</span> <span id="firstBuyPoint">0</span>
+						</div>
+						<div style="margin-left: 177px; color: red; font-size: 0.9rem; font-weight: 700; line-height: 1rem;">
+							<span>积分:&nbsp;</span> 
+							<span id="buyPoint">0</span> 
+							<span style="display: none;" id="point">0</span>
 						</div>
 					</li>
 				</ul>
@@ -183,23 +191,22 @@
 
 		//图片放大初始化
 		mui.previewImage();
-		
-		$(document).ready(function checkIsSubscribe(){
-			console.info('333');
-			mui.ajax('${ctx}/wechat/index/checkIsSubscribe.htm',{
-				dataType:'json',// 服务器返回json格式数据
-				type:'post',// HTTP请求类型
-				success:function(data){
-					console.log(data);
-					if(!data){
+
+		$(document).ready(function checkIsSubscribe() {
+			mui.ajax('${ctx}/wechat/index/checkIsSubscribe.htm', {
+				dataType : 'json',// 服务器返回json格式数据
+				type : 'post',// HTTP请求类型
+				success : function(data) {
+					if (!data) {
 						mui(".tips")[0].style.display = "flex"
 					}
 				}
 			})
-			document.getElementById('tip').addEventListener('tap',function(){
-				window.location.href="https://mp.weixin.qq.com/s/TTOM3jibBDp0mM2Ajegi6w";
+			document.getElementById('tip').addEventListener('tap', function() {
+				window.location.href = "https://mp.weixin.qq.com/s/TTOM3jibBDp0mM2Ajegi6w";
 			});
 		});
+		
 		(function($, doc) {
 			mui.init();
 			$.ready(function() {
@@ -213,23 +220,22 @@
 				mui('#goods-detail-content.mui-scroll-wrapper').scroll({
 					bounce : false
 				});
-	
+		
 				LoadAds();
 				LoadGoodsContent();
-				
+
 				// 匹配购买关系流程
 				mui(document).on('tap', '#exemptionProcess', function() {
-					console.log("4545454")
-					window.location.href="${ctx }/wechat/user/rulePage.htm?userId=${userId}";
+					window.location.href = "${ctx }/wechat/user/rulePage.htm?userId=${userId}";
 				});
-				
+
 				LoadGoodsSku();
-// 				mui('#selectBox').popover('show');
+				// 				mui('#selectBox').popover('show');
 				SaveSKU();
-	
+
 				LoadCartNum();
 				setconHeight();
-	
+
 				//SKU选择层弹出事件
 				var selectBtn = document.getElementById('selectBox');
 				selectBtn.addEventListener('shown', function(e) {
@@ -241,11 +247,11 @@
 						SaveSKU(1);
 					}
 				});
-	
+
 				mui("#guideDiv")[0].addEventListener("tap", function() {
 					document.getElementById("guideDiv").style.display = (document.getElementById("guideDiv").style.display == "none") ? "" : "none";
 				});
-	
+
 				//主图初始化
 				var mySwiper = new Swiper('#slider.swiper-container', {
 					loop : true,
@@ -253,13 +259,13 @@
 					pagination : '.swiper-pagination',
 					zoom : true
 				});
-	
+
 				//图片比例调整								
 				var slider_img_width = mui("#slider .swiper-slide img")[0].clientWidth;
 				for (var i = 0; i < mui("#slider .swiper-slide img").length; i++) {
 					mui("#slider .swiper-slide img")[i].style.height = slider_img_width + "px";
 				};
-	
+
 				//加入购物车
 				mui(document).on('tap', '#addcartbtn', function() {
 					var attr = document.querySelector("#toSelect span").innerHTML;
@@ -279,15 +285,15 @@
 						},
 						dataType : 'json',//服务器返回json格式数据
 						type : 'post',//HTTP请求类型
-						success : function(data) {
+						success : function(
+								data) {
 							loading(2);
 							if (data.flag) {//先判断是否登录
 								//写个ajax事件,添加成功后返回购物车里的商品数量
-								//var count = document.getElementById("cartnum").innerText;count ++;//这句是模拟的，不用要																													
 								mui.toast("成功加入购物车！");
 								mui('#selectBox').popover('hide');
 								document.getElementById("cartnum").innerText = data.cartCount;
-								document.getElementById("cartnum").style.display='inline';
+								document.getElementById("cartnum").style.display = 'inline';
 							} else {
 								if ("您没有登录" == data.message) {
 									mui.confirm(data.message + ',请先登录哦', ' ', ['等等吧', '说走就走' ], function(e) {
@@ -300,14 +306,14 @@
 								mui.toast(data.message);
 							};
 						},
-						error : function( xhr, type, errorThrown) {
+						error : function(xhr, type, errorThrown) {
 							loading(2);
 							//异常处理；
 							console.log(type);
 						}
 					});
 				});
-	
+
 				//SKU点击事件
 				mui("#sku_box").on('tap', '.sku_list li', function() {
 					// 商品规格编号
@@ -320,20 +326,26 @@
 						};
 						_this.classList.add("sku_active");
 					};
+					
 					history.pushState("", "", "?promoterId=${userId}&onlineId=${onlineId}&specId=" + specId);
+					
 					SaveSKU(1);
+					
 					var sTop = document.getElementById('selectBox_titlebar').clientHeight + 1;
 					document.getElementById('scroll-wrapper').style.top = sTop + "px";
+					
 					AjaxUpdate(document.querySelector(".sku_active").getAttribute("data-value"), specId);
 				});
-	
+
 				//改变购买数量时触发
 				mui("#mui-numbox").on('change', '#buyNum', function() {
 					buyNum = mui("#mui-numbox").numbox().getValue();//全局变量：购买数量
 					total = parseFloat(mul(price, buyNum)).toFixed(2);//全局变量：计算当前总价（当前单价*购买数量）
 					document.querySelector("#total_price").innerText = "¥" + total;//显示当前总价
+					var point = document.getElementById('point').innerHTML;
+					document.getElementById("buyPoint").innerHTML = point * buyNum;//显示所选SKU的积分
 				});
-	
+
 				//保存选中SKU
 				function SaveSKU(type) {
 					var sku_arr = new Array();
@@ -345,25 +357,28 @@
 						sku_arr.push(skuId);
 						sku_name.push(skuName);
 					};
+					
 					skuNames = String(sku_name);
-	
+
 					if (skuNames != "") {
 						document.querySelector(".skuNameShow").innerHTML = "您已选择：" + skuNames;
 					} else {
 						document.querySelector(".skuNameShow").innerHTML = "请选择商品规格、购买数量";
 					};
+					
 					if (type == 1) {
 						document.querySelector("#toSelect span").innerHTML = "您已选择：<em>" + skuNames + "</em>";
 					};
+					
 					skuIds = String(sku_arr);//全局变量：选中的SKU数组（字符串）						
 				};
-	
+
 				//切换会员评价筛选方式
 				mui(".comments-tab-box").on('tap', 'a.mui-control-item', function() {
 					commentType = this.getAttribute("data-id");
 					getComments(commentType);
 				});
-	
+
 				//input焦点bug
 				document.addEventListener('tap', function(e) {
 					var target = e.target;
@@ -376,7 +391,7 @@
 						}
 					}
 				});
-	
+
 				//计算内容区最小高度
 				function setconHeight() {
 					var head = mui(".goods-detail-head")[0].clientHeight;
@@ -389,7 +404,7 @@
 						obj[i].style.minHeight = height + "px";
 					};
 				}
-	
+
 				//选项卡滚动到顶部时悬浮固定
 				document.getElementById("goods-detail-content").addEventListener("scroll", function(e) {
 					var obj1 = document.getElementById("fixedTab1");
@@ -398,6 +413,7 @@
 					var s1 = mui("#slider")[0].clientHeight;
 					var s2 = mui(".detail-content")[0].clientHeight;
 					var top = -(s1 + s2 + 13);
+					
 					if (e.detail.lastY < top) {
 						obj2.style.display = "block";
 						obj1.style.visibility = "hidden";
@@ -405,24 +421,19 @@
 						obj2.style.display = "none";
 						obj1.style.visibility = "visible ";
 					};
+					
 					if (e.detail.lastY <= top + 40) {
 						iconback.style.display = "none";
 					} else {
 						iconback.style.display = "inline-block";
 					};
 				});
-	
+
 				//切换选项卡事件
 				document.querySelector('#detail_slider.mui-slider').addEventListener('slide', function(event) {
 					var s1 = mui("#slider")[0].clientHeight;
 					var s2 = mui(".detail-content")[0].clientHeight;
 					var top = -(s1 + s2 + 13); //从商品详情选项卡栏顶部到轮播图顶部的距离，13是选项卡上的margin
-					/*
-					var head = mui(".goods-detail-head")[0].clientHeight;
-					var nav = mui(".goods-detail-nav")[0].clientHeight;
-					var view = document.documentElement.clientHeight-head-nav; //除去头部和底部的实际显示高度
-					var scroll = -(top-view+340);//主体区域滚动需要向上滚动多少，才能使详情内容区至少显示300的高度
-					 */
 					if (mui('#goods-detail-content.mui-scroll-wrapper').scroll().lastY > top) {
 						mui('#goods-detail-content.mui-scroll-wrapper').scroll().scrollTo(0, top + 1, 700);
 					} else {
@@ -434,7 +445,7 @@
 					for (var i = 0; i < siblings(item).length; i++) {
 						siblings(item)[i].classList.remove("mui-active");
 					};
-	
+
 					if (event.detail.slideNumber === 2) {
 						getComments(commentType); //切换到会员评价选项卡，加载评价
 					};
@@ -478,19 +489,18 @@
 		};
 
 		// 加载轮播
-		function LoadAds(){
+		function LoadAds() {
 			var imgs = "${goodsPics}";
-			console.log(imgs);
-			var html="";
-			document.body.querySelector("#slider .swiper-wrapper").innerHTML=html;
+			var html = "";
+			document.body.querySelector("#slider .swiper-wrapper").innerHTML = html;
 			var img = imgs.split(",");
-			for(var i = 0;i<img.length;i++){
+			for (var i = 0; i < img.length; i++) {
 				html += '<div class="swiper-slide">'
 				html += '<div class="swiper-zoom-container">'
 				html += '<img src="${goodsImgUrl}' + img[i] + '">'
 				html += '</div></div>';
 			}
-			document.body.querySelector("#slider .swiper-wrapper").innerHTML=html;
+			document.body.querySelector("#slider .swiper-wrapper").innerHTML = html;
 		}
 
 		// 加载商品内容
@@ -502,7 +512,6 @@
 				dataType : 'json',//服务器返回json格式数据
 				type : 'post',//HTTP请求类型
 				success : function(data) {
-					console.log(data);
 					var html = "";
 					var sboxHtml = "";
 					document.body.querySelector("#detail-content-ul").innerHTML = html;
@@ -515,25 +524,24 @@
 					html += '		<div id="collection" class="collection"></div>';
 					html += '	</div>';
 					html += '</li>';
-					console.log(data[0].subjectType);
-					if(data[0].subjectType==0){
+					if (data[0].subjectType == 0) {
 						html += '<li class="mui-table-view-cell price-bar">';
 						html += '	<span class="price">¥<em>' + formatCurrency(data[0].salePrice) + '</em></span>';
 						html += ' 	<span class="back-money">返<em>' + formatCurrency(data[0].cashbackAmount) + '</em>元</span>';
 						html += '</li>';
-						sboxHtml +='<span class="ss_price">¥<span id="ss_price"></span></span> ';
-						sboxHtml +='<span class="ss_back">返<span id="ss_back"></span>元</span>';
-						sboxHtml +='<span class="goodsnum" id="stock">库存：<span></span></span>';
-					}else{
+						sboxHtml += '<span class="ss_price">¥<span id="ss_price"></span></span> ';
+						sboxHtml += '<span class="ss_back">返<span id="ss_back"></span>元</span>';
+						sboxHtml += '<span class="goodsnum" id="stock">库存：<span></span></span>';
+					} else {
 						html += '<li class="mui-table-view-cell price-bar">';
 						html += '	<span class="full-return-price price">¥<em>' + formatCurrency(data[0].salePrice) + '</em></span>';
-						html += ' 	<span class="now-price">￥<em>0元'  + '</em></span>';
-						html += '<span id="ss_back" style="display:none"></span>'
+						html += ' 	<span class="now-price">￥<em>0元</em></span>';
+						html += '	<span id="ss_back" style="display:none"></span>'
 						html += ' 	<span style="display:none" class="back-money">返<em></em></span>'
 						html += '</li>';
-						sboxHtml +='<span class="ss_full_return_price">¥<span id="ss_price"></span></span> ';
-						sboxHtml +='<span class="ss_now_price">￥<em style="display=none;" ></em>0元</span>';
-						sboxHtml +='<span class="goodsnum" id="stock">库存：<span></span></span>';
+						sboxHtml += '<span class="ss_full_return_price">¥<span id="ss_price"></span></span> ';
+						sboxHtml += '<span class="ss_now_price">￥<em style="display=none;" ></em>0元</span>';
+						sboxHtml += '<span class="goodsnum" id="stock">库存：<span></span></span>';
 					}
 					html += '<li class="mui-table-view-cell selectbar">';
 					html += '	<a href="#selectBox" class="mui-navigate-right" id="toSelect"><span>点击选择商品规格</span></a>';
@@ -545,8 +553,8 @@
 					//第二个参数中的 g 表示全部匹配,i表示忽略大小写
 					var regS = new RegExp("src", "g");
 					var exemptionProcess = '<a id="exemptionProcess">';
-						exemptionProcess += '	<img src="${ctx }/images/wechat/exemptionProcess.png">';
-						exemptionProcess += '</a>';
+					exemptionProcess += '		<img src="${ctx }/images/wechat/exemptionProcess.png">';
+					exemptionProcess += '	</a>';
 					var onlineDetail = exemptionProcess + data[0].onlineDetail;
 					//服务器返回响应
 					document.body.querySelector("#tuwen").innerHTML = onlineDetail.replace(regS, "data-url");
@@ -557,8 +565,7 @@
 
 		// 加载商品规格
 		function LoadGoodsSku() {
-			mui.ajax(
-			'${ctx}/wechat/goods/selectGoodsSpecDetails.htm', {
+			mui.ajax('${ctx}/wechat/goods/selectGoodsSpecDetails.htm', {
 				data : {
 					specId : 0,
 					onlineId : "${onlineId}"
@@ -575,7 +582,7 @@
 						document.body.querySelector("#sku_box .sku_unit").innerHTML = html;
 						html += '<ul class="sku_list">';
 						for (var i = 0; i < data.length; i++) {
-							if(data[i].currentOnlineCount - data[i].saleCount > 0) {
+							if (data[i].currentOnlineCount - data[i].saleCount > 0) {
 								html += '<li class="sku_item" data-sku="' + data[i].specId + '" data-value="' + data[i].onlineSpec + '">' + data[i].onlineSpec + '</li>';
 							}
 						}
@@ -608,7 +615,7 @@
 				}
 			});
 		}
-		
+
 		//提交选中的SKU数据,返回得到相应SKU的单价、返现金、库存等;
 		function AjaxUpdate(id, specId) {
 			skuIds = specId;
@@ -633,6 +640,9 @@
 							document.querySelector("#ss_price").innerText = price;//显示所选SKU的单价
 							document.querySelector(".price em").innerText = price;
 							document.querySelector("#ss_back").innerText = back;//显示所选SKU的返现
+							document.getElementById("buyPoint").innerHTML = item.buyPoint;//显示所选SKU的积分
+							document.getElementById("point").innerHTML = item.buyPoint;//显示所选SKU的积分
+							document.getElementById("firstBuyPoint").innerHTML = item.firstBuyPoint;//显示所选SKU的首单积分
 							document.querySelector(".back-money em").innerText = back;
 							document.querySelector("#stock span").innerText = stock;//显示所选SKU的库存	
 							document.querySelector("#total_price").innerText = "¥" + total;//显示当前总价
@@ -641,8 +651,7 @@
 						}
 					});
 				},
-				error : function(xhr, type,
-						errorThrown) {
+				error : function(xhr, type, errorThrown) {
 					//异常处理；
 					console.log(type);
 				}
