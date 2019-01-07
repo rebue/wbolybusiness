@@ -42,11 +42,12 @@ public class SysAuth implements Filter {
 			+ "/wechat/cart/batchdelete.htm,/wechat/order/aboutCinfirmReceipt.htm,/wechat/order/queryLogistics.htm,/wechat/order/returnGoods.htm,"
 			+ "/wechat/user/setLoginName.htm,/wechat/user/setLoninNamePage.htm,/wechat/user/setLoginPassword.htm,/wechat/user/changeLogonPassword.htm,/wechat/user/updateloginpwdpage.htm,"
 			+ "/wechat/user/rulePage.htm,/wechat/user/uploadRealImg.htm,/wechat/user/verifyRealName.htm,/wechat/user/verifyRealNameApply.htm,/wechat/user/verifyResult.htm,"
-			+"/wechat/goods/fullReturnGoodsList.htm,/wechat/goods/getFullReturnGoodsList.htm, /wechat/user/accountTrade.htm, /wechat/user/cashbackTrade.htm, /wechat/user/beBeingWithdraw.htm,"
-			+"/wechat/order/getOrderLogisticInfo.htm, /wechat/order/getCashBack.htm, /wechat/user/applyWithdrAwaccountPage.htm, /wechat/user/applyWithdrAwaccountPage.htm,"
+			+ "/wechat/goods/fullReturnGoodsList.htm,/wechat/goods/getFullReturnGoodsList.htm, /wechat/user/accountTrade.htm, /wechat/user/cashbackTrade.htm, /wechat/user/beBeingWithdraw.htm,"
+			+ "/wechat/order/getOrderLogisticInfo.htm, /wechat/order/getCashBack.htm, /wechat/user/applyWithdrAwaccountPage.htm, /wechat/user/applyWithdrAwaccountPage.htm,"
 			+ "/wechat/user/submitApplyWithdrAwaccount.htm, /wechat/order/cancelReturn.htm, /wechat/user/updatepaypwdpage.htm, /wechat/user/payPwIsExis.htm,"
 			+ "/wechat/user/setPayPassword.htm, /wechat/user/changePayPassword.htm, /wechat/user/applyWithdraw.htm, /wechat/user/withdrawRecord.htm, /wechat/user/getWithdrawRecord.htm,"
-			+"/wechat/index/checkIsSubscribe.htm,/wechat/order/modifyPayOrderId.htm,/wechat/order/commissionTotal.htm";
+			+ "/wechat/index/checkIsSubscribe.htm, /wechat/order/modifyPayOrderId.htm, /wechat/order/commissionTotal.htm, /wechat/user/jumpMyPoint.htm, /wechat/user/cumulativeIncome.htm, "
+			+ "/wechat/user/waitingPoint.htm, /wechat/user/point.htm, /wechat/user/getPoint.htm";
 
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
 			throws IOException, ServletException {
@@ -67,10 +68,11 @@ public class SysAuth implements Filter {
 		System.out.println("拦截器获取到的推广者id为：" + promoterId);
 		if (urlDoFilter(servletRequest)) {
 			if (requestUrlss.contains("/wechat/oauth2/myPreReg.htm")
-					|| requestUrlss.contains("/wechat/oauth2/checkSignature.htm")|| requestUrlss.contains("/wechat/user/rulePage.htm")) {
+					|| requestUrlss.contains("/wechat/oauth2/checkSignature.htm")
+					|| requestUrlss.contains("/wechat/user/rulePage.htm")) {
 				chain.doFilter(servletRequest, servletResponse);
 			} else {
-				CookiesUtil.setCookie("oNklT0bp29pc3Qtk0UEdnCVzotKU", resp);
+//				CookiesUtil.setCookie("oAwIr04JK8GVF5xvNaOZ4IxwQhhQ", resp);
 				// 获取当前登录用户编号
 				String userId = SysCache.getWeChatUserByColumn(request, "userId");
 				System.out.println("拦截器获取到的当前用户id为：" + userId);
@@ -82,8 +84,8 @@ public class SysAuth implements Filter {
 					String encodeUrl = "https%3A%2F%2Fwww.duamai.com%2Fwxx-svr%2Fwxx%2Fresponse%2Fauthorizecode";// 线上微信回调地址
 //					String encodeUrl = "http%3A%2F%2F596038980.mynatapp.cc%2Fwxx-svr%2Fwxx%2Fresponse%2Fauthorizecode";// 本地微信回调地址
 					String state = requestUrlss + "," + promoterId + "," + onlineId;
-					String url = SITE.AUTHORIZE.getMessage() + "?appid=" + SysContext.wxAppId + "&redirect_uri=" + encodeUrl
-							+ "&response_type=code&scope=snsapi_userinfo&state=" + state;
+					String url = SITE.AUTHORIZE.getMessage() + "?appid=" + SysContext.wxAppId + "&redirect_uri="
+							+ encodeUrl + "&response_type=code&scope=snsapi_userinfo&state=" + state;
 					System.out.println(url);
 					resp.sendRedirect(url);
 				} else {

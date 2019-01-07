@@ -114,4 +114,9 @@ public class SysContext {
 	 * 微信appid
 	 */
 	public static String wxAppId;
+	
+	/**
+	 * 积分微服务地址
+	 */
+	public static String PNTURL;
 }

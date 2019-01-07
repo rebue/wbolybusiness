@@ -96,6 +96,10 @@ public class SysListener implements ServletContextListener {
 		// 快递微服务地址
 		String kdiUrl = PropertiesUtil.getPropertiesValue("system.properties", "KDIURL").toString();
 		SysContext.KDIURL = kdiUrl;
+		
+		// 快递微服务地址
+		String pntUrl = PropertiesUtil.getPropertiesValue("system.properties", "PNTURL").toString();
+		SysContext.PNTURL = pntUrl;
 
 		/** 微信登录校验key **/
 		String loginSignKey = PropertiesUtil.getPropertiesValue("system.properties", "LOGINSIGNKEY").toString();

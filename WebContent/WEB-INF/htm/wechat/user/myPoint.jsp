@@ -1,19 +1,16 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
 <title>大卖网络</title>
 <meta name="wap-font-scale" content="no">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <link rel="stylesheet" href="${ctx }/css/wechat/mui.min.css">
 <link rel="stylesheet" href="${ctx }/css/wechat/wboly_mobile.css">
-<link rel="stylesheet" type="text/css"
-	href="${ctx }/css/wechat/usercenter.css" />
+<link rel="stylesheet" type="text/css" href="${ctx }/css/wechat/usercenter.css" />
 <script src="${ctx }/js/wechat/mui.min.js"></script>
 <script src="${ctx }/js/wechat/jquery.min.js"></script>
 <script src="${ctx }/js/util/commonUtil.js"></script>
@@ -23,23 +20,26 @@
 <body>
 	<header class="mui-bar mui-bar-nav" style="box-shadow: none;">
 		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-		<h4 class="mui-title">我的钱包</h4>
-		<h5 class="mui-title" style="left: auto; font-size: 15px;">
-			<a id="withdraw" style="color:#fe3000;" >提现</a>
-		</h5>
+		<h4 class="mui-title">我的积分</h4>
 	</header>
 	<div id="wallet_main">
 		<div class="mui-content">
 			<ul id="icon-grid-9" class="mui-table-view mui-grid-view mui-grid-9"></ul>
-
 			<div class="mui-slider tab-slider">
 				<div id="sliderSegmentedControl"
 					class="order-tab-box mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
-					<a class="mui-control-item mui-active" data-value="1" href="#item1">余额<br /><span class="money-show" id="balance">0.00</span></a> 
-					<a class="mui-control-item" data-value="2" href="#item2">返现金<br /><span class="money-show" id="cashback">0.00</span></a> 
-					<a class="mui-control-item" data-value="3" href="#item3">待全返<br /><span class="money-show" id="commissioning">0.00</span></a> 
-					<a class="mui-control-item" data-value="4" href="#item4">待返现<br /><span class="money-show" id="balance">0.00</span></a> 
-					<a class="mui-control-item" data-value="5" href="#item5">提现中 <br /><span class="money-show" id="withdrawing">0.00</span></a>
+					<!-- <a class="mui-control-item" data-value="1" href="#item1">昨日收益<br />
+						<span class="money-show" id="yesterdayIncome">0.000000</span>
+					</a>  -->
+					<a class="mui-control-item mui-active" data-value="1" href="#item1">累计收益<br />
+						<span class="money-show" id="cumulativeIncome">0.000000</span>
+					</a> 
+					<a class="mui-control-item" data-value="2" href="#item2">待入积分<br />
+						<span class="money-show" id="waitingPoint">0</span>
+					</a> 
+					<a class="mui-control-item" data-value="3" href="#item3">积分<br />
+						<span class="money-show" id="point">0</span>
+					</a>
 				</div>
 				<div class="active-bar">
 					<span id="active-bar-span"></span>
@@ -64,9 +64,9 @@
 						<div class="mui-scroll">
 							<div id="item2_inner" class="inner">
 								<ul class="inner_tab">
+									<li>订单编号</li>
 									<li>商品名称</li>
-									<li>规格名称</li>
-									<li>返现总额</li>
+									<li>交易总额</li>
 								</ul>
 								<ul class="inner_data" id="inner_data_2"></ul>
 							</div>
@@ -86,34 +86,6 @@
 							</div>
 						</div>
 					</div>
-
-					<div id="item4"
-						class="mui-slider-item mui-control-content mui-scroll-wrapper">
-						<div class="mui-scroll">
-							<div id="item4_inner" class="inner">
-								<ul class="inner_tab">
-									<li>商品名称</li>
-									<li>规格名称</li>
-									<li>返现总额</li>
-								</ul>
-								<ul class="inner_data" id="inner_data_4"></ul>
-							</div>
-						</div>
-					</div>
-
-					<div id="item5"
-						class="mui-slider-item mui-control-content mui-scroll-wrapper">
-						<div class="mui-scroll">
-							<div id="item5_inner" class="inner">
-								<ul class="inner_tab">
-									<li>实际到账金额</li>
-									<li>提现服务费</li>
-									<li>申请时间</li>
-								</ul>
-								<ul class="inner_data" id="inner_data_5"></ul>
-							</div>
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>
@@ -124,7 +96,7 @@
 		var state = 2;
 		var pageNum = 1;
 		var pageSize = 10;
-		var $$=jQuery.noConflict();
+		var $$ = jQuery.noConflict();
 		var b = new Base64();
 		
 		(function($, doc, $$) {
@@ -134,8 +106,8 @@
 					up: {
 						callback : function() {
 			                var self = this; // 这里的this == mui('#refreshContainer').pullRefresh()
-			                // 加载更多的内容
-			                pulldownRefresh(this);
+ 			                // 加载更多累计收益信息
+			                cumulativeIncomeLoadMore(this);
 			            }, //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
 						contentnomore: '<div class="fade">已到底部,不能再拉了</div>'
 					},
@@ -144,8 +116,8 @@
 					up: {
 						callback : function() {
 			                var self = this; // 这里的this == mui('#refreshContainer').pullRefresh()
-			                // 加载更多的内容
-			                toBeFullyReturnedPulldownRefresh(this);
+			                // 加载更多待入积分信息
+			                waitingPointLoadMore(this);
 			            }, //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
 						contentnomore: '<div class="fade">已到底部,不能再拉了</div>'
 					},
@@ -154,28 +126,8 @@
 					up: {
 						callback : function() {
 			                var self = this; // 这里的this == mui('#refreshContainer').pullRefresh()
-			                // 加载更多的内容
-			                cashbackPulldownRefresh(this);
-			            }, //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
-						contentnomore: '<div class="fade">已到底部,不能再拉了</div>'
-					},
-				},{
-					container: '#item4.mui-scroll-wrapper',
-					up: {
-						callback : function() {
-			                var self = this; // 这里的this == mui('#refreshContainer').pullRefresh()
-			                // 加载更多的内容
-			                ordinaryCashbackPulldownRefresh(this);
-			            }, //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
-						contentnomore: '<div class="fade">已到底部,不能再拉了</div>'
-					},
-				},{
-					container: '#item5.mui-scroll-wrapper',
-					up: {
-						callback : function() {
-			                var self = this; // 这里的this == mui('#refreshContainer').pullRefresh()
-			                // 加载更多的内容
-			                beBeingWithdrawPulldownRefresh(this);
+			                // 加载更多积分信息
+			                pointLoadMore(this);
 			            }, //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
 						contentnomore: '<div class="fade">已到底部,不能再拉了</div>'
 					},
@@ -187,9 +139,13 @@
 				mui('#wallet_main').on('tap','.mui-table-view-cell a',function(){document.location.href=this.href;});
 				// mui('body').on('tap','.mui-bar-nav a',function(){document.location.href=this.href;});
 				mui("#active-bar-span")[0].style.left = mui(".tab-slider .mui-control-item.mui-active")[0].offsetLeft + "px";
-				accountTrade(0);
+				// 默认加载累计收益
+				cumulativeIncomeList(0);
+				// 计算内容区最小高度
 				setconHeight();
-				getMoney();
+				
+				// 积分账号信息
+				getPoint();
 
 				//标签选中状态
 				mui(document).on('tap', '.tab-slider .mui-control-item', function(e) {
@@ -207,85 +163,46 @@
 					state = obj.getAttribute("data-value");
 					mui("#active-bar-span")[0].style.left = left + "px";
 					if(event.detail.slideNumber == 0) {
+						// 累计收益
 						document.getElementById("inner_data_1").innerHTML = "";
-						// 余额
-						accountTrade(0);
+						cumulativeIncomeList(0);
 					} else if(event.detail.slideNumber == 1) {
+						// 待入积分
 						document.getElementById("inner_data_2").innerHTML = "";
-						// 返现金
-						accountCashback(0);
+						waitingPointList(0);
 					} else if(event.detail.slideNumber == 2) {
+						// 积分
 						document.getElementById("inner_data_3").innerHTML = "";
-						// 待全返
-						toBeFullyReturned(0);
-					} else if(event.detail.slideNumber == 3) {
-						document.getElementById("inner_data_4").innerHTML = "";
-						// 普通返现
-						ordinaryCashback(0);
-					} else if (event.detail.slideNumber == 4) {
-						document.getElementById("inner_data_5").innerHTML = "";
-						// 提现中
-						beBeingWithdraw(0);
+						pointList(0);
 					};
 				});
-				
-				// 提现
-				document.getElementById('withdraw').addEventListener('tap',function(){
-					window.location.href="${ctx}/wechat/user/wechatWithdraw.htm";
-				});
-				
-				//设置待全返金额
-				var initCommissionTotal=0;
-				$.ajax({
-					url : "${ctx }/wechat/order/commissionTotal.htm?userId=${userId}",
-					type : "get",
-					dataType : 'json',//服务器返回json格式数据
-					success : function(data) {
-						if(data !=null && data !=""){
-							document.getElementById("commissioning").innerHTML = formatCurrency(data);	
-						}else{
-							document.getElementById("commissioning").innerHTML = initCommissionTotal;
-
-						}
-					}
-				})
 			});
 		})(mui, document, jQuery);
-
-		// 账号交易ajax下拉刷新事件
-		function pulldownRefresh(obj) {
-			accountTrade(1, obj);
+		
+		// 累计收益ajax下拉刷新事件
+		function cumulativeIncomeLoadMore(obj) {
+			cumulativeIncomeList(1, obj);
 		};
 		
-		// 待全返ajax下拉刷新事件
-		function toBeFullyReturnedPulldownRefresh(obj) {
-			toBeFullyReturned(1, obj);
+		// 待入积分ajax下拉刷新事件
+		function waitingPointLoadMore(obj) {
+			waitingPointList(1, obj);
 		};
 		
-		// 返现金ajax下拉刷新事件
-		function cashbackPulldownRefresh(obj) {
-			accountCashback(1, obj);
+		// 积分ajax下拉刷新事件
+		function pointList(obj) {
+			pointLoadMore(1, obj);
 		};
 		
-		// 普通待返现ajax下拉刷新事件
-		function ordinaryCashbackPulldownRefresh(obj) {
-			ordinaryCashback(1, obj);
-		};
-		
-		// 提现中ajax下拉刷新事件
-		function beBeingWithdrawPulldownRefresh(obj) {
-			beBeingWithdraw(1, obj);
-		}
-		
-		//获取账号交易信息
-		function accountTrade(flushtype, object){
+		//获取累计收益信息
+		function cumulativeIncomeList(flushtype, object){
 			limit = 10;
 			if(flushtype == 0) {
 				start = 1;
 			} else {
 				start += 1;
 			}
-			mui.ajax('${ctx }/wechat/user/accountTrade.htm', {
+			mui.ajax('${ctx }/wechat/user/cumulativeIncome.htm', {
 				data: {
 					"key": "59c23bdde5603ef993cf03fe64e448f1",
 					"pageNum":start,
@@ -297,9 +214,9 @@
 					var html = "";
 					for(var i = 0; i < data.list.length; i++) {
 						html += '<li>'
-						html += '<span>'+data.list[i].tradeTitle+'</span>'
-						html += '<span>'+data.list[i].tradeAmount+'</span>'
-						html += '<span>'+data.list[i].tradeTime+'</span>'
+						html += '	<span>' + data.list[i].changedTitile + '</span>'
+						html += '	<span>' + data.list[i].changedIncome + '</span>'
+						html += '	<span>' + timestampToTime(data.list[i].modifiedTimestamp) + '</span>'
 						html += '<li>'
 					};
 					if(flushtype != 2) {
@@ -337,15 +254,15 @@
 			});				
 		}
 		
-		// ajax上滑加载数据  账号交易信息（返现金）
-		function accountCashback(flushtype, object){
+		// 待入积分
+		function waitingPointList(flushtype, object){
 			limit = 10;
 			if(flushtype == 0) {
 				start = 1;
 			} else {
 				start += 1;
 			}
-			mui.ajax('${ctx }/wechat/user/cashbackTrade.htm', {
+			mui.ajax('${ctx }/wechat/user/waitingPoint.htm', {
 				data: {
 					"key": "59c23bdde5603ef993cf03fe64e448f1",
 					"pageNum": start,
@@ -357,9 +274,9 @@
 					var html = "";
 					for(var i = 0; i < data.list.length; i++) {
 						html += '<li>'
-						html += '	<span>'+data.list[i].tradeTitle+'</span>'
-						html += '	<span>'+data.list[i].tradeAmount+'</span>'
-						html += '	<span>'+data.list[i].tradeTime+'</span>'
+						html += '	<span>' + data.list[i].orderCode + '</span>'
+						html += '	<span>' + data.list[i].onlineTitle + '</span>'
+						html += '	<span>' + data.list[i].buyPointTotal + '</span>'
 						html += '<li>'
 					};
 					if(flushtype != 2) {
@@ -388,7 +305,7 @@
 						object.endPullupToRefresh(true); //已加载全部数据则传入true，还有剩下的数据则传入false，加个判断	
 					}
 					if(data.list.length < 1){
-						mui.toast("没有反现信息");
+						mui.toast("没有待入积分信息");
 					}
 				},
 				error: function(xhr, type, errorThrown) {
@@ -397,31 +314,30 @@
 			});				
 		}
 		
-		// 待全返
-		function toBeFullyReturned(flushtype, object) {
+		// 积分列表
+		function pointList(flushtype, object) {
 			limit = 10;
 			if(flushtype == 0) {
 				start = 1;
 			} else {
 				start += 1;
 			}
-			mui.ajax('${ctx }/wechat/order/getCashBack.htm', {
+			mui.ajax('${ctx }/wechat/user/point.htm', {
 				data: {
 					"key": "59c23bdde5603ef993cf03fe64e448f1",
 					"pageNum": start,
 					"pageSize": limit,
-					"subjectType": 1,
 				},
 				dataType: 'json',
 				type: 'post',
 				success: function(data) {
 					console.log(data)
 					var html = "";
-					for(var i = 0; i < data.message.list.length; i++) {
+					for(var i = 0; i < data.list.length; i++) {
 						html += '<li>'
-						html += '	<span>'+data.message.list[i].onlineTitle+'</span>'
-						html += '	<span>'+data.message.list[i].specName+'</span>'
-						html += '	<span>'+data.message.list[i].cashbackTotal+'</span>'
+						html += '	<span>' + data.list[i].changedTitile + '</span>'
+						html += '	<span>' + data.list[i].changedPoint + '</span>'
+						html += '	<span>' + timestampToTime(data.list[i].modifiedTimestamp) + '</span>'
 						html += '<li>'
 					};
 					if(flushtype != 2) {
@@ -449,131 +365,8 @@
 						};
 						object.endPullupToRefresh(true); //已加载全部数据则传入true，还有剩下的数据则传入false，加个判断	
 					}
-					if(data.message.list.length < 1){
-						mui.toast("没有待全反信息");
-					}
-				},
-				error: function(xhr, type, errorThrown) {
-					console.log(type);
-				}
-			});
-		}
-		
-		// 普通返现
-		function ordinaryCashback(flushtype, object) {
-			limit = 10;
-			if(flushtype == 0) {
-				start = 1;
-			} else {
-				start += 1;
-			}
-			mui.ajax('${ctx }/wechat/order/getCashBack.htm', {
-				data: {
-					"key": "59c23bdde5603ef993cf03fe64e448f1",
-					"pageNum": start,
-					"pageSize": limit,
-					"subjectType": 0,
-				},
-				dataType: 'json',
-				type: 'post',
-				success: function(data) {
-					console.log(data)
-					var html = "";
-					for(var i = 0; i < data.message.list.length; i++) {
-						html += '<li>'
-						html += '	<span>' + data.message.list[i].onlineTitle + '</span>'
-						html += '	<span>' + data.message.list[i].specName + '</span>'
-						html += '	<span>' + data.message.list[i].cashbackTotal + '</span>'
-						html += '<li>'
-					};
-					if(flushtype != 2) {
-						setTimeout(function() {
-							var htmls = document.createElement("item4_inner");
-							htmls.innerHTML = html;
-							for(var i = 0; i < htmls.childNodes.length; i++) {
-								document.getElementById("inner_data_4").appendChild(htmls.childNodes[i]);
-								htmls.innerHTML = html;
-							};
-							mui('#item5.mui-scroll-wrapper').pullRefresh().endPulldownToRefresh();
-							mui('#item5.mui-scroll-wrapper').pullRefresh().refresh(true);
-							if (data.pageNum < data.pages) {
-								object.endPullupToRefresh(false);//已加载全部数据则传入true，还有剩下的数据则传入false，加个判断							
-							} else {
-								object.endPullupToRefresh(true);//已加载全部数据则传入true，还有剩下的数据则传入false，加个判断	
-							}
-						}, 200);
-					} else {
-						var htmls = document.createElement("ul");
-						htmls.innerHTML = html;
-						for(var i = 0; i < htmls.childNodes.length; i++) {
-							document.getElementById("inner_data_4").appendChild(htmls.childNodes[i]);
-							htmls.innerHTML = html;
-						};
-						object.endPullupToRefresh(true); //已加载全部数据则传入true，还有剩下的数据则传入false，加个判断	
-					}
-					if(data.message.list.length < 1){
-						mui.toast("没有待反现信息");
-					}
-				},
-				error: function(xhr, type, errorThrown) {
-					console.log(type);
-				}
-			});
-		}
-		
-		// ajax上滑加载数据  提现中
-		function beBeingWithdraw(flushtype, object) {
-			limit = 10;
-			if(flushtype == 0) {
-				start = 1;
-			} else {
-				start += 1;
-			}
-			mui.ajax('${ctx }/wechat/user/beBeingWithdraw.htm', {
-				data: {
-					"key": "59c23bdde5603ef993cf03fe64e448f1",
-					"pageNum": start,
-					"pageSize": limit
-				},
-				dataType: 'json',
-				type: 'post',
-				success: function(data) {
-					console.log(data)
-					var html = "";
-					for(var i = 0; i < data.list.length; i++) {
-						html += '<li>'
-						html += '	<span>'+data.list[i].realAmount+'</span>'
-						html += '	<span>'+data.list[i].seviceCharge+'</span>'
-						html += '	<span>'+data.list[i].applyTime+'</span>'
-						html += '<li>'
-					};
-					if(flushtype != 2) {
-						setTimeout(function() {
-							var htmls = document.createElement("item5_inner");
-							htmls.innerHTML = html;
-							for(var i = 0; i < htmls.childNodes.length; i++) {
-								document.getElementById("inner_data_5").appendChild(htmls.childNodes[i]);
-								htmls.innerHTML = html;
-							};
-							mui('#item5.mui-scroll-wrapper').pullRefresh().endPulldownToRefresh();
-							mui('#item5.mui-scroll-wrapper').pullRefresh().refresh(true);
-							if (data.pageNum < data.pages) {
-								object.endPullupToRefresh(false);//已加载全部数据则传入true，还有剩下的数据则传入false，加个判断							
-							} else {
-								object.endPullupToRefresh(true);//已加载全部数据则传入true，还有剩下的数据则传入false，加个判断	
-							}
-						}, 200);
-					} else {
-						var htmls = document.createElement("ul");
-						htmls.innerHTML = html;
-						for(var i = 0; i < htmls.childNodes.length; i++) {
-							document.getElementById("inner_data_5").appendChild(htmls.childNodes[i]);
-							htmls.innerHTML = html;
-						};
-						object.endPullupToRefresh(true); //已加载全部数据则传入true，还有剩下的数据则传入false，加个判断	
-					}
 					if(data.list.length < 1){
-						mui.toast("没有提现中信息");
+						mui.toast("没有积分交易信息");
 					}
 				},
 				error: function(xhr, type, errorThrown) {
@@ -620,8 +413,6 @@
 				obj[i].style.height = height + "px";
 			};
 		}
-		
-
 	</script>
 </body>
 </html>

@@ -332,9 +332,9 @@ function returnPage(gn) {
 function payPage(key) {
 	loading(1);
 	mui.ajax('/wbolybusiness/wechat/order/modifyPayOrderId.htm', {
-		data: {
+		data : {
 			key : '59c23bdde5603ef993cf03fe64e448f1',
-			orderId: key
+			orderId : key
 		},
 		dataType : 'json',// 服务器返回json格式数据
 		type : 'post',// HTTP请求类型
@@ -354,7 +354,6 @@ function payPage(key) {
 			}
 		}
 	})
-	
 };
 
 /**
@@ -369,19 +368,15 @@ function getMoney() {
 		type : 'post',// HTTP请求类型
 		timeout : 10000,// 超时时间设置为10秒；
 		success : function(data) {
+			console.log(data);
 			if (data.flag) {
 				document.getElementById("balance").innerHTML = formatCurrency(data.message.balance);
 				document.getElementById("cashback").innerHTML = formatCurrency(data.message.cashback);
-//				if (data.message.commissioning != 0) {
-//					document.getElementById("commissioning").innerHTML = formatCurrency(data.message.commissioning);
-//				}
-				console.log(document.getElementById("commissionTotal"));
-				if(document.getElementById("commissionTotal") !=null){
+				if (document.getElementById("commissionTotal") != null) {
 					document.getElementById("commissionTotal").innerHTML = formatCurrency(data.message.commissionTotal);
 				}
 				document.getElementById("withdrawing").innerHTML = formatCurrency(data.message.withdrawing);
 				return;
-				
 			}
 			mui.toast(data.message);
 		},
@@ -394,6 +389,36 @@ function getMoney() {
 		}
 	});
 };
+
+// 用户积分
+function getPoint() {
+	mui.ajax('/wbolybusiness/wechat/user/getPoint.htm', {
+		data : {
+			key : '59c23bdde5603ef993cf03fe64e448f1'
+		},
+		dataType : 'json',// 服务器返回json格式数据
+		type : 'get',// HTTP请求类型
+		timeout : 10000,// 超时时间设置为10秒；
+		success : function(data) {
+			console.log(data);
+			if (data.flag) {
+				document.getElementById("cumulativeIncome").innerHTML = data.message.cumulativeIncome;
+				document.getElementById("waitingPoint").innerHTML = data.message.waitingPoint;
+				document.getElementById("point").innerHTML = data.message.point;
+				document.getElementById("yesterdayIncome").innerHTML = data.message.yesterdayIncome;
+				return;
+			}
+			mui.toast(data.message);
+		},
+		error : function(xhr, type, errorThrown) {
+			// 异常处理；
+			console.log(type);
+			if (type == "timeout") {
+				mui.toast("请求我的积分超时");
+			}
+		}
+	});
+}
 
 /**
  * 功能： 模拟form表单的提交 参数： url 跳转地址 parameters 参数 FLAG 打开新页面 1,默认 0

@@ -19,12 +19,12 @@
 
 <body>
 	<header class="mui-bar mui-bar-nav">
-		<a id="backPage"
-			class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		<a id="backPage" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 		<h4 class="mui-title">我的订单</h4>
 	</header>
 	<div class="mui-slider tab-slider">
-		<div id="sliderSegmentedControl" class="order-tab-box mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+		<div id="sliderSegmentedControl"
+			class="order-tab-box mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
 			<a class="mui-control-item ${allOrder }" data-value="0"> 全部订单 </a> 
 			<a class="mui-control-item ${stayPay }" data-value="1"> 待付款 </a> 
 			<a class="mui-control-item ${stayTake }" data-value="3"> 待收货 </a> 
@@ -414,28 +414,35 @@
 								strs = goodsQsmm.split(".");
 								html += '<div class="mui-input-row mui-left">';
 								html += '	<input type="hidden" name="goodsId" value="' + data.message[i].items[j].onlineId + '">';
-								html += '<div class="car-inner-box">';
-								html += '<div class="car-inner-box-img">';
+								html += '	<div class="car-inner-box">';
+								html += '		<div class="car-inner-box-img">';
 								if(data.message[i].items[j].subjectType==1){
-									html += '	<a href="${ctx}/wechat/myorder/' + data.message[i].orderCode + '.htm"  class="full-return">';
-									html += '		<img src="${goodsImgUrl}' + goodsQsmm + '" alt="" class="goodspic">';
-									html += '	</a>';
+									html += '		<a href="${ctx}/wechat/myorder/' + data.message[i].orderCode + '.htm"  class="full-return">';
+									html += '			<img src="${goodsImgUrl}' + goodsQsmm + '" alt="" class="goodspic">';
+									html += '		</a>';
 								}else{
-									html += '	<a href="${ctx}/wechat/myorder/' + data.message[i].orderCode + '.htm"  class=\"\">';
-									html += '		<img src="${goodsImgUrl}' + goodsQsmm + '" alt="" class="goodspic">';
-									html += '	</a>';
+									html += '		<a href="${ctx}/wechat/myorder/' + data.message[i].orderCode + '.htm"  class=\"\">';
+									html += '			<img src="${goodsImgUrl}' + goodsQsmm + '" alt="" class="goodspic">';
+									html += '		</a>';
 								}
-								html += '</div>';
-								html += '<div class="car-inner-body">';
-								html += '	<h5><a href="${ctx}/wechat/myorder/' + data.message[i].orderCode + '.htm" >'+ data.message[i].items[j].onlineTitle +'</a></h5>';
-								html += '	<p>规格：' + data.message[i].items[j].specName 	+ '</p><br/>';
-								html += '	<div class="price-area">';
+								html += '		</div>';
+								html += '	<div class="car-inner-body">';
+								html += '		<h5><a href="${ctx}/wechat/myorder/' + data.message[i].orderCode + '.htm" >'+ data.message[i].items[j].onlineTitle +'</a></h5>';
+								html += '		<p>规格：' + data.message[i].items[j].specName 	+ '</p>';
+								if (data.message[i].items[j].subjectType == 1) {
+									html += '		<p>积分：' + data.message[i].items[j].buyPoint;
+									if (data.message[i].items[j].paySeq == 1) {
+										html += '		&nbsp;&nbsp;&nbsp;首单积分：' + data.message[i].items[j].buyPointTotal;
+									}
+									html += '		</p><br/>';
+								}
+								html += '		<div class="price-area">';
 								if(data.message[i].items[j].subjectType==1){
 									if(data.message[i].orderState == -1){
-										html += '		<span style="color:#8f8f94;" class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
+										html += '	<span style="color:#8f8f94;" class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
 
 									}else{
-										html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
+										html += '	<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
 
 									}
 									html += '		<span class="numbox">数量：<span>' + buyCount + '</span></span>';
@@ -450,7 +457,7 @@
 													relation += ' 签收状态：已签收 \\n'
 												}
 											}
-											html += '	<a href="javascript:showRelation(\''+relation+'\')" style= "padding-right:10px">';
+											html += '<a href="javascript:showRelation(\''+relation+'\')" style= "padding-right:10px">';
 											for(k=0;k<data.message[i].items[j].ordBuyRelation.length;k++){
 												html += '<span class="numbox"><img src= \''+data.message[i].items[j].ordBuyRelation[k].downlineUserWxFace +' \' width=\'25\' height=\'20\'></span>';
 											}
@@ -458,18 +465,18 @@
 										}
 								}else{
 									if(data.message[i].orderState == -1){
-										html += '		<span style="color:#8f8f94;" class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
+										html += '	<span style="color:#8f8f94;" class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
 
 									}else{
-										html += '		<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
+										html += '	<span class="m-price">¥ <span>'+ formatCurrency(data.message[i].items[j].buyPrice) + '</span></span>';
 
 									}
 									html += '		<span class="b-money"> 返 <span>' + formatCurrency(data.message[i].items[j].cashbackAmount) + '</span></span>';//*注：测试数据是复制PC版的，里面没有【单个商品返现金额】数据，你直接传入就好
 									html += '		<span class="numbox">数量：<span>' + buyCount + '</span></span>';
 								}
+								html += '		</div>';
 								html += '	</div>';
-								html += '</div>';
-								html += '<div class="button-box">';
+								html += '	<div class="button-box">';
 								if(data.message[i].items[j].returnState == 1){
 									if(data.message[i].orderState==2){
 										html+='<button class="mui-btn locked">退款中</button>'
@@ -494,8 +501,8 @@
 									}
 									
 								};
-								html += '</div>';
-								html+='</div>'
+								html += '	</div>';
+								html+='	</div>'
 								html+='</div>'	
 								retailBacLimit += parseFloat(data.message[i].items[j].cashbackTotal); 
 								totalCount += parseInt(data.message[i].items[j].buyCount);

@@ -1,6 +1,7 @@
 package com.wboly.wechat.controller.user;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -99,7 +100,7 @@ public class WeChatUserController extends SysController {
 		ObjectMapper mapper = new ObjectMapper();
 		Map resultMap = mapper.readValue(results, Map.class);
 		Integer flag = (Integer) resultMap.get("result");
-		if (flag==1) {
+		if (flag == 1) {
 			this.render(response, "{\"message\":\"删除成功\",\"flag\":true}");
 			return;
 		}
@@ -309,9 +310,9 @@ public class WeChatUserController extends SysController {
 		mav.setViewName("/htm/wechat/user/usercenter");
 		return mav;
 	}
-	
+
 	/**
-	 * @throws IOException 
+	 * @throws IOException
 	 * @Name: 查看登录密码是否存在
 	 * @Author: nick
 	 */
@@ -322,13 +323,13 @@ public class WeChatUserController extends SysController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", id);
 		System.err.println("查看登录密码是否存在的参数为：" + String.valueOf(map));
-		String result = OkhttpUtils.get(SysContext.USERCENTERURL + "/user/loginPwIsExis",map);
-		System.err.println("查看登录密码是否存在的结果为：" +result );
+		String result = OkhttpUtils.get(SysContext.USERCENTERURL + "/user/loginPwIsExis", map);
+		System.err.println("查看登录密码是否存在的结果为：" + result);
 		this.render(response, result);
 	}
-	
+
 	/**
-	 * @throws IOException 
+	 * @throws IOException
 	 * @Name: 查看用户是否实名认证
 	 * @Author: nick
 	 */
@@ -338,11 +339,11 @@ public class WeChatUserController extends SysController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		System.err.println("查看登录密码是否存在的参数为：" + String.valueOf(map));
-		String result = OkhttpUtils.get(SysContext.RNAURL + "/rna/getbyuserid",map);
-		System.err.println("查看登录密码是否存在的结果为：" +result );
+		String result = OkhttpUtils.get(SysContext.RNAURL + "/rna/getbyuserid", map);
+		System.err.println("查看登录密码是否存在的结果为：" + result);
 		this.render(response, result);
 	}
-	
+
 	/**
 	 * @Name: 我的钱包页面
 	 * @Author: nick
@@ -369,7 +370,7 @@ public class WeChatUserController extends SysController {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/wechat/user/getMoney", method = RequestMethod.POST)
 	public void UserMoney(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
+		// 获取当前用户id
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
 
 		if (userId.equals("")) {
@@ -378,18 +379,53 @@ public class WeChatUserController extends SysController {
 		}
 
 		// 商家可用余额接口
-		String url = SysContext.VPAYURL + "/account/funds?userId=" + userId;
-		String result = HttpUtil.getUrl(url);
-		System.err.println(userId + "获取到的余额信息为：" + result);
+		String result = OkhttpUtils.get(SysContext.VPAYURL + "/account/funds?userId=" + userId);
+		_log.info("用户钱包接口查询用户账号信息的返回值为：{}", result);
 		ObjectMapper mapper = new ObjectMapper();
 		Map map = mapper.readValue(result, Map.class);
 		System.err.println("WX:用户编号为:" + userId + "\t 查询账户余额成功返回");
 		DecimalFormat df = new DecimalFormat("0.00");
 		map.put("availableBalance", df.format(map.get("balance")));// 账户余额,单位:分
 		map.put("sumretailBacLimit", df.format(map.get("cashback")));// 可用返现金额，单位:分
-
 		// 返现总金额单位:分
 		map.put("usableBacLimit", df.format(map.get("cashbacking")));
+		this.render(response, "{\"message\":" + JsonUtil.ObjectToJson(map) + ",\"flag\":true}");
+	}
+
+	/**
+	 * 获取用户积分账号信息
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@SuppressWarnings("rawtypes")
+	@RequestMapping("/wechat/user/getPoint")
+	public void userPoint(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		// 获取当前用户id
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+
+		if (userId.equals("")) {
+			this.render(response, "{\"message\":\"您没有登录\",\"flag\":false}");
+			return;
+		}
+		_log.info("获取用户积分账号信息获取待入积分的参数为：{}", userId);
+		String waitingPoint = OkhttpUtils.get(SysContext.ORDERURL + "/ord/detailList/countwaitingbuypoint?userId=" + userId);
+		_log.info("获取用户积分账号信息获取待入积分的返回值为：{}", waitingPoint);
+
+		String pntAccounts = OkhttpUtils.get(SysContext.PNTURL + "/pnt/account/getbyid?id=" + userId);
+		_log.info("获取用户积分账号信息查询用户积分的返回值为：{}", pntAccounts);
+		
+		String yesterdayIncome = OkhttpUtils.get(SysContext.PNTURL + "/pnt/income/yesterday?accountId=" + userId);
+		_log.info("获取用户积分账号信息获取到的昨日积分信息为：{}", new BigDecimal(yesterdayIncome).toPlainString());
+		
+		ObjectMapper mapper = new ObjectMapper();
+		Map pntMap = mapper.readValue(pntAccounts, Map.class);
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("waitingPoint", new BigDecimal(waitingPoint).stripTrailingZeros().toPlainString()); // 待入积分
+		map.put("point", pntMap.get("point")); // 当前积分
+		map.put("cumulativeIncome", new BigDecimal(pntMap.get("totalIncome").toString()).toPlainString()); // 历史总收益
+		map.put("yesterdayIncome", yesterdayIncome);
 		this.render(response, "{\"message\":" + JsonUtil.ObjectToJson(map) + ",\"flag\":true}");
 	}
 
@@ -579,13 +615,14 @@ public class WeChatUserController extends SysController {
 	 * 跳转至微信提现页面
 	 * 
 	 * @return 2018年1月19日14:04:13
-	 * @throws IOException 
-	 * @throws JsonMappingException 
-	 * @throws JsonParseException 
+	 * @throws IOException
+	 * @throws JsonMappingException
+	 * @throws JsonParseException
 	 */
 	@SuppressWarnings({ "rawtypes" })
 	@RequestMapping(value = "/wechat/user/wechatWithdraw")
-	public ModelAndView skipWechatWithdraw(HttpServletRequest request, HttpServletResponse response) throws JsonParseException, JsonMappingException, IOException {
+	public ModelAndView skipWechatWithdraw(HttpServletRequest request, HttpServletResponse response)
+			throws JsonParseException, JsonMappingException, IOException {
 		ModelAndView andView = new ModelAndView();
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
 		if (userId == null || userId.equals("") || userId.equals("null")) {
@@ -809,7 +846,7 @@ public class WeChatUserController extends SysController {
 	 */
 	@RequestMapping("/wechat/user/rulePage")
 	public ModelAndView rulePage(HttpServletRequest request, HttpServletResponse response) throws IOException {
-			return new ModelAndView("/htm/wechat/user/rulePage");
+		return new ModelAndView("/htm/wechat/user/rulePage");
 	}
 
 	/**
@@ -886,6 +923,7 @@ public class WeChatUserController extends SysController {
 
 	/**
 	 * 跳转至申请提现账号页面
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -900,31 +938,34 @@ public class WeChatUserController extends SysController {
 			return "redirect:/wechat/oauth2/checkSignature/login.htm";
 		}
 	}
-	
+
 	/**
 	 * 提交申请提现账号信息
+	 * 
 	 * @param request
 	 * @param response
 	 * @param applyWithdrAwaccounts
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	@RequestMapping("/wechat/user/submitApplyWithdrAwaccount")
-	public void submitApplyWithdrAwaccount(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, Object> applyWithdrAwaccounts) throws IOException {
+	public void submitApplyWithdrAwaccount(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam Map<String, Object> applyWithdrAwaccounts) throws IOException {
 		// 获取当前用户ID
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
 		if (userId == null || userId.equals("") || userId.equals("null")) {
 			this.render(response, "{\"msg\":\"您没有登录\",\"result\":-11}");
-			return ;
+			return;
 		}
 		applyWithdrAwaccounts.put("applicantId", userId);
 		applyWithdrAwaccounts.put("applicantIp", AgentUtils.getIpAddr(request, "nginx"));
 		applyWithdrAwaccounts.put("accountId", userId);
 		System.out.println("提交申请提现账户信息的参数为：" + String.valueOf(applyWithdrAwaccounts));
-		String postByJsonParamsResult = OkhttpUtils.postByJsonParams(SysContext.VPAYURL + "/afc/withdrawaccountbindflow/addex", applyWithdrAwaccounts);
+		String postByJsonParamsResult = OkhttpUtils
+				.postByJsonParams(SysContext.VPAYURL + "/afc/withdrawaccountbindflow/addex", applyWithdrAwaccounts);
 		System.out.println("提交申请提现账户信息的返回值为：" + postByJsonParamsResult);
 		this.render(response, postByJsonParamsResult);
 	}
-	
+
 	/**
 	 * @Name: 修改登录密码页面
 	 * @Author: knick
@@ -941,9 +982,9 @@ public class WeChatUserController extends SysController {
 		}
 		return mav;
 	}
-	
+
 	/**
-	 * @throws IOException 
+	 * @throws IOException
 	 * @Name: 查看支付密码是否存在
 	 * @Author: nick
 	 */
@@ -953,11 +994,11 @@ public class WeChatUserController extends SysController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", id);
 		System.err.println("查看支付密码是否存在的参数为：" + String.valueOf(map));
-		String result = OkhttpUtils.get(SysContext.USERCENTERURL + "/user/payPwIsExis",map);
-		System.err.println("查看支付密码是否存在的结果为：" +result );
+		String result = OkhttpUtils.get(SysContext.USERCENTERURL + "/user/payPwIsExis", map);
+		System.err.println("查看支付密码是否存在的结果为：" + result);
 		this.render(response, result);
 	}
-	
+
 	/**
 	 * 设置支付密码
 	 * 
@@ -985,7 +1026,7 @@ public class WeChatUserController extends SysController {
 			this.render(response, "{\"msg\":\"您未登录！\", \"result\":\"-74110\"}");
 		}
 	}
-	
+
 	/**
 	 * 修改支付密码提交
 	 * 
@@ -1012,15 +1053,17 @@ public class WeChatUserController extends SysController {
 			this.render(response, "{\"msg\":\"您未登录！\", \"result\":\"-74110\"}");
 		}
 	}
-	
+
 	/**
 	 * 申请提现、申请提现账户、添加实名认证信息
+	 * 
 	 * @param request
 	 * @param response
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	@RequestMapping("/wechat/user/applyWithdraw")
-	public void applyWithdraw(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, Object> map) throws IOException {
+	public void applyWithdraw(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam Map<String, Object> map) throws IOException {
 		// 获取当前登录用户编号
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
 		map.put("applicantId", userId);
@@ -1031,9 +1074,10 @@ public class WeChatUserController extends SysController {
 		_log.info("申请提现的返回值为：{}", results);
 		this.render(response, results);
 	}
-	
+
 	/**
 	 * 跳转至提现记录页面
+	 * 
 	 * @param request
 	 * @return
 	 */
@@ -1049,15 +1093,17 @@ public class WeChatUserController extends SysController {
 		}
 		return mav;
 	}
-	
+
 	/**
 	 * 获取用户提现记录
+	 * 
 	 * @param request
 	 * @param response
 	 * @throws IOException
 	 */
 	@RequestMapping("/wechat/user/getWithdrawRecord")
-	public void getWithdrawRecord(HttpServletRequest request, HttpServletResponse response, @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) throws IOException {
+	public void getWithdrawRecord(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) throws IOException {
 		// 获取当前登录用户编号
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
 		if (userId != null && !userId.equals("") && !userId.equals("null")) {
@@ -1070,6 +1116,113 @@ public class WeChatUserController extends SysController {
 			this.render(response, result);
 		} else {
 			this.render(response, "{\"msg\":\"您未登录！\", \"result\":\"-74110\"}");
+		}
+	}
+
+	/**
+	 * 跳转至我的积分页面
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/wechat/user/jumpMyPoint")
+	public ModelAndView jumpMyPoint(HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView();
+		// 用户编号
+		String loginuid = SysCache.getWeChatUserByColumn(request, "userId");
+		if (loginuid == null || loginuid.equals("") || loginuid.equals("null")) {
+			mav.setViewName("/wechat/oauth2/checkSignature/login.htm");
+		} else {
+			mav.setViewName("/htm/wechat/user/myPoint");
+		}
+		return mav;
+	}
+
+	/**
+	 * 获取累计收益日志信息
+	 * 
+	 * @param request
+	 * @param response
+	 * @param pageNum
+	 * @param pageSize
+	 * @throws IOException
+	 */
+	@RequestMapping("/wechat/user/cumulativeIncome")
+	public void cumulativeIncomeList(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) throws IOException {
+		// 获取当前登录用户编号
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+		_log.info("获取累计收益获取到的用户id为：{}", userId);
+		if (userId == null || userId.equals("") || userId.equals("null")) {
+			this.render(response, "{\"msg\":\"您未登录！\", \"result\":\"-74110\"}");
+		} else {
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("pageNum", pageNum);
+			map.put("pageSize", pageSize);
+			map.put("accountId", userId);
+			map.put("incomeLogType", 1); // 只查日收益
+			_log.info("获取累计收益的请求参数为：{}", String.valueOf(map));
+			String result = OkhttpUtils.get(SysContext.PNTURL + "/pnt/incomelog", map);
+			_log.info("获取累计收益的请求返回值为：{}", result);
+			this.render(response, result);
+		}
+	}
+
+	/**
+	 * 待入积分
+	 * 
+	 * @param request
+	 * @param response
+	 * @param pageNum
+	 * @param pageSize
+	 * @throws IOException
+	 */
+	@RequestMapping("/wechat/user/waitingPoint")
+	public void waitingPointList(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) throws IOException {
+		// 获取当前登录用户编号
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+		_log.info("待入积分获取到的用户id为：{}", userId);
+		if (userId == null || userId.equals("") || userId.equals("null")) {
+			this.render(response, "{\"msg\":\"您未登录！\", \"result\":\"-74110\"}");
+		} else {
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("pageNum", pageNum);
+			map.put("pageSize", pageSize);
+			map.put("userId", userId);
+			_log.info("获取待入积分的请求参数为：{}", String.valueOf(map));
+			String result = OkhttpUtils.get(SysContext.ORDERURL + "/ord/detailList/waitingbuypointlist", map);
+			_log.info("获取待入积分的请求返回值为：{}", result);
+			this.render(response, result);
+		}
+	}
+
+	/**
+	 * 获取积分列表
+	 * 
+	 * @param request
+	 * @param response
+	 * @param pageNum
+	 * @param pageSize
+	 * @throws IOException
+	 */
+	@RequestMapping("/wechat/user/point")
+	public void pointList(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) throws IOException {
+		// 获取当前登录用户编号
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+		_log.info("积分列表获取到的用户id为：{}", userId);
+		if (userId == null || userId.equals("") || userId.equals("null")) {
+			this.render(response, "{\"msg\":\"您未登录！\", \"result\":\"-74110\"}");
+		} else {
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("pageNum", pageNum);
+			map.put("pageSize", pageSize);
+			map.put("accountId", userId);
+			_log.info("获取积分列表的请求参数为：{}", String.valueOf(map));
+			String result = OkhttpUtils.get(SysContext.PNTURL + "/pnt/pointlog", map);
+			_log.info("获取积分列表的请求返回值为：{}", result);
+			this.render(response, result);
 		}
 	}
 }
