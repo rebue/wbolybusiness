@@ -416,7 +416,10 @@ public class WeChatUserController extends SysController {
 		_log.info("获取用户积分账号信息查询用户积分的返回值为：{}", pntAccounts);
 		
 		String yesterdayIncome = OkhttpUtils.get(SysContext.PNTURL + "/pnt/income/yesterday?accountId=" + userId);
-		_log.info("获取用户积分账号信息获取到的昨日积分信息为：{}", new BigDecimal(yesterdayIncome).toPlainString());
+		_log.info("获取用户积分账号信息获取到的昨日积分信息为：{}", yesterdayIncome);
+		if (yesterdayIncome == null || yesterdayIncome.equals("") || yesterdayIncome.equals("null")) {
+			yesterdayIncome = "0.0";
+		}
 		
 		ObjectMapper mapper = new ObjectMapper();
 		Map pntMap = mapper.readValue(pntAccounts, Map.class);

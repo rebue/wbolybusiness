@@ -120,8 +120,8 @@
 		var NumLimit = 3;
 		var SizeLimit = 9 * 1024 * 1024; // 15 M     
 		var SingleSizeLimit = 3 * 1024 * 1024; // 3 M 
-		// var serverUrl = 'https://www.duamai.com/ise-svr/ise/upload'; //测试
-		var serverUrl = 'http://192.168.1.201/ise-svr/ise/upload'; //测试
+		var serverUrl = 'https://www.duamai.com/ise-svr/ise/upload'; //测试
+		// var serverUrl = 'http://192.168.1.201/ise-svr/ise/upload'; //测试
 
 		function selectType() {
 			var orderState = document.getElementById("orderState");
