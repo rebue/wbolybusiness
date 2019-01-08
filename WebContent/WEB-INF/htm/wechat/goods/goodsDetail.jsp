@@ -153,7 +153,7 @@
 							<button class="mui-btn mui-btn-numbox-plus" id="btn-plus" type="button">+</button>
 						</div></li>
 					<li class="mui-table-view-cell buynum_bar">
-						<div style="margin-left: 148px; color: red; font-size: 0.9rem; font-weight: 700; line-height: 1rem;">
+						<div id="firstBuyPointDiv" style="margin-left: 148px; color: red; font-size: 0.9rem; font-weight: 700; line-height: 1rem;">
 							<span>首单积分:&nbsp;</span> <span id="firstBuyPoint">0</span>
 						</div>
 						<div style="margin-left: 177px; color: red; font-size: 0.9rem; font-weight: 700; line-height: 1rem;">
@@ -633,6 +633,7 @@
 					//如果选择了多种SKU,而这种SKU的组合不存在,库存返回0即可	
 					mui.each(data, function(index, item) {
 						if (id == item.onlineSpec) {
+							console.log(item);
 							price = formatCurrency(item.salePrice);//全局变量：当前单价
 							back = formatCurrency(item.cashbackAmount);//全局变量：当前返现
 							stock = item.currentOnlineCount - item.saleCount;//全局变量：当前库存
@@ -642,7 +643,12 @@
 							document.querySelector("#ss_back").innerText = back;//显示所选SKU的返现
 							document.getElementById("buyPoint").innerHTML = item.buyPoint;//显示所选SKU的积分
 							document.getElementById("point").innerHTML = item.buyPoint;//显示所选SKU的积分
-							document.getElementById("firstBuyPoint").innerHTML = item.firstBuyPoint;//显示所选SKU的首单积分
+							if (item.isHaveFirstOrder == true || item.isHaveFirstOrder == "true") {
+								document.getElementById("firstBuyPointDiv").style.display = 'none';
+							} else {
+								document.getElementById("firstBuyPointDiv").style.display = 'block';
+								document.getElementById("firstBuyPoint").innerHTML = item.firstBuyPoint;//显示所选SKU的首单积分
+							}
 							document.querySelector(".back-money em").innerText = back;
 							document.querySelector("#stock span").innerText = stock;//显示所选SKU的库存	
 							document.querySelector("#total_price").innerText = "¥" + total;//显示当前总价
