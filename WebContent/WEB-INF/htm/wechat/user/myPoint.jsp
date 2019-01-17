@@ -66,7 +66,7 @@
 								<ul class="inner_tab">
 									<li>订单编号</li>
 									<li>商品名称</li>
-									<li>交易总额</li>
+									<li>积分总额</li>
 								</ul>
 								<ul class="inner_data" id="inner_data_2"></ul>
 							</div>
@@ -190,13 +190,14 @@
 		};
 		
 		// 积分ajax下拉刷新事件
-		function pointList(obj) {
-			pointLoadMore(1, obj);
+		function pointLoadMore(obj) {
+			pointList(1, obj);
 		};
 		
 		//获取累计收益信息
 		function cumulativeIncomeList(flushtype, object){
 			limit = 10;
+			console.log(flushtype);
 			if(flushtype == 0) {
 				start = 1;
 			} else {
@@ -211,14 +212,20 @@
 				dataType: 'json',
 				type: 'post',
 				success: function(data) {
+					console.log(data);
 					var html = "";
 					for(var i = 0; i < data.list.length; i++) {
 						html += '<li>'
 						html += '	<span>' + data.list[i].changedTitile + '</span>'
 						html += '	<span>' + data.list[i].changedIncome + '</span>'
-						html += '	<span>' + timestampToTime(data.list[i].modifiedTimestamp) + '</span>'
+						html += '	<span>' + data.list[i].statDate + '</span>'
 						html += '<li>'
 					};
+					
+					// 如果总页数为1则清除之前加载的
+					if (data.pages == 1) {
+						document.getElementById("inner_data_1").innerHTML = "";
+					}
 					if(flushtype != 2) {
 						setTimeout(function() {
 							var htmls = document.createElement("item1_inner");
@@ -229,10 +236,12 @@
 							};
 							mui('#item1.mui-scroll-wrapper').pullRefresh().endPulldownToRefresh();
 							mui('#item1.mui-scroll-wrapper').pullRefresh().refresh(true);
-							if (data.pageNum < data.pages) {
-								object.endPullupToRefresh(false);//已加载全部数据则传入true，还有剩下的数据则传入false，加个判断							
+							
+							// 判断是否为最后一页
+							if (data.isLastPage) {
+								object.endPullupToRefresh(true);//已加载全部数据则传入true，还有剩下的数据则传入false，加个判断		
 							} else {
-								object.endPullupToRefresh(true);//已加载全部数据则传入true，还有剩下的数据则传入false，加个判断	
+								object.endPullupToRefresh(false);//已加载全部数据则传入true，还有剩下的数据则传入false，加个判断	
 							}
 						}, 200);
 					} else {
@@ -242,7 +251,12 @@
 							document.getElementById("inner_data_1").appendChild(htmls.childNodes[i]);
 							htmls.innerHTML = html;
 						};
-						object.endPullupToRefresh(true); //已加载全部数据则传入true，还有剩下的数据则传入false，加个判断	
+						// 判断是否为最后一页
+						if (data.isLastPage) {
+							object.endPullupToRefresh(true);//已加载全部数据则传入true，还有剩下的数据则传入false，加个判断		
+						} else {
+							object.endPullupToRefresh(false);//已加载全部数据则传入true，还有剩下的数据则传入false，加个判断	
+						}
 					}
 					if(data.list.length < 1){
 						mui.toast("没有交易信息");
@@ -279,6 +293,12 @@
 						html += '	<span>' + data.list[i].buyPointTotal + '</span>'
 						html += '<li>'
 					};
+					
+					// 如果总页数为1则清除之前加载的
+					if (data.pages == 1) {
+						document.getElementById("inner_data_2").innerHTML = "";
+					}
+					
 					if(flushtype != 2) {
 						setTimeout(function() {
 							var htmls = document.createElement("item2_inner");
@@ -289,10 +309,12 @@
 							};
 							mui('#item2.mui-scroll-wrapper').pullRefresh().endPulldownToRefresh();
 							mui('#item2.mui-scroll-wrapper').pullRefresh().refresh(true);
-							if (data.pageNum < data.pages) {
-								object.endPullupToRefresh(false);//已加载全部数据则传入true，还有剩下的数据则传入false，加个判断							
+							
+							// 判断是否为最后一页
+							if (data.isLastPage) {
+								object.endPullupToRefresh(true);//已加载全部数据则传入true，还有剩下的数据则传入false，加个判断		
 							} else {
-								object.endPullupToRefresh(true);//已加载全部数据则传入true，还有剩下的数据则传入false，加个判断	
+								object.endPullupToRefresh(false);//已加载全部数据则传入true，还有剩下的数据则传入false，加个判断	
 							}
 						}, 200);
 					} else {
@@ -302,7 +324,13 @@
 							document.getElementById("inner_data_2").appendChild(htmls.childNodes[i]);
 							htmls.innerHTML = html;
 						};
-						object.endPullupToRefresh(true); //已加载全部数据则传入true，还有剩下的数据则传入false，加个判断	
+						
+						// 判断是否为最后一页
+						if (data.isLastPage) {
+							object.endPullupToRefresh(true);//已加载全部数据则传入true，还有剩下的数据则传入false，加个判断		
+						} else {
+							object.endPullupToRefresh(false);//已加载全部数据则传入true，还有剩下的数据则传入false，加个判断	
+						}
 					}
 					if(data.list.length < 1){
 						mui.toast("没有待入积分信息");
@@ -340,6 +368,12 @@
 						html += '	<span>' + timestampToTime(data.list[i].modifiedTimestamp) + '</span>'
 						html += '<li>'
 					};
+					
+					// 如果总页数为1则清除之前加载的
+					if (data.pages == 1) {
+						document.getElementById("inner_data_3").innerHTML = "";
+					}
+					
 					if(flushtype != 2) {
 						setTimeout(function() {
 							var htmls = document.createElement("item3_inner");
@@ -350,10 +384,12 @@
 							};
 							mui('#item3.mui-scroll-wrapper').pullRefresh().endPulldownToRefresh();
 							mui('#item3.mui-scroll-wrapper').pullRefresh().refresh(true);
-							if (data.pageNum < data.pages) {
-								object.endPullupToRefresh(false);//已加载全部数据则传入true，还有剩下的数据则传入false，加个判断							
+							
+							// 判断是否为最后一页
+							if (data.isLastPage) {
+								object.endPullupToRefresh(true);//已加载全部数据则传入true，还有剩下的数据则传入false，加个判断		
 							} else {
-								object.endPullupToRefresh(true);//已加载全部数据则传入true，还有剩下的数据则传入false，加个判断	
+								object.endPullupToRefresh(false);//已加载全部数据则传入true，还有剩下的数据则传入false，加个判断	
 							}
 						}, 200);
 					} else {
@@ -363,7 +399,13 @@
 							document.getElementById("inner_data_3").appendChild(htmls.childNodes[i]);
 							htmls.innerHTML = html;
 						};
-						object.endPullupToRefresh(true); //已加载全部数据则传入true，还有剩下的数据则传入false，加个判断	
+						
+						// 判断是否为最后一页
+						if (data.isLastPage) {
+							object.endPullupToRefresh(true);//已加载全部数据则传入true，还有剩下的数据则传入false，加个判断		
+						} else {
+							object.endPullupToRefresh(false);//已加载全部数据则传入true，还有剩下的数据则传入false，加个判断	
+						}	
 					}
 					if(data.list.length < 1){
 						mui.toast("没有积分交易信息");
