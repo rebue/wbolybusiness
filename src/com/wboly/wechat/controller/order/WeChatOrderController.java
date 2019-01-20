@@ -438,6 +438,9 @@ public class WeChatOrderController extends SysController {
 			orderDetailTo.setOnlineSpecId(Long.parseLong(String.valueOf(detailList.get(i).get("onlineSpecId"))));
 			orderDetailTo.setCartId(Long.parseLong(String.valueOf(detailList.get(i).get("cartId"))));
 			orderDetailTo.setBuyCount(Integer.parseInt(String.valueOf(detailList.get(i).get("buyCount"))));
+			if(detailList.get(i).get("inviteId") != null && !detailList.get(i).get("inviteId").equals("") && detailList.get(i).get("inviteId").toString().indexOf(".") ==-1) {
+				orderDetailTo.setInviteId(Long.parseLong(String.valueOf(detailList.get(i).get("inviteId"))));
+			}
 			detailsList.add(orderDetailTo);
 		}
 		orderTo.setDetails(detailsList);

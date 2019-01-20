@@ -101,6 +101,38 @@
 						mui.toast(data.message);
 						return ;
 					}
+					
+					//在订单状态等于4的时候，将已经得免单的详情去掉，如果订单里面只有一个详情的话，连订单也去掉。
+					//先去掉订单中所有详情都已经免单的订单
+					var tempData =new Object();
+					tempData.message=[];
+					console.log("状态--------："+state);
+					if(state==4){
+						//去掉详情已经是全返的订单
+						for(var i = 0; i < data.message.length; i++){
+							if (data.message[i] != null && data.message[i] != "" && data.message[i].items.length > 0) {
+								var end=true;
+								var itemsTemp=[];
+								for (j = 0; j < data.message[i].items.length; j++) {
+									if(data.message[i].items[j].cashbackCommissionState !=2){
+										itemsTemp.push(data.message[i].items[j]);
+										end=false
+									}
+
+								}
+								console.log(itemsTemp);
+								data.message[i].items=itemsTemp;
+								
+								if(end==false){
+									tempData.message.push(data.message[i]);
+								}
+							}
+
+						}
+						data=tempData;
+
+					}
+
 					var html = "";
 					for(var i = 0; i < data.message.length; i++){
 						if (data.message[i] != null && data.message[i] != "" && data.message[i].items.length > 0) {
@@ -116,9 +148,9 @@
 							} else if (data.message[i].orderState == 3) {
 								html += '	<span class="orderState">待签收</span>';
 							} else if (data.message[i].orderState == 4) {
-								html += '	<span class="orderState">待结算</span>';
+								html += '	<span class="orderState">已签收</span>';
 							} else if (data.message[i].orderState == 5) {
-								html += '	<span class="orderState">已结算</span>';
+								html += '	<span class="orderState">已签收</span>';
 							} else if (data.message[i].orderState == "") {
 								html += '	<span class="status">全部订单</span>';
 							} else if (data.message[i].orderState == -1) {
@@ -373,6 +405,39 @@
 						mui.toast(data.message);
 						return ;
 					}
+					//在订单状态等于4的时候，将已经得免单的详情去掉，如果订单里面只有一个详情的话，连订单也去掉。
+					//先去掉订单中所有详情都已经免单的订单
+					var tempData =new Object();
+					tempData.message=[];
+					console.log("状态--------："+state);
+					if(state==4){
+						//去掉详情已经是全返的订单
+						for(var i = 0; i < data.message.length; i++){
+							if (data.message[i] != null && data.message[i] != "" && data.message[i].items.length > 0) {
+								var end=true;
+								var itemsTemp=[];
+								for (j = 0; j < data.message[i].items.length; j++) {
+									if(data.message[i].items[j].cashbackCommissionState !=2){
+										itemsTemp.push(data.message[i].items[j]);
+										end=false
+									}
+
+								}
+								console.log(itemsTemp);
+								data.message[i].items=itemsTemp;
+								
+								if(end==false){
+									tempData.message.push(data.message[i]);
+								}
+							}
+
+						}
+						data=tempData;
+
+					}
+
+					
+
 					var html = "";
 					for(var i = 0; i < data.message.length; i++){
 						if (data.message[i] != null && data.message[i] != "" && data.message[i].items.length > 0) {
@@ -388,9 +453,9 @@
 							}else if (data.message[i].orderState == 3) {
 								html += '<span class="status">待签收</span>';
 							}else if (data.message[i].orderState == 4) {
-								html += '<span class="status">待结算</span>';
+								html += '<span class="status">已签收</span>';
 							}else if (data.message[i].orderState == 5) {
-								html += '<span class="status">已结算</span>';
+								html += '<span class="status">已签收</span>';
 							}else if (data.message[i].orderState == -1) {
 								html += '<span style="color:#8f8f94;border:solid 1px #8f8f94;"    class="status">已取消</span>';
 							};

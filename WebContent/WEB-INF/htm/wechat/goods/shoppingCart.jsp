@@ -220,7 +220,15 @@
 						var subjectType = this.parentNode.querySelector("input[name='subjectType']").value;
 						// 商品主图 
 						var picPath = this.parentNode.querySelector(".car-inner-box img[class='goodspic']").src;
-						var unitJson = '{"salePrice":"' + salePrice + '","cashbackAmount":"'
+						//邀请人id
+						var inviteId="";
+						if(this.parentNode.querySelector("input[name='invite']") !=null){
+							inviteId= this.parentNode.querySelector("input[name='invite']").value;
+						}
+						 
+						
+						var unitJson = '{"salePrice":"' + salePrice + '","cashbackAmount":"' + '","inviteId":"'
+						+ inviteId
 								+ cashbackAmount + '","onlineId":"' + onlineId
 								+ '","onlineSpecId":"' + onlineSpecId + '","cartId":"' + cartId
 								+ '","buyCount":"' + number + '","onlineTitle":"' + onlineTitle
@@ -433,9 +441,15 @@
 							html += '			<input type="text" name="pledgeType" value="' + data.message[i].pledgeType + '"/>';
 							html += '			<input type="text" name="cartCount" id="cartCount' + data.message[i].id + '" value="' + data.message[i].cartCount + '"/>';
 							html += '		</div>';
-							html += '		<div class="car-inner-box">';
+							if (data.message[i].subjectType == 1 &&  data.message[i].uplineWxNickname !='' && data.message[i].uplineWxNickname !=undefined) {
+								html += '<div  style="height:3em;border:solid 1px white,fontSize:3em; color:red; lineHeight:3em; " >邀请人:' +'<span  ><img style="height:2em;lineHeight:2em; " src="'+data.message[i].uplineWxFace+'"></span>'+data.message[i].uplineWxNickname +'</div>';
+								html += '			<input type="hidden" name="invite" value="' + data.message[i].uplineUserId + '"/>';
+
+							}
+							html += '		<div class="car-inner-box" style="background:red" >';
 							html += '			<div class="car-inner-box-img">';
 							if (data.message[i].subjectType == 1) {
+
 								html += '				<a href="${ctx}/wechat/goods/goodsDetail.htm?onlineId=' + data.message[i].onlineId + '&promoterId=${userId}' + '" class="full-return">';
 								html += '					<img src="${goodsImgUrl}' + data.message[i].picPath + '" alt="" class="goodspic"/>';
 								html += '				</a>';

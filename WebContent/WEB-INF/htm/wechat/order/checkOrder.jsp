@@ -118,6 +118,8 @@
 							onlineSpecId: json.info[i].onlineSpecId,
 							cartId: json.info[i].cartId,
 							buyCount: json.info[i].buyCount,
+							inviteId: json.info[i].inviteId,
+
 						})
 					}
 					console.log(details);
@@ -220,12 +222,16 @@
 					html += '		</div>';
 					html += '		<div class="car-inner-body">';
 					html += '			<input type="hidden" name="cartId" value="' + item.cartId + '"/>';
+
 					html += '			<h5>';
 					html += '				<a href="${ctx}/wechat/goods/' + item.parm + '.htm?promoterId=${userId}">' + item.onlineTitle + '</a>';
 					html += '			</h5>';
 					html += '			<p>' + item.onlineSpec + '</p><br/>';
 					html += '			<div class="price-area">';
 					if(item.subjectType==1){
+						if(item.inviteId !=undefined && item.inviteId !="" ){
+							html += '			<input type="hidden" name="inviteId" value="' + item.inviteId + '"/>';
+						}
 						html += '				<span class="m-price">¥<span>' + formatCurrency(item.salePrice) + '</span></span>';
 						html += '  				<span class="b-money"><span>'+ '</span></span>';
 					}else{

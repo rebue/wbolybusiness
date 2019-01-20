@@ -375,7 +375,10 @@ function getMoney() {
 				if (document.getElementById("commissionTotal") != null) {
 					document.getElementById("commissionTotal").innerHTML = formatCurrency(data.message.commissionTotal);
 				}
-				document.getElementById("withdrawing").innerHTML = formatCurrency(data.message.withdrawing);
+				if(document.getElementById("withdrawing")  != null ){
+					document.getElementById("withdrawing").innerHTML = formatCurrency(data.message.withdrawing);
+
+				}
 				return;
 			}
 			mui.toast(data.message);

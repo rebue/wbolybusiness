@@ -17,11 +17,26 @@ public class OrderDetailTo {
 	 * 上线规格ID
 	 */
 	private Long onlineSpecId;
+	
+	/**
+	 * 邀请人id
+	 */
+	private Long  inviteId;
 
 	/**
 	 * 购买数量
 	 */
 	private Integer buyCount;
+	
+	
+
+	public Long getInviteId() {
+		return inviteId;
+	}
+
+	public void setInviteId(Long inviteId) {
+		this.inviteId = inviteId;
+	}
 
 	/**
 	 * 购物车ID

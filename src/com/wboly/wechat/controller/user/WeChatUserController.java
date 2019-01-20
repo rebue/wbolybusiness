@@ -425,7 +425,11 @@ public class WeChatUserController extends SysController {
 		Map pntMap = mapper.readValue(pntAccounts, Map.class);
 		
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("waitingPoint", new BigDecimal(waitingPoint).stripTrailingZeros().toPlainString()); // 待入积分
+		if(waitingPoint !=null && waitingPoint !="") {
+			map.put("waitingPoint", new BigDecimal(waitingPoint).stripTrailingZeros().toPlainString()); // 待入积分
+		}else {
+			map.put("waitingPoint", 0);
+		}
 		map.put("point", pntMap.get("point")); // 当前积分
 		map.put("cumulativeIncome", new BigDecimal(pntMap.get("totalIncome").toString()).toPlainString()); // 历史总收益
 		map.put("yesterdayIncome", yesterdayIncome);
