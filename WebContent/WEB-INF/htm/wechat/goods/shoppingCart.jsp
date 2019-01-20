@@ -90,7 +90,12 @@
 			$.ready(function() {
 				//购物车商品的详细信息，在点击去付款按钮时会整理成一个JSON，详见控制台
 				LoadCartNum();
-		
+				
+				mui('.invites').on('tap', '.invite', function() {
+					this.parentNode.innerHTML='<div  style="height:3em;border:solid 1px white,fontSize:3em; color:#333; lineHeight:3em; " >邀请人: 自己</div>'
+				});
+				
+				
 				compute();
 				mui('#goods-group .car-inner-box').on('tap', 'a', function() {
 					document.location.href = this.href;
@@ -442,8 +447,10 @@
 							html += '			<input type="text" name="cartCount" id="cartCount' + data.message[i].id + '" value="' + data.message[i].cartCount + '"/>';
 							html += '		</div>';
 							if (data.message[i].subjectType == 1 &&  data.message[i].uplineWxNickname !='' && data.message[i].uplineWxNickname !=undefined) {
-								html += '<div  style="height:3em;border:solid 1px white,fontSize:3em; color:red; lineHeight:3em; " >邀请人:' +'<span  ><img style="height:2em;lineHeight:2em; " src="'+data.message[i].uplineWxFace+'"></span>'+data.message[i].uplineWxNickname +'</div>';
-								html += '			<input type="hidden" name="invite" value="' + data.message[i].uplineUserId + '"/>';
+								html += '<div class="invites" style="height:3em;fontSize:3em; color:#333; lineHeight:3em; " >邀请人: ' +'<span style="margin-right:5px;" ><img style="height:2em;lineHeight:2em; " src="'+data.message[i].uplineWxFace+'"></span>'+
+										data.message[i].uplineWxNickname + '<a style="margin-left:20px;color:red"  class="invite"  id="'+data.message[i].id+'">点击转为自己</a>';
+								
+								html += '			<input type="hidden" id="'+data.message[i].id+'" name="invite" value="' + data.message[i].uplineUserId + '"/> </div> ';
 
 							}
 							html += '		<div class="car-inner-box" style="background:red" >';
