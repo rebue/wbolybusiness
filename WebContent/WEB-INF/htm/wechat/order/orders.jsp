@@ -215,7 +215,7 @@
 										}
 										html += '		<a href="javascript:showRelation(\''+relation+'\')" style= "padding-right:10px">';
 										for(k=0;k<data.message[i].items[j].ordBuyRelation.length;k++){
-											html += '		<span class="numbox"><img src= \''+data.message[i].items[j].ordBuyRelation[k].downlineUserWxFace +' \' width=\'25\' height=\'20\'></span>';
+											html += '		<span class="numbox"><img  style="height:2em;line-height:2em; border:solid 1px #bbb;border-radius:20px; margin-bottom:-0.5em;" src="'+data.message[i].items[j].ordBuyRelation[k].downlineUserWxFace +'"></span>';
 										}
 										html += '		</a>';
 									}
@@ -524,7 +524,7 @@
 											}
 											html += '<a href="javascript:showRelation(\''+relation+'\')" style= "padding-right:10px">';
 											for(k=0;k<data.message[i].items[j].ordBuyRelation.length;k++){
-												html += '<span class="numbox"><img src= \''+data.message[i].items[j].ordBuyRelation[k].downlineUserWxFace +' \' width=\'25\' height=\'20\'></span>';
+												html += '<span class="numbox"><img style="height:2em;line-height:2em; border:solid 1px #bbb;border-radius:20px; margin-bottom:-0.5em;" src="'+data.message[i].items[j].ordBuyRelation[k].downlineUserWxFace +'"></span>';
 											}
 											html += '</a>';
 										}

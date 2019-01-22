@@ -92,7 +92,7 @@
 				LoadCartNum();
 				
 				mui('.invites').on('tap', '.invite', function() {
-					this.parentNode.innerHTML='<div  style="height:3em;border:solid 1px white,fontSize:3em; color:#333; lineHeight:3em; " >邀请人: 自己</div>'
+					this.parentNode.innerHTML='<div  style="height:3em;border:solid 1px white,fontSize:3em; color:#333; line-height:3em; " >邀请人: 自己</div>'
 				});
 				
 				
@@ -447,8 +447,15 @@
 							html += '			<input type="text" name="cartCount" id="cartCount' + data.message[i].id + '" value="' + data.message[i].cartCount + '"/>';
 							html += '		</div>';
 							if (data.message[i].subjectType == 1 &&  data.message[i].uplineWxNickname !='' && data.message[i].uplineWxNickname !=undefined) {
-								html += '<div class="invites" style="height:3em;fontSize:3em; color:#333; lineHeight:3em; " >邀请人: ' +'<span style="margin-right:5px;" ><img style="height:2em;lineHeight:2em; " src="'+data.message[i].uplineWxFace+'"></span>'+
-										data.message[i].uplineWxNickname + '<a style="margin-left:20px;color:red"  class="invite"  id="'+data.message[i].id+'">点击转为自己</a>';
+								console.log(data.message[i].uplineWxNickname.length)
+								var wxName="";
+								if(data.message[i].uplineWxNickname.length >4){
+									wxName=data.message[i].uplineWxNickname.substr(0,4)+"..";
+								}else{
+									wxName=data.message[i].uplineWxNickname;
+								}
+								html += '<div class="invites" style="height:3em;fontSize:3em; color:#333;  line-height:3em; " >邀请人: ' +'<span style="padding-right:0.5em;"  ><img style="height:2em;line-height:2em; border:solid 1px #bbb;border-radius:20px; margin-bottom:-0.5em;" src="'+data.message[i].uplineWxFace+'"></span>'+
+										wxName + '<a style="margin-left:20px;color:red"  class="invite"  id="'+data.message[i].id+'">点击转为自己</a>';
 								
 								html += '			<input type="hidden" id="'+data.message[i].id+'" name="invite" value="' + data.message[i].uplineUserId + '"/> </div> ';
 
