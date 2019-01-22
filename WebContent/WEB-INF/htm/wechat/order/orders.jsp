@@ -114,7 +114,7 @@
 								var end=true;
 								var itemsTemp=[];
 								for (j = 0; j < data.message[i].items.length; j++) {
-									if(data.message[i].items[j].cashbackCommissionState !=2){
+									if(data.message[i].items[j].cashbackCommissionState !=2 && data.message[i].items[j].subjectType==1){
 										itemsTemp.push(data.message[i].items[j]);
 										end=false
 									}
@@ -417,7 +417,7 @@
 								var end=true;
 								var itemsTemp=[];
 								for (j = 0; j < data.message[i].items.length; j++) {
-									if(data.message[i].items[j].cashbackCommissionState !=2){
+									if(data.message[i].items[j].cashbackCommissionState !=2 && data.message[i].items[j].subjectType==1 ){
 										itemsTemp.push(data.message[i].items[j]);
 										end=false
 									}
