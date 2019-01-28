@@ -1232,4 +1232,35 @@ public class WeChatUserController extends SysController {
 			this.render(response, result);
 		}
 	}
+	/**
+	 * 积分收益转出
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping("/wechat/user/rollOut")
+	public void rollOut(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		String userId = SysCache.getWeChatUserByColumn(request, "userId");
+		_log.info("积分收益转出获取到的用户id为：{}", userId);
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("accountId",userId);
+		if (userId == null || userId.equals("") || userId.equals("null")) {
+			this.render(response, "{\"msg\":\"您未登录！\", \"result\":\"-74110\"}");
+		} else {
+			String results=OkhttpUtils.putByFormParams(SysContext.PNTURL+"pnt/income/rollOut",map);
+			if (results != null && !results.equals("") && !results.equals("null")) {
+				ObjectMapper mapper = new ObjectMapper();
+				Map resultMap = mapper.readValue(results, Map.class);
+				int result = Integer.parseInt(String.valueOf(resultMap.get("result")));
+				if (result > 0) {
+					this.render(response, "{\"message\":\"修改成功\",\"flag\":true}");
+				} else {
+					this.render(response, "{\"message\":\"修改失败\",\"flag\":false}");
+				}
+			} else {
+				this.render(response, "{\"message\":\"修改失败\",\"flag\":false}");
+			}
+			
+		}
+	}
 }
