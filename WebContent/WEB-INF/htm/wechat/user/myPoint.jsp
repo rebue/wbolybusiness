@@ -21,6 +21,9 @@
 	<header class="mui-bar mui-bar-nav" style="box-shadow: none;">
 		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 		<h4 class="mui-title">我的积分</h4>
+		<h5 class="mui-title mui-pull-right" style="left: auto; font-size: 15px;">
+		<a id="turnOut" style="color:#fe3000;" >转出积分收益</a>
+		</h5>
 	</header>
 	<div id="wallet_main">
 		<div class="mui-content">
@@ -139,6 +142,10 @@
 				mui('#wallet_main').on('tap','.mui-table-view-cell a',function(){document.location.href=this.href;});
 				// mui('body').on('tap','.mui-bar-nav a',function(){document.location.href=this.href;});
 				mui("#active-bar-span")[0].style.left = mui(".tab-slider .mui-control-item.mui-active")[0].offsetLeft + "px";
+				
+				/* mui('#turnOut').on('tap','.mui-table-view-cell a',function(){var message=confirm("是否将所有积分收益转出？");
+				alert(message);
+				}); */
 				// 默认加载累计收益
 				cumulativeIncomeList(0);
 				// 计算内容区最小高度
@@ -153,7 +160,32 @@
 					state = this.getAttribute("data-value");
 					mui("#active-bar-span")[0].style.left = left + "px";
 				});
-
+				
+				
+				document.getElementById('turnOut').addEventListener('tap',function(){
+					var btnArray = ['否','是' ];
+	                mui.confirm('是否将所有积分收益转出？','积分收益转出', btnArray, function(e) {
+	                    if (e.index == 1) {
+	                    	mui.ajax('${ctx }/wechat/user/rollOut.htm', {
+	            				data: {
+	            					"key": "59c23bdde5603ef993cf03fe64e448f1"
+	            				},
+	            				dataType: 'json',
+	            				type: 'put',
+	            				success: function(result) {
+	            					console.log(result);
+	            					if(result.flag == true){
+	            						mui.alert(result.message);
+	            					}
+	            				},
+	            				error: function() {
+	            					mui.alert("转出失败");
+	            				}
+	                    	}); 
+	                    }
+	                });
+				});
+				
 				//切换选项卡事件
 				document.querySelector('.mui-slider').addEventListener('slide', function(event) {
 					mui('#wallet_main.mui-scroll-wrapper').scroll({ bounce: false });
