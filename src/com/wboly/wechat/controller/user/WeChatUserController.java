@@ -15,9 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,7 +29,6 @@ import com.wboly.system.sys.system.SysCache;
 import com.wboly.system.sys.system.SysContext;
 import com.wboly.system.sys.util.HttpUtil;
 import com.wboly.system.sys.util.JsonUtil;
-import com.wboly.wechat.service.user.WeChatUserService;
 
 import rebue.wheel.AgentUtils;
 import rebue.wheel.NetUtils;
@@ -46,9 +43,6 @@ import rebue.wheel.RegexUtils;
 public class WeChatUserController extends SysController {
 
 	private static final Logger _log = LoggerFactory.getLogger(WeChatUserController.class);
-
-	@Autowired
-	private WeChatUserService weChatUserService;
 
 	/**
 	 * @Name: 地址管理页面(新)__目前使用这个地址链接
@@ -583,7 +577,6 @@ public class WeChatUserController extends SysController {
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
 	 */
-	@SuppressWarnings("rawtypes")
 	@RequestMapping("/wechat/user/setLoginName")
 	public void setLoginName(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam("loginName") String loginName) throws JsonParseException, JsonMappingException, IOException {
@@ -599,15 +592,6 @@ public class WeChatUserController extends SysController {
 				System.err.println("微信设置登录名称的参数为：" + String.valueOf(map));
 				String results = OkhttpUtils.postByFormParams(SysContext.USERCENTERURL + "/user/setloginname/bywxid",
 						map);
-				ObjectMapper mapper = new ObjectMapper();
-				Map resultMap = mapper.readValue(results, Map.class);
-				String result = String.valueOf(resultMap.get("result"));
-				if (result.equals("1")) {
-					map.put("userId", userId);
-					System.err.println("修改用户名称的参数为：" + String.valueOf(map));
-					int updateResult = weChatUserService.updateUserName(map);
-					System.err.println("修改用户 名称的返回值为：" + updateResult);
-				}
 				System.err.println("微信设置登录名称的返回值为：" + results);
 				this.render(response, results);
 			} else {

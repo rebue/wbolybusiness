@@ -18,7 +18,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import com.wboly.rpc.entity.VblGoodsClass;
 import com.wboly.system.sys.pojo.Page;
 
 public class JsonUtil {
@@ -321,11 +320,6 @@ public class JsonUtil {
     	List<Map<String, Object>> list =  (List<Map<String, Object>>)mapper.readValue(result, javaType);
     	System.out.println("将json转为list的返回值为：" + String.valueOf(list));
     	return list;
-	}
-
-	public static String objListToJson(List<VblGoodsClass> vblGoodsClassList) {
-		Gson gson = new Gson();
-		return gson.toJson(vblGoodsClassList);
 	}
 
 	public static void main(String[] args) {

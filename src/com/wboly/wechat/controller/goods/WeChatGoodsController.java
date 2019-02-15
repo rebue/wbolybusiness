@@ -14,24 +14,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.thrift.TException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.wboly.modules.service.goods.VblGoodsService;
-import com.wboly.modules.service.index.VblIndexService;
-import com.wboly.modules.service.order.VblOrderService;
-import com.wboly.rpc.entity.AppraiseEntity;
-import com.wboly.rpc.entity.GoodsEntity;
 import com.wboly.system.sys.cache.RedisBase;
 import com.wboly.system.sys.spring.SysController;
 import com.wboly.system.sys.system.SysContext;
 import com.wboly.system.sys.util.JsonUtil;
 import com.wboly.system.sys.util.SessionUtil;
-import com.wboly.system.sys.util.WriterJsonUtil;
-import com.wboly.wechat.service.index.WeChatIndexService;
-
 import rebue.wheel.OkhttpUtils;
 import redis.clients.jedis.Jedis;
 
@@ -42,15 +33,6 @@ import redis.clients.jedis.Jedis;
 @Controller
 @SuppressWarnings("unchecked")
 public class WeChatGoodsController extends SysController {
-
-	@Autowired
-	private VblIndexService vblindexService;
-	@Autowired
-	private WeChatIndexService weChatIndexService;
-	@Autowired
-	private VblGoodsService vblgoodsService;
-	@Autowired
-	private VblOrderService vblorderService;
 
 	/**
 	 * @Name: 商品详情页面
@@ -78,106 +60,6 @@ public class WeChatGoodsController extends SysController {
 		mav.addObject("goodsPics", pics.substring(0, pics.length() - 1));
 		mav.setViewName("/htm/wechat/goods/goodsDetail");// 商品详情
 		return mav;
-	}
-
-	/**
-	 * @Name: 获取商品详情图片
-	 * @Author: nick
-	 */
-	@RequestMapping(value = "/wechat/goods/getDetailImg")
-	public void getDetailImg(HttpServletRequest request, HttpServletResponse response) {
-		GoodsEntity entity = new GoodsEntity();
-		String goodsId = request.getParameter("goods");
-		if (goodsId == null || goodsId.equals("")) {
-			goodsId = "0";
-		}
-		entity.setGoodsId(Integer.parseInt(goodsId));
-		Map<String, String> map = vblgoodsService.getGoodsDeteilById(entity);
-		String deteils = map.get("deteils");
-		WriterJsonUtil.writerJson(response, deteils);
-	}
-
-	/**
-	 * @Name: 详情页分类行数
-	 * @Author: nick
-	 */
-	@RequestMapping(value = "/wechat/goods/getAppraiseCount")
-	public void goodsSpecification(HttpServletRequest request, HttpServletResponse response) {
-
-		Object shopByColumn = null;
-
-		// 因为订单详情是所有门店的订单,从全部订单那里进来需要传一个shopId,如果不传默认是当前门店shopId
-		String shopId = request.getParameter("shopId");
-
-		if (shopId == null || shopId.equals("")) {
-			shopByColumn = SessionUtil.getShopByColumn(request, "shopId");
-		} else {
-			shopByColumn = shopId;
-		}
-
-		if (shopByColumn != null && !"".equals(shopByColumn)) {
-
-			AppraiseEntity entity = new AppraiseEntity();
-
-			entity.setShopId(String.valueOf(shopByColumn));
-
-			String goods = request.getParameter("goods");
-
-			if (null == goods || "".equals(goods)) {
-				goods = "0";
-			}
-			int goodsid = 0;
-			try {
-				goodsid = Integer.parseInt(goods);
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-			}
-			entity.setGoodsId(goodsid);
-
-			Map<String, String> map = vblorderService.AppraiseclassifyCount(entity);
-
-			WriterJsonUtil.writerJson(response, map);
-		} else {
-			WriterJsonUtil.writerJson(response, "");
-		}
-	}
-
-	/**
-	 * @Name: 详情页评价数据
-	 * @throws Exception
-	 * @Author: nick
-	 */
-	@RequestMapping(value = "/wechat/goods/getGoodsAppraise")
-	public void getAppraisePage(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-		Object shopByColumn = null;
-
-		// 因为订单详情是所有门店的订单,从全部订单那里进来需要传一个shopId,如果不传默认是当前门店shopId
-		String shopId = request.getParameter("shopId");
-		if (shopId == null || shopId.equals("")) {
-			shopByColumn = SessionUtil.getShopByColumn(request, "shopId");
-		} else {
-			shopByColumn = shopId;
-		}
-
-		if (shopByColumn != null) {
-			AppraiseEntity entity = new AppraiseEntity();
-
-			entity.setShopId(shopByColumn.toString());
-			entity.setGoodsId(Integer.parseInt(request.getParameter("goods")));
-			entity.setType(Integer.parseInt(request.getParameter("type")));
-			entity.setLimit(Integer.parseInt(request.getParameter("limit")));
-			entity.setStart(Integer.parseInt(request.getParameter("start")));
-
-			List<AppraiseEntity> list = vblorderService.goodsAppraise(entity);
-			if (list.size() == 0) {
-				WriterJsonUtil.writerJson(response, "");
-			} else {
-				WriterJsonUtil.writerJson(response, list);
-			}
-		} else {
-			WriterJsonUtil.writerJson(response, "");
-		}
 	}
 
 	/**
@@ -367,53 +249,6 @@ public class WeChatGoodsController extends SysController {
 	}
 
 	/**
-	 * @Name: 加载父级菜单
-	 * @Author: nick
-	 */
-	@RequestMapping(value = "/wechat/goods/loadParentMenu")
-	public void loadParentMenu(HttpServletRequest request, HttpServletResponse response) {
-
-		Object shopByColumn = SessionUtil.getShopByColumn(request, "shopId");
-
-		if (shopByColumn != null) {
-
-			Jedis jedis = null;
-
-			try {
-				jedis = RedisBase.getJedis();
-
-				if (null != jedis) {
-					List<Map<String, String>> menulist = new ArrayList<Map<String, String>>();
-					jedis.select(Integer.valueOf(String.valueOf(shopByColumn)));
-
-					String key = "ClassMenu:";
-
-					Set<String> keys = jedis.keys(key + "0:*");
-
-					if (keys == null || keys.size() < 1) {
-						vblindexService.initMenu();
-					}
-
-					for (String string : keys) {
-						menulist.add(jedis.hgetAll(string));
-					}
-					WriterJsonUtil.writerJson(response, menulist);
-					return;
-				}
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-			} finally {
-				if (null != jedis) {
-					jedis.close();
-				}
-			}
-			WriterJsonUtil.writerJson(response, "");
-		} else {
-			WriterJsonUtil.writerJson(response, "");
-		}
-	}
-
-	/**
 	 * @Name: 加载子级菜单
 	 * @Author: nick
 	 */
@@ -534,29 +369,6 @@ public class WeChatGoodsController extends SysController {
 				}
 			}
 			writerJson(response, menulist);
-		}
-	}
-
-	/**
-	 * @Name: 获取商品品牌信息
-	 * @throws Exception
-	 * @throws NumberFormatException
-	 * @Author: nick
-	 */
-	@RequestMapping(value = "/wechat/goods/getGoodsBreand")
-	public void getGoodsBreand(HttpServletRequest request, HttpServletResponse response)
-			throws NumberFormatException, Exception {
-		String classId = request.getParameter("classId");
-		if (classId != null && !classId.equals("null") && !classId.equals("0")) {
-			Object id = classId.substring(classId.lastIndexOf("_") + 1);
-			if (id instanceof Integer) {
-				List<Map<String, Object>> BrandList = vblindexService
-						.listBrandByClassId(Integer.parseInt(id.toString()));
-				WriterJsonUtil.writerJson(response, BrandList);
-			}
-		} else {
-			List<Map<String, Object>> BrandList = weChatIndexService.selectAllBrandInfo();
-			WriterJsonUtil.writerJson(response, BrandList);
 		}
 	}
 

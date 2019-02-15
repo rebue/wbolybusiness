@@ -22,8 +22,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wboly.modules.controller.Util.MacAddressUtil;
 import com.wboly.system.sys.spring.SysController;
 import com.wboly.system.sys.system.SysCache;
 import com.wboly.system.sys.system.SysContext;
@@ -32,6 +30,7 @@ import com.wboly.system.sys.util.HttpUtil;
 import com.wboly.system.sys.util.IpUtil;
 import com.wboly.system.sys.util.JsonUtil;
 import com.wboly.system.sys.util.MD5CodeUtil;
+import com.wboly.system.sys.util.MacAddressUtil;
 import com.wboly.system.sys.util.wx.WXSignUtils;
 import com.wboly.system.sys.util.wx.WeixinUtil.SITE;
 import com.wboly.system.sys.util.wx.WxConfig;

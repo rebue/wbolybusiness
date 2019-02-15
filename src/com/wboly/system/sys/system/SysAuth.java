@@ -72,7 +72,7 @@ public class SysAuth implements Filter {
 					|| requestUrlss.contains("/wechat/user/rulePage.htm")) {
 				chain.doFilter(servletRequest, servletResponse);
 			} else {
-//				CookiesUtil.setCookie("oAwIr04JK8GVF5xvNaOZ4IxwQhhQ", resp);
+//				CookiesUtil.setCookie("oNklT0bp29pc3Qtk0UEdnCVzotKU", resp);
 				// 获取当前登录用户编号
 				String userId = SysCache.getWeChatUserByColumn(request, "userId");
 				System.out.println("拦截器获取到的当前用户id为：" + userId);

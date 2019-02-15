@@ -35,7 +35,6 @@ import com.wboly.system.sys.util.MacAddressUtil;
 import com.wboly.system.sys.util.wx.WeixinUtil;
 import com.wboly.system.sys.util.wx.WeixinUtil.SITE;
 import com.wboly.system.sys.util.wx.WxConfig;
-import com.wboly.wechat.service.user.WeChatUserService;
 
 import rebue.wheel.NetUtils;
 import rebue.wheel.OkhttpUtils;
@@ -48,9 +47,6 @@ import rebue.wheel.turing.SignUtils;
 @Controller
 @RequestMapping(value = "/wechat/oauth2/")
 public class WeChatOAuth2Controller extends SysController {
-
-	@Autowired
-	private WeChatUserService weChatUserService;
 	
 	private static final Logger _log = LoggerFactory.getLogger(WeChatOAuth2Controller.class);
 
@@ -406,25 +402,6 @@ public class WeChatOAuth2Controller extends SysController {
 		System.err.println("微信登录或者缓存缓存用户信息成功");
 		m.put("result", userId);
 		m.put("userId", userId);
-
-		// 获取当前时间戳
-		long currentTime = System.currentTimeMillis() / 1000;
-		Map<String, Object> maps = new HashMap<String, Object>();
-		maps.put("userId", userId);
-		maps.put("userName", userName);
-		maps.put("lastLoninType", 1);
-		maps.put("userSource", "");
-		maps.put("regTime", currentTime);
-		maps.put("lastLoginMarket", NetUtils.getFirstIpOfLocalHost());
-
-		// 根据用户编号查询用户是否存在
-		String userIds = weChatUserService.selectUserInformation(maps);
-		if (userIds == null || userIds.equals("") || userIds.equals("null")) {
-			// 添加用户注册信息
-			weChatUserService.insertUserRegInformation(maps);
-		} else {
-			weChatUserService.updateUserRegInformation(maps);
-		}
 		return m;
 	}
 

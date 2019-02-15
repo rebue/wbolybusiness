@@ -21,9 +21,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wboly.rpc.Client.OrderRPCClient;
-import com.wboly.rpc.entity.AppraiseEntity;
-import com.wboly.rpc.entity.OrderEntity;
 import com.wboly.system.sys.spring.SysController;
 import com.wboly.system.sys.system.SysCache;
 import com.wboly.system.sys.system.SysContext;
@@ -58,72 +55,6 @@ public class WeChatOrderController extends SysController {
 			mav.setViewName("/htm/wechat/order/orderAfterSale");
 		}
 		return mav;
-	}
-
-	/**
-	 * @Name: 用户申请售后提交
-	 * @Author: nick
-	 */
-	// @RequestMapping(value = "/wechat/order/afterSaleApply")
-	public void ApplyAftermarket1(OrderEntity entity, HttpServletRequest request, HttpServletResponse response)
-			throws TException {
-
-		String userId = SysCache.getWeChatUserByColumn(request, "userId");
-		if (userId.equals("")) {
-			this.render(response, "{\"message\":\"您没有登录\",\"flag\":false}");
-			return;
-		}
-
-		String activityId = request.getParameter("activityId");
-		String appealType = request.getParameter("appealType");
-		String buyerContact = request.getParameter("buyerContact");
-		String img = request.getParameter("img");
-		if (activityId == null || "".equals(activityId) || appealType == null || "".equals(appealType)
-				|| entity.getOrderIds() == null || entity.getOrderIds().length() == 0 || img == null || "".equals(img)
-				|| buyerContact == null || "".equals(buyerContact)) {
-			this.render(response, "{\"message\":\"请求参数有误\",\"flag\":false}");
-			return;
-		}
-
-		String userName = SysCache.getWeChatUserByColumn(request, "userName");
-		entity.setUserName(userName);
-		entity.setBuyerUid(userId);
-
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("activityId", activityId);
-		map.put("appealType", appealType);
-		map.put("buyerContact", buyerContact);
-		map.put("img", img);
-		OrderRPCClient orderService = new OrderRPCClient();
-		int i = orderService.client.ApplyAftermarket(entity, map);
-		orderService.close();
-		if (i == -3) {// 当前用户还有未处理完的售后
-			this.render(response, "{\"message\":\"有未处理完成的收货\",\"flag\":false}");
-			return;
-		}
-		if (i == -2) {// 订单当前状态不允许申请售后
-			this.render(response, "{\"message\":\"当前状态不能售后\",\"flag\":false}");
-			return;
-		}
-		if (i == -1) {// 添加失败
-			this.render(response, "{\"message\":\"提交失败\",\"flag\":false}");
-			return;
-		}
-		if (i == -4) {// 更新订单状态失败
-			this.render(response, "{\"message\":\"更新状态失败\",\"flag\":false}");
-			return;
-		}
-		if (i == -5) {// 当前门店的活动已申请过售后
-			this.render(response, "{\"message\":\"无需重复申请售后\",\"flag\":false}");
-			return;
-		}
-		if (i > 0) {// 成功提交
-			this.render(response, "{\"message\":\"成功提交<br/>请耐心等待结果\",\"flag\":true}");
-			return;
-		}
-
-		this.render(response, "{\"message\":\"无法提交\",\"flag\":false}");
-
 	}
 
 	/**
@@ -200,60 +131,6 @@ public class WeChatOrderController extends SysController {
 			return;
 		}
 		this.render(response, results);
-	}
-
-	/**
-	 * @Name: 买家评价商品
-	 * @Author: nick
-	 */
-	// @RequestMapping(value = "/wechat/order/appraiseGoods")
-	public void AppraiseOrder(AppraiseEntity entity, HttpServletRequest request, HttpServletResponse response)
-			throws TException {
-
-		String userId = SysCache.getWeChatUserByColumn(request, "userId");
-		if (userId.equals("")) {
-			this.render(response, "{\"message\":\"您没有登录\",\"flag\":false}");
-			return;
-		}
-
-		entity.setBuyerUid(userId);
-
-		String activityId = request.getParameter("activityId");
-		String babyEvaluation = request.getParameter("babyEvaluation");
-		String orderId = request.getParameter("orderId");
-		String userName = SysCache.getWeChatUserByColumn(request, "userName");
-
-		if (orderId == null || "".equals(orderId) || activityId == null || "".equals(activityId)
-				|| babyEvaluation == null || "".equals(babyEvaluation)) {
-			this.render(response, "{\"message\":\"请求参数有误\",\"flag\":false}");
-			return;
-		}
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("activityId", activityId);
-		map.put("babyEvaluation", babyEvaluation);
-		map.put("userId", userId);
-		map.put("orderId", orderId);
-		map.put("userName", userName);
-		OrderRPCClient orderService = new OrderRPCClient();
-		int i = orderService.client.AppraiseOrder(entity, map);
-		orderService.close();
-		if (i == -3) {// 买家没有在此店面购买此活动商品
-			this.render(response, "{\"message\":\"未购买该商品<br/>无法评价\",\"flag\":false}");
-			return;
-		}
-		if (i == -2) {// 当前门店的活动买家已追加评价
-			this.render(response, "{\"message\":\"无需重复追加评价\",\"flag\":false}");
-			return;
-		}
-		if (i == -1) {// 评价失败
-			this.render(response, "{\"message\":\"评价失败\",\"flag\":false}");
-			return;
-		}
-		if (i >= 0) {// 评价成功
-			this.render(response, "{\"message\":\"评价成功\",\"flag\":true}");
-			return;
-		}
-		this.render(response, "{\"message\":\"无法评价\",\"flag\":true}");
 	}
 
 	/**

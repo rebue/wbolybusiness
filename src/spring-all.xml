@@ -12,9 +12,5 @@
 
 	<description>Spring-all</description>
 	<!-- 加载配置属性文件 <context:property-placeholder ignore-unresolvable="true" location="classpath*:/coresite*.properties"/> -->
-	<import resource="spring-vbl_data.xml" />
 	<import resource="spring-redis.xml" />
-	<!-- <import resource="spring-rpc.xml" /> -->
-	<!-- <import resource="spring-rpc-service.xml" /> -->
-	<!-- <import resource="spring-system.xml" /> -->
 </beans>
