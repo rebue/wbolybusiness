@@ -137,7 +137,7 @@ public class WeChatOAuth2Controller extends SysController {
 
 		System.out.println("微信登录获取到的用户 信息为：openid=" + openid + "====unionid=" + unionid + "=====nickname=" + nickname
 				+ "====headimgurl=" + headimgurl);
-		String wxId = openid;
+		String wxId = null;
 		if (unionid != null && !"".equals(unionid) && !"null".equals(unionid)) {
 			wxId = unionid;
 		}
@@ -397,7 +397,7 @@ public class WeChatOAuth2Controller extends SysController {
 		// 用户名称
 		String userName = String.valueOf(map.get("wxNickname"));
 		String userjson = "{\"userId\":" + userId + ",\"userName\":\"" + userName + "\",\"img\":\"" + map.get("wxFace")
-				+ "\",\"openid\":\"" + map.get("openid") + "\"}";
+				+ "\",\"openid\":\"" + map.get("openid") + "\",\"wxId\":\"" + map.get("wxId") + "\"}";
 		SysCache.setWechatUser(map.get("openid").toString(), userjson);// 缓存用户信息
 		System.err.println("微信登录或者缓存缓存用户信息成功");
 		m.put("result", userId);

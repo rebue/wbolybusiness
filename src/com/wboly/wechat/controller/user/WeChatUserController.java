@@ -497,10 +497,8 @@ public class WeChatUserController extends SysController {
 		// 获取当前登录用户编号
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
 		if (userId != null && !userId.equals("") && !userId.equals("null")) {
-			// 获取当前登录用户编号
-			String wxId = SysCache.getWeChatUserByColumn(request, "openid");
-			map.put("wxId", wxId);
-			System.out.println("修改登录密码的参数为：" + wxId);
+			map.put("id", userId);
+			System.out.println("修改登录密码的参数为：" + userId);
 			String result = OkhttpUtils.postByFormParams(SysContext.USERCENTERURL + "/loginpswd/modify/bywxid", map);
 			System.out.println("微信修改登录密码的返回值为：" + result);
 			this.render(response, result);
@@ -524,10 +522,8 @@ public class WeChatUserController extends SysController {
 		// 获取当前登录用户编号
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
 		if (userId != null && !userId.equals("") && !userId.equals("null")) {
-			// 获取当前登录用户编号
-			String wxId = SysCache.getWeChatUserByColumn(request, "openid");
-			map.put("wxId", wxId);
-			System.out.println("设置登录密码的参数为：" + wxId);
+			map.put("id", userId);
+			System.out.println("设置登录密码的参数为：" + userId);
 			String result = OkhttpUtils.postByFormParams(SysContext.USERCENTERURL + "/loginpswd/add/bywxid", map);
 			System.out.println("微信修改登录密码的返回值为：" + result);
 			this.render(response, result);
@@ -551,9 +547,7 @@ public class WeChatUserController extends SysController {
 		// 获取当前登录用户编号
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
 		if (userId != null && !userId.equals("") && !userId.equals("null")) {
-			// 获取当前登录用户编号
-			String wxId = SysCache.getWeChatUserByColumn(request, "openid");
-			String result = OkhttpUtils.get(SysContext.USERCENTERURL + "/user/loginName/bywxid?wxId=" + wxId);
+			String result = OkhttpUtils.get(SysContext.USERCENTERURL + "/user/loginName/bywxid?id=" + userId);
 			ObjectMapper mapper = new ObjectMapper();
 			Map map = mapper.readValue(result, Map.class);
 			String loginName = String.valueOf(map.get("loginName"));
@@ -583,20 +577,13 @@ public class WeChatUserController extends SysController {
 		// 获取当前登录用户编号
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
 		if (userId != null && !userId.equals("") && !userId.equals("null")) {
-			// 获取当前登录用户编号
-			String wxId = SysCache.getWeChatUserByColumn(request, "openid");
-			if (wxId != null && !wxId.equals("") && !wxId.equals("null")) {
 				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("wxId", wxId);
+				map.put("id", userId);
 				map.put("loginName", loginName);
 				System.err.println("微信设置登录名称的参数为：" + String.valueOf(map));
 				String results = OkhttpUtils.postByFormParams(SysContext.USERCENTERURL + "/user/setloginname/bywxid",
 						map);
 				System.err.println("微信设置登录名称的返回值为：" + results);
-				this.render(response, results);
-			} else {
-				this.render(response, "{\"msg\":\"您未登录！\", \"result\":\"-74110\"}");
-			}
 		} else {
 			this.render(response, "{\"msg\":\"您未登录！\", \"result\":\"-74110\"}");
 		}
@@ -1005,11 +992,8 @@ public class WeChatUserController extends SysController {
 		// 获取当前登录用户编号
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
 		if (userId != null && !userId.equals("") && !userId.equals("null")) {
-			// 获取当前登录用户编号
-			String wxId = SysCache.getWeChatUserByColumn(request, "openid");
-			map.put("wxId", wxId);
-			System.out.println("设置支付密码的参数为：" + wxId);
-			_log.info("设置支付密码的参数为：{}", wxId);
+			map.put("id", userId);
+			_log.info("设置支付密码的参数为：{}", userId);
 			String result = OkhttpUtils.postByFormParams(SysContext.USERCENTERURL + "/paypswd/add/bywxid", map);
 			_log.info("设置支付密码的返回值为：{}", result);
 			this.render(response, result);
@@ -1033,10 +1017,8 @@ public class WeChatUserController extends SysController {
 		// 获取当前登录用户编号
 		String userId = SysCache.getWeChatUserByColumn(request, "userId");
 		if (userId != null && !userId.equals("") && !userId.equals("null")) {
-			// 获取当前登录用户编号
-			String wxId = SysCache.getWeChatUserByColumn(request, "openid");
-			map.put("wxId", wxId);
-			System.out.println("修改支付密码的参数为：" + wxId);
+			map.put("id", userId);
+			System.out.println("修改支付密码的参数为：" + userId);
 			String result = OkhttpUtils.postByFormParams(SysContext.USERCENTERURL + "/paypswd/modify/bywxid", map);
 			System.out.println("微信修改支付密码的返回值为：" + result);
 			this.render(response, result);
