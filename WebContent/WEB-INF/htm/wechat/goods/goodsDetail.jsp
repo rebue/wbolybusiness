@@ -552,9 +552,21 @@
 					// 商品详情图片
 					//第二个参数中的 g 表示全部匹配,i表示忽略大小写
 					var regS = new RegExp("src", "g");
-					var exemptionProcess = '<a id="exemptionProcess">';
-					exemptionProcess += '		<img src="${ctx }/images/wechat/exemptionProcess.png">';
-					exemptionProcess += '	</a>';
+				//	var exemptionProcess = '<a id="exemptionProcess">';
+				//	exemptionProcess += '		<img src="${ctx }/images/wechat/exemptionProcess.png">';
+				//	exemptionProcess += '	</a>';
+				//	var onlineDetail = exemptionProcess + data[0].onlineDetail; 
+				
+					var exemptionProcess='';
+					if (data[0].subjectType == 0) {
+						exemptionProcess += '<a id="exemptionProcess" style="display:none" >';
+						exemptionProcess += '		<img src="${ctx }/images/wechat/exemptionProcess.png">';
+						exemptionProcess += '	</a>';
+					}else{
+						exemptionProcess += '<a id="exemptionProcess"  >';
+						exemptionProcess += '		<img src="${ctx }/images/wechat/exemptionProcess.png">';
+						exemptionProcess += '	</a>';
+					}
 					var onlineDetail = exemptionProcess + data[0].onlineDetail;
 					//服务器返回响应
 					document.body.querySelector("#tuwen").innerHTML = onlineDetail.replace(regS, "data-url");
