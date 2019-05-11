@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 
 import com.wboly.system.sys.util.CookiesUtil;
+import com.wboly.system.sys.util.wx.WxConfig;
 import com.wboly.system.sys.util.wx.WeixinUtil.SITE;
 
 public class SysAuth implements Filter {
@@ -47,7 +48,7 @@ public class SysAuth implements Filter {
 			+ "/wechat/user/submitApplyWithdrAwaccount.htm, /wechat/order/cancelReturn.htm, /wechat/user/updatepaypwdpage.htm, /wechat/user/payPwIsExis.htm,"
 			+ "/wechat/user/setPayPassword.htm, /wechat/user/changePayPassword.htm, /wechat/user/applyWithdraw.htm, /wechat/user/withdrawRecord.htm, /wechat/user/getWithdrawRecord.htm,"
 			+ "/wechat/index/checkIsSubscribe.htm, /wechat/order/modifyPayOrderId.htm, /wechat/order/commissionTotal.htm, /wechat/user/jumpMyPoint.htm, /wechat/user/cumulativeIncome.htm, "
-			+ "/wechat/user/waitingPoint.htm, /wechat/user/point.htm, /wechat/user/getPoint.htm";
+			+ "/wechat/user/waitingPoint.htm, /wechat/user/point.htm, /wechat/user/getPoint.htm, /wechat/order/transfer.htm";
 
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
 			throws IOException, ServletException {
@@ -72,6 +73,7 @@ public class SysAuth implements Filter {
 					|| requestUrlss.contains("/wechat/user/rulePage.htm")) {
 				chain.doFilter(servletRequest, servletResponse);
 			} else {
+
 //				CookiesUtil.setCookie("oNklT0bp29pc3Qtk0UEdnCVzotKU", resp);
 				// 获取当前登录用户编号
 				String userId = SysCache.getWeChatUserByColumn(request, "userId");
@@ -79,11 +81,25 @@ public class SysAuth implements Filter {
 				request.getSession().setAttribute("userId", userId);
 				// 上线id
 				String onlineId = request.getParameter("onlineId");
+				// 支付订单ID
+				String payOrderId = request.getParameter("payOrderId");
+				// 旧订单用户id（转单时必须传过来）
+				String oldUserId = request.getParameter("oldUserId");
 				if (!StringUtils.isAnyBlank(promoterId, onlineId) && !userId.equals(promoterId)) {
 					System.out.println("拦截器获取到的上线id为：" + onlineId);
 					String encodeUrl = "https%3A%2F%2Fwww.duamai.com%2Fwxx-svr%2Fwxx%2Fresponse%2Fauthorizecode";// 线上微信回调地址
 //					String encodeUrl = "http%3A%2F%2F596038980.mynatapp.cc%2Fwxx-svr%2Fwxx%2Fresponse%2Fauthorizecode";// 本地微信回调地址
-					String state = requestUrlss + "," + promoterId + "," + onlineId;
+					String state = requestUrlss + "," + promoterId + "," + onlineId + ",invite";
+					String url = SITE.AUTHORIZE.getMessage() + "?appid=" + SysContext.wxAppId + "&redirect_uri="
+							+ encodeUrl + "&response_type=code&scope=snsapi_userinfo&state=" + state;
+					System.out.println(url);
+					resp.sendRedirect(url);
+				} else if (!StringUtils.isAnyBlank(payOrderId, oldUserId)
+						&& (userId.equals("") || userId.equals("null") || userId == null)) {
+					System.out.println("拦截器获取到的支付订单id为：" + payOrderId);
+					String backUrl = WxConfig.onLineURL + "/wechat/oauth2/myPreReg.htm";// 微信回调地址
+					String encodeUrl = URLEncoder.encode(backUrl, "UTF-8");// 对url进行编码
+					String state = requestUrlss + "," + payOrderId + "," + oldUserId + ",transfer";
 					String url = SITE.AUTHORIZE.getMessage() + "?appid=" + SysContext.wxAppId + "&redirect_uri="
 							+ encodeUrl + "&response_type=code&scope=snsapi_userinfo&state=" + state;
 					System.out.println(url);

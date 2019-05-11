@@ -47,7 +47,7 @@ import rebue.wheel.turing.SignUtils;
 @Controller
 @RequestMapping(value = "/wechat/oauth2/")
 public class WeChatOAuth2Controller extends SysController {
-	
+
 	private static final Logger _log = LoggerFactory.getLogger(WeChatOAuth2Controller.class);
 
 	public static void main(String[] args) throws UnsupportedEncodingException {
@@ -105,24 +105,25 @@ public class WeChatOAuth2Controller extends SysController {
 		System.out.println("微信授权回调地址的请求参数为：" + wxMaps.toString());
 		ModelAndView andView = new ModelAndView();
 
-//		// 本地
-//		String code = request.getParameter("code");
-//		// 微信授权登陆获取到的用户信息
-//		String userData = getUserData(code, response);
-//		System.err.println("微信授权登陆返回的用户信息:" + userData);
-//		ObjectMapper mapper = new ObjectMapper();
-//		Map userMap = mapper.readValue(userData, Map.class); //
-//		// 微信授权登陆获取到的用户信息
-//		String openid = String.valueOf(userMap.get("openid"));
-//		String unionid = String.valueOf(userMap.get("unionid"));
-//		String nickname = String.valueOf(userMap.get("nickname"));
-//		String headimgurl = String.valueOf(userMap.get("headimgurl"));
+		// 本地
+		String code = request.getParameter("code");
+		// 微信授权登陆获取到的用户信息
+		String userData = getUserData(code, response);
+		System.err.println("微信授权登陆返回的用户信息:" + userData);
+		ObjectMapper mapper = new ObjectMapper();
+		Map userMap = mapper.readValue(userData, Map.class); //
+		// 微信授权登陆获取到的用户信息
+		String openid = String.valueOf(userMap.get("openid"));
+		String unionid = String.valueOf(userMap.get("unionid"));
+		String nickname = String.valueOf(userMap.get("nickname"));
+		String headimgurl = String.valueOf(userMap.get("headimgurl"));
 //
-//		System.out.println("微信回调解码之前的参数为：" + String.valueOf(wxMaps));
+		System.out.println("微信回调解码之前的参数为：" + String.valueOf(wxMaps));
 
+		// 对微信回调参数进行解码 MapUtils.decodeUrl(wxMaps);
+		// 微信回调登录校验
 		/*
-		 * // 对微信回调参数进行解码 MapUtils.decodeUrl(wxMaps); // 微信回调登录校验 if
-		 * (!SignUtils.verify1(wxMaps, SysContext.WXLOGINKEY)) {
+		 * if (!SignUtils.verify1(wxMaps, SysContext.WXLOGINKEY)) {
 		 * System.out.println("========微信校验出错======="); andView.addObject("errormsg",
 		 * "微信校验出错"); andView.setViewName("/htm/wechat/prompt/errors"); return andView;
 		 * }
@@ -130,10 +131,12 @@ public class WeChatOAuth2Controller extends SysController {
 
 		// 线上
 
-		String openid = String.valueOf(wxMaps.get("openid"));
-		String unionid = String.valueOf(wxMaps.get("unionid"));
-		String nickname = String.valueOf(wxMaps.get("nickname"));
-		String headimgurl = String.valueOf(wxMaps.get("headimgurl"));
+		/*
+		 * String openid = String.valueOf(wxMaps.get("openid")); String unionid =
+		 * String.valueOf(wxMaps.get("unionid")); String nickname =
+		 * String.valueOf(wxMaps.get("nickname")); String headimgurl =
+		 * String.valueOf(wxMaps.get("headimgurl"));
+		 */
 
 		System.out.println("微信登录获取到的用户 信息为：openid=" + openid + "====unionid=" + unionid + "=====nickname=" + nickname
 				+ "====headimgurl=" + headimgurl);
@@ -171,9 +174,15 @@ public class WeChatOAuth2Controller extends SysController {
 				return andView;
 			} else {
 				System.out.println("==============登录成功，开始返回===========");
+				String onlineId = String.valueOf(wechatLoginResult.get("onlineId"));
+				if (!onlineId.equals("") && !onlineId.equals("null") && onlineId != null) {
+					andView.addObject("userId", wechatLoginResult.get("userId"));
+					andView.addObject("onlineId", onlineId);
+				} else {
+					andView.addObject("payOrderId", wechatLoginResult.get("payOrderId"));
+					andView.addObject("oldUserId", wechatLoginResult.get("oldUserId"));
+				}
 				andView.addObject("JSURL", request.getRequestURL());
-				andView.addObject("userId", wechatLoginResult.get("userId"));
-				andView.addObject("onlineId", wechatLoginResult.get("onlineId"));
 				andView.setViewName(wechatLoginResult.get("msg").toString());
 				return andView;
 			}
@@ -201,20 +210,37 @@ public class WeChatOAuth2Controller extends SysController {
 		Map<String, Object> m = new HashMap<String, Object>();
 		String state = String.valueOf(map.get("state"));
 		String msg = "/htm/wechat/index/index";
+		// 邀请人id
 		String promoterId = "";
+		// 上线id
 		String onlineId = "";
-		if (state != null && !state.equals("") && !state.equals("null") && !state.equals("login") && state.contains(",")) {
+		// 支付订单id
+		String payOrderId = "";
+		// 订单旧用户id
+		String oldUserId = "";
+		if (state != null && !state.equals("") && !state.equals("null") && !state.equals("login")
+				&& state.contains(",")) {
 			String[] states = state.split(",");
-			promoterId = states[1];
-			map.put("promoterId", promoterId);
 			msg = "redirect:" + states[0].replaceFirst(SysContext.SYS_NAME, "");
-			onlineId = states[2];
-			map.put("promoterId", promoterId);
-			map.put("onlineId", onlineId);
+			if (states.length == 3) {
+				if (states[3].equals("invite")) {
+					promoterId = states[1];
+					onlineId = states[2];
+					map.put("promoterId", promoterId);
+					map.put("onlineId", onlineId);
+				} else {
+					payOrderId = states[1];
+					oldUserId = states[2];
+					map.put("payOrderId", payOrderId);
+					map.put("oldUserId", oldUserId);
+				}
+			}
 		}
 		System.out.println("微信用户登录的参数为：" + String.valueOf(map));
 		String wechatLoginUrl = SysContext.USERCENTERURL + "/user/login/by/wx";
-		String wechatLoginResults = OkhttpUtils.postByJsonParams(wechatLoginUrl, map)/*"{\"result\":\"1\", \"msg\":\"/htm/wechat/index/index\", \"userId\":\"525616558689484801\", \"expirationTime\":\"2018-8-10 20:18:18\", \"sign\":\"asdaadadadadadadda\"}"*/;
+		String wechatLoginResults = OkhttpUtils.postByJsonParams(wechatLoginUrl, map)/*
+																						 * "{\"result\":\"1\", \"msg\":\"/htm/wechat/index/index\", \"userId\":\"525616558689484801\", \"expirationTime\":\"2018-8-10 20:18:18\", \"sign\":\"asdaadadadadadadda\"}"
+																						 */;
 		if (!wechatLoginResults.equals("") && !wechatLoginResults.equals("null") && wechatLoginResults != null) {
 			ObjectMapper objectMapper = new ObjectMapper();
 			Map<String, Object> resultMap = objectMapper.readValue(wechatLoginResults, Map.class);
@@ -248,9 +274,11 @@ public class WeChatOAuth2Controller extends SysController {
 						buyRelationMap.put("onlineId", onlineId);
 						buyRelationMap.put("createTime", new Date());
 						_log.info("添加用戶商品購買關係的參賽為: {}", buyRelationMap);
-						String addBuyRelationResult = OkhttpUtils.postByJsonParams(SysContext.ORDERURL + "/ord/goodsbuyrelation", buyRelationMap);
+						String addBuyRelationResult = OkhttpUtils
+								.postByJsonParams(SysContext.ORDERURL + "/ord/goodsbuyrelation", buyRelationMap);
 						_log.info("添加用戶商品購買關係的返回值为: {}", addBuyRelationResult);
-						Map<String, Object> addBuyRelationResultMap = objectMapper.readValue(addBuyRelationResult, Map.class);
+						Map<String, Object> addBuyRelationResultMap = objectMapper.readValue(addBuyRelationResult,
+								Map.class);
 						System.out.println(addBuyRelationResultMap.get("result"));
 						if (!String.valueOf(addBuyRelationResultMap.get("result")).equals("1")) {
 							m.put("result", -8);
@@ -258,11 +286,17 @@ public class WeChatOAuth2Controller extends SysController {
 							return m;
 						}
 					}
+					m.put("promoterId", promoterId);
+					m.put("onlineId", onlineId);
 				}
+
+				if (payOrderId != null && !"".equals(payOrderId) && !"null".equals(payOrderId)) {
+					m.put("payOrderId", payOrderId);
+					m.put("oldUserId", oldUserId);
+				}
+				
 				m = insertRegInfoAndCacheUserInfo(map);
 				m.put("msg", msg);
-				m.put("promoterId", promoterId);
-				m.put("onlineId", onlineId);
 			} else if (wechatLoginResult.equals("0")) {
 				System.err.println(map.get("wxNickname") + "：缓存失败");
 				m.put("result", wechatLoginResult);
@@ -282,9 +316,18 @@ public class WeChatOAuth2Controller extends SysController {
 				} else {
 					m = regMap;
 				}
+				
+				if (onlineId != null && !onlineId.equals("") && !onlineId.equals("null")) {
+					m.put("promoterId", promoterId);
+					m.put("onlineId", onlineId);
+				}
+				
+				if (payOrderId != null && !"".equals(payOrderId) && !"null".equals(payOrderId)) {
+					m.put("payOrderId", payOrderId);
+					m.put("oldUserId", oldUserId);
+				}
 				m.put("msg", msg);
-				m.put("promoterId", promoterId);
-				m.put("onlineId", onlineId);
+				
 			} else if (wechatLoginResult.equals("-3")) {
 				System.err.println(map.get("wxNickname") + "：密码错误");
 				m.put("result", wechatLoginResult);
