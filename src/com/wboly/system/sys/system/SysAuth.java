@@ -97,8 +97,11 @@ public class SysAuth implements Filter {
 				} else if (!StringUtils.isAnyBlank(payOrderId, oldUserId)
 						&& (userId.equals("") || userId.equals("null") || userId == null)) {
 					System.out.println("拦截器获取到的支付订单id为：" + payOrderId);
-					String backUrl = WxConfig.onLineURL + "/wechat/oauth2/myPreReg.htm";// 微信回调地址
-					String encodeUrl = URLEncoder.encode(backUrl, "UTF-8");// 对url进行编码
+
+//					  String backUrl = WxConfig.onLineURL + "/wechat/oauth2/myPreReg.htm";// 微信回调地址
+//					  String encodeUrl = URLEncoder.encode(backUrl, "UTF-8");// 对url进行编码
+
+					String encodeUrl = "https%3A%2F%2Fwww.duamai.com%2Fwxx-svr%2Fwxx%2Fresponse%2Fauthorizecode";// 线上微信回调地址
 					String state = requestUrlss + "," + payOrderId + "," + oldUserId + ",transfer";
 					String url = SITE.AUTHORIZE.getMessage() + "?appid=" + SysContext.wxAppId + "&redirect_uri="
 							+ encodeUrl + "&response_type=code&scope=snsapi_userinfo&state=" + state;
