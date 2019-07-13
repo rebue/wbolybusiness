@@ -227,19 +227,23 @@
 						var picPath = this.parentNode.querySelector(".car-inner-box img[class='goodspic']").src;
 						//邀请人id
 						var inviteId="";
+						var inviteWxface="";
+						var inviteWxNickname="";
 						if(this.parentNode.querySelector("input[name='invite']") !=null){
 							inviteId= this.parentNode.querySelector("input[name='invite']").value;
+							inviteWxface= this.parentNode.querySelector("input[name='inviteWxface']").value;
+							inviteWxNickname= this.parentNode.querySelector("input[name='inviteWxNickname']").value;
 						}
 						 
 						
-						var unitJson = '{"salePrice":"' + salePrice + '","cashbackAmount":"' + '","inviteId":"'
+						var unitJson = '{"salePrice":"' + salePrice + '","cashbackAmount":"' + cashbackAmount + '","inviteId":"'
 						+ inviteId
-								+ cashbackAmount + '","onlineId":"' + onlineId
-								+ '","onlineSpecId":"' + onlineSpecId + '","cartId":"' + cartId
+								+ '","onlineId":"' + onlineId
+								+ '","onlineSpecId":"' + onlineSpecId + '","cartId":"' + cartId + '","inviteWxface":"' + inviteWxface+ '","inviteWxNickname":"' + inviteWxNickname
 								+ '","buyCount":"' + number + '","onlineTitle":"' + onlineTitle
 								+ '","onlineSpec":"' + onlineSpec + '","productId":"' + productId
 								+ '","subjectType":"' + subjectType + '","supplierId":"' + supplierId
-								+ '","subjectType":"' + subjectType + '","picPath":"' + picPath + '"}';
+								+ '","picPath":"' + picPath + '"}';
 						arr.push(unitJson);
 					});
 					if (!flag) {
@@ -444,6 +448,8 @@
 							html += '			<input type="text" name="subjectType" value="' + data.message[i].subjectType + '"/>';
 							html += '			<input type="text" name="supplierId" value="' + data.message[i].supplierId + '"/>';
 							html += '			<input type="text" name="pledgeType" value="' + data.message[i].pledgeType + '"/>';
+							html += '			<input type="text" name="inviteWxNickname" value="' + data.message[i].uplineWxNickname + '"/>';
+							html += '			<input type="text" name="inviteWxface" value="' + data.message[i].uplineWxFace + '"/>';
 							html += '			<input type="text" name="cartCount" id="cartCount' + data.message[i].id + '" value="' + data.message[i].cartCount + '"/>';
 							html += '		</div>';
 							if (data.message[i].subjectType == 1 &&  data.message[i].uplineWxNickname !='' && data.message[i].uplineWxNickname !=undefined) {
@@ -454,7 +460,7 @@
 								}else{
 									wxName=data.message[i].uplineWxNickname;
 								}
-								html += '<div class="invites" style="height:3em;fontSize:3em; color:#333;  line-height:3em; " >邀请人: ' +'<span style="padding-right:0.5em;"  ><img style="height:2em;line-height:2em; border:solid 1px #bbb;border-radius:20px; margin-bottom:-0.5em;" src="'+data.message[i].uplineWxFace+'"></span>'+
+								html += '<div class="invites" style="  height:3em;fontSize:3em; color:#333;  line-height:3em; " >邀请人: ' +'<span style="padding-right:0.5em;"  ><img style="height:2em;line-height:2em; border:solid 1px #bbb;border-radius:20px; margin-bottom:-0.5em;" src="'+data.message[i].uplineWxFace+'"></span>'+
 										wxName + '<a style="margin-left:20px;color:red"  class="invite"  id="'+data.message[i].id+'">点击转为自己</a>';
 								
 								html += '			<input type="hidden" id="'+data.message[i].id+'" name="invite" value="' + data.message[i].uplineUserId + '"/> </div> ';

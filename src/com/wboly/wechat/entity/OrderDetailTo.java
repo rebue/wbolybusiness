@@ -8,77 +8,87 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  */
 @JsonInclude(Include.NON_NULL)
 public class OrderDetailTo {
-	/**
-	 * 上线ID
-	 */
-	private Long onlineId;
+    /**
+     * 上线ID
+     */
+    private Long onlineId;
 
-	/**
-	 * 上线规格ID
-	 */
-	private Long onlineSpecId;
-	
-	/**
-	 * 邀请人id
-	 */
-	private Long  inviteId;
+    /**
+     * 上线规格ID
+     */
+    private Long onlineSpecId;
 
-	/**
-	 * 购买数量
-	 */
-	private Integer buyCount;
-	
-	
+    /**
+     * 邀请人id
+     */
+    private Long inviteId;
 
-	public Long getInviteId() {
-		return inviteId;
-	}
+    /**
+     * 是否匹配给邀请人
+     */
+    private boolean isInviter;
+    /**
+     * 购买数量
+     */
+    private Integer buyCount;
 
-	public void setInviteId(Long inviteId) {
-		this.inviteId = inviteId;
-	}
+    public Long getInviteId() {
+        return inviteId;
+    }
 
-	/**
-	 * 购物车ID
-	 */
-	private Long cartId;
+    public void setInviteId(Long inviteId) {
+        this.inviteId = inviteId;
+    }
 
-	public Long getOnlineId() {
-		return onlineId;
-	}
+    /**
+     * 购物车ID
+     */
+    private Long cartId;
 
-	public void setOnlineId(Long onlineId) {
-		this.onlineId = onlineId;
-	}
+    public Long getOnlineId() {
+        return onlineId;
+    }
 
-	public Long getOnlineSpecId() {
-		return onlineSpecId;
-	}
+    public void setOnlineId(Long onlineId) {
+        this.onlineId = onlineId;
+    }
 
-	public void setOnlineSpecId(Long onlineSpecId) {
-		this.onlineSpecId = onlineSpecId;
-	}
+    public Long getOnlineSpecId() {
+        return onlineSpecId;
+    }
 
-	public Integer getBuyCount() {
-		return buyCount;
-	}
+    public void setOnlineSpecId(Long onlineSpecId) {
+        this.onlineSpecId = onlineSpecId;
+    }
 
-	public void setBuyCount(Integer buyCount) {
-		this.buyCount = buyCount;
-	}
+    public Integer getBuyCount() {
+        return buyCount;
+    }
 
-	public Long getCartId() {
-		return cartId;
-	}
+    public void setBuyCount(Integer buyCount) {
+        this.buyCount = buyCount;
+    }
 
-	public void setCartId(Long cartId) {
-		this.cartId = cartId;
-	}
+    public Long getCartId() {
+        return cartId;
+    }
 
-	@Override
-	public String toString() {
-		return "OrderDetailTo [onlineId=" + onlineId + ", onlineSpecId=" + onlineSpecId + ", buyCount=" + buyCount
-				+ ", cartId=" + cartId + "]";
-	}
+    public void setCartId(Long cartId) {
+        this.cartId = cartId;
+    }
+
+    public boolean isInviter() {
+        return isInviter;
+    }
+
+    public void setInviter(boolean isInviter) {
+        this.isInviter = isInviter;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderDetailTo [onlineId=" + onlineId + ", onlineSpecId=" + onlineSpecId + ", inviteId=" + inviteId
+                + ", isInviter=" + isInviter + ", buyCount=" + buyCount + ", cartId=" + cartId + "]";
+    }
 
 }

@@ -26,7 +26,7 @@
 	<div id="main-checkorder" class="mui-scroll-wrapper">
 		<div class="mui-content mui-scroll">
 			<div id="goods-main-box" class="check-order-box">
-				<form class="mui-input-group" id="goods-group"></form>
+				<div class="mui-input-group" id="goods-group"></div>
 			</div>
 
 			<ul class="mui-table-view" id="AddList"></ul>
@@ -72,6 +72,10 @@
 				//点击地址栏，转到地址设置页面
 				mui("#AddList")[0].addEventListener("tap",function(e){
 					window.location.href = "${ctx}/wechat/user/newAddressPage.htm?promoterId=${userId}";
+				});
+				
+				mui('body').on('tap', '.modifyInviterId', function() {
+					modifyInviteIdByid(this.id);
 				});
 
 				//订单商品的详细信息，在点击去付款按钮时会整理成一个JSON，详见控制台
@@ -119,7 +123,7 @@
 							cartId: json.info[i].cartId,
 							buyCount: json.info[i].buyCount,
 							inviteId: json.info[i].inviteId,
-
+							isInviter: json.info[i].isInviter,
 						})
 					}
 					console.log(details);
@@ -188,6 +192,35 @@
 			}
 			return Number(d.replace(".", "")) * Number(e.replace(".", "")) / Math.pow(10, c);
 		};
+		
+		function modifyInviteIdByid(data){
+			var el = document.getElementById(data);
+			var dataArr = data.split('/')
+			if(el.innerText == "转给自己"){
+				console.log("自己")
+				document.getElementById(dataArr[0]+'face').style.display = 'none';
+				document.getElementById(dataArr[0]+'tips').innerText = '优先匹配给自己';
+				for ( var i in json.info) {
+					if(json.info[i].cartId == dataArr[0]){
+						el.innerText = "转给邀请人";
+						json.info[i].isInviter=false;
+					}
+				}
+			}else if(el.innerText == "转给邀请人"){
+				console.log("邀请人")
+				document.getElementById(dataArr[0]+'face').style.display = 'flex';
+				document.getElementById(dataArr[0]+'tips').innerText = '优先匹配给邀请人';
+				for ( var i in json.info) {
+					if(json.info[i].cartId == dataArr[0]){
+						el.innerText = "转给自己";
+						json.info[i].isInviter=true;
+					}
+				}
+			}else{
+				return;
+			}
+			console.log(json.info);
+		}
 
 		function GetCartList() {
 			if (localStorage.getItem("orderInfo") != null) {
@@ -206,8 +239,11 @@
 				var html = '';
 				document.body.querySelector("#goods-group").innerHTML = html;
 				mui.each(json.info, function(index, item) {
-					html += '<div class="mui-input-row mui-checkbox mui-left">';
-					html += '	<input type="hidden" name="onlineId" value="' + item.onlineId + '"/>';
+					if(item.subjectType==1 && item.inviteWxNickname != "" ){
+						html += '<div style="height:146px"  class="mui-input-row mui-checkbox mui-left">';
+					}else{
+						html += '<div  class="mui-input-row mui-checkbox mui-left">';
+					}					html += '	<input type="hidden" name="onlineId" value="' + item.onlineId + '"/>';
 					html += '	<div class="car-inner-box">';
 					html += '		<div class="car-inner-box-img">';
 					if(item.subjectType==1){
@@ -221,13 +257,15 @@
 					}
 					html += '		</div>';
 					html += '		<div class="car-inner-body">';
+
 					html += '			<input type="hidden" name="cartId" value="' + item.cartId + '"/>';
 
 					html += '			<h5>';
-					html += '				<a href="${ctx}/wechat/goods/' + item.parm + '.htm?promoterId=${userId}">' + item.onlineTitle + '</a>';
+					html += '				<a >' + item.onlineTitle + '</a>';
 					html += '			</h5>';
-					html += '			<p>' + item.onlineSpec + '</p><br/>';
-					html += '			<div class="price-area">';
+					html += '			<p>' + item.onlineSpec + '</p>';
+
+					html += '			<div style="width:74%;bottom:unset;padding-top:9px;"  class="price-area">';
 					if(item.subjectType==1){
 						if(item.inviteId !=undefined && item.inviteId !="" ){
 							html += '			<input type="hidden" name="inviteId" value="' + item.inviteId + '"/>';
@@ -238,10 +276,37 @@
 						html += '				<span class="m-price">¥<span>' + formatCurrency(item.salePrice) + '</span></span>';
 						html += '  				<span class="b-money"> 返 <span>' + formatCurrency(item.cashbackAmount) + '</span> 元</span>';
 					}
+
+					html += '			<div style="float:right" class="numbox"   >数量：<span>' + item.buyCount + '</span></div>';
+
 					html += '			</div>';
-					html += '			<div class="numbox">数量：<span>' + item.buyCount + '</span></div>';
 					html += '		</div>';
+
+
 					html += '	</div>';
+					
+					if(item.subjectType==1 && item.inviteId != "" ){
+						console.log(item.inviteWxNickname.length)
+						var wxName="";
+						if(item.inviteWxNickname.length >4){
+							wxName=item.inviteWxNickname.substr(0,4)+"..";
+						}else{
+							wxName=item.inviteWxNickname;
+						}
+						
+						html += '<div style="top:88px;overflow:hidden;line-height:21px;position:absolute;display: flex;align-items:center;"  >';
+						html += 		'<div id="'+item.cartId+'tips'+'" >优先匹配给自己</div>';
+						html +=			'<div id="'+item.cartId+'face'+'" style="display:none;flex-direction:column;margin:0 1rem 0 0.4rem;align-items:center;" >';
+						html +=				'<img style="height:2rem;border-radius:4rem;width:2rem;border:solid 1px #9E9B9B;"  src="' + item.inviteWxface  +'" alt="头像" />';
+						html +=				'<span style="font-size:0.7rem;"  >'+wxName+'</span>';
+						html +=			'</div>';
+						html +=			'<div>';
+						html +=	 			'<button class="modifyInviterId"  id='+item.cartId+'/'+item.inviteId+'  style="color:#fe3000;height:24px;padding:2px 8px 0;border-radius:5.22rem;background:beige;"  >转给邀请人</button>';
+						html +=			'</div>';
+						html += '</div>'
+					}
+
+					
 					html += '</div>';
 				});
 				document.body.querySelector("#goods-group").innerHTML = html;

@@ -155,17 +155,18 @@
 							</li>
 						</ul>
 					</li>
-					<li class="mui-table-view-cell setPw" id="${ctx }/wechat/user/updatepaypwdpage.htm?userId=${userId}">
+					<!-- 以下三个设置为display：none而不是删除是因为某个js里面会垃圾地获取这里的id或者class，一旦获取不到就会不往下走，所以就让它冗余下去吧，整vue -->
+					<li style="display:none;"  class="mui-table-view-cell setPw" id="${ctx }/wechat/user/updatepaypwdpage.htm?userId=${userId}">
 						<a href="${ctx }/wechat/user/updatepaypwdpage.htm?userId=${userId}" class="mui-navigate-right notshare"> 
 							<span class="mui-icon mui-icon-compose mui-pull-left"></span> 修改或设置支付密码
 						</a>
 					</li>
-					<li class="mui-table-view-cell setPw" id="${ctx }/wechat/user/updateloginpwdpage.htm?userId=${userId}">
+					<li style="display:none;"   class="mui-table-view-cell setPw" id="${ctx }/wechat/user/updateloginpwdpage.htm?userId=${userId}">
 						<a href="${ctx }/wechat/user/updateloginpwdpage.htm?userId=${userId}" class="mui-navigate-right notshare"> 
 							<span class="mui-icon mui-icon-compose mui-pull-left"></span> 修改或设置登录密码
 						</a>
 					</li>
-					<li class="mui-table-view-cell setName" id="${ctx }/wechat/user/setLoninNamePage.htm?userId=${userId}">
+					<li style="display:none;"  class="mui-table-view-cell setName" id="${ctx }/wechat/user/setLoninNamePage.htm?userId=${userId}">
 						<a href="${ctx }/wechat/user/setLoninNamePage.htm?userId=${userId}" class="mui-navigate-right notshare"> 
 							<span class="mui-icon mui-icon-compose mui-pull-left"></span> 修改或设置登录名称
 						</a>
