@@ -269,6 +269,9 @@
 										}else{
 											html+='<a href="${ctx}/wechat/goods/goodsDetail.htm?guideDisplay=none&onlineId='+  data.message[i].items[j].onlineId+ '&promoterId=${userId}'+ '"  class="mui-btn locked" style = "margin-top:63px">满足免单条件</a>';
 										}
+									}else{
+										html+='	<a href="${ctx}/wechat/goods/goodsDetail.htm?guideDisplay=none&onlineId='+  data.message[i].items[j].onlineId+ '&promoterId=${userId}'+ '"  class="mui-btn" style = "margin-top:63px">匹配中</a>';
+
 									}
 								};
 								html += '		</div>';
@@ -594,6 +597,9 @@
 										}else{
 											html+='<a href="${ctx}/wechat/goods/goodsDetail.htm?guideDisplay=none&onlineId='+  data.message[i].items[j].onlineId+ '&promoterId=${userId}'+ '"  class="mui-btn locked" style = "margin-top:63px">满足免单条件</a>';
 										}
+									}else{
+										html+='	<a href="${ctx}/wechat/goods/goodsDetail.htm?guideDisplay=none&onlineId='+  data.message[i].items[j].onlineId+ '&promoterId=${userId}'+ '"  class="mui-btn" style = "margin-top:63px">匹配中</a>';
+
 									}
 								};
 								html += '	</div>';
