@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +27,6 @@ import com.wboly.system.sys.system.SysCache;
 import com.wboly.system.sys.system.SysContext;
 import com.wboly.system.sys.util.Base64EnOut;
 import com.wboly.system.sys.util.JsonUtil;
-import com.wboly.wechat.entity.ModifyInviteIdTo;
 import com.wboly.wechat.entity.OrderDetailTo;
 import com.wboly.wechat.entity.OrderTo;
 
@@ -318,12 +316,10 @@ public class WeChatOrderController extends SysController {
             orderDetailTo.setOnlineSpecId(Long.parseLong(String.valueOf(detailList.get(i).get("onlineSpecId"))));
             orderDetailTo.setCartId(Long.parseLong(String.valueOf(detailList.get(i).get("cartId"))));
             orderDetailTo.setBuyCount(Integer.parseInt(String.valueOf(detailList.get(i).get("buyCount"))));
-            if (detailList.get(i).get("inviteId") != null && !detailList.get(i).get("inviteId").equals("")
-                    && detailList.get(i).get("inviteId").toString().indexOf(".") == -1) {
-                orderDetailTo.setInviteId(Long.parseLong(String.valueOf(detailList.get(i).get("inviteId"))));
-            }
+
             if (detailList.get(i).get("isInviter") != null && (boolean) detailList.get(i).get("isInviter") != false) {
-                orderDetailTo.setInviter((boolean) detailList.get(i).get("isInviter"));
+
+                orderDetailTo.setInviteId(Long.parseLong(String.valueOf(detailList.get(i).get("inviteId"))));
             }
             detailsList.add(orderDetailTo);
         }
@@ -530,53 +526,53 @@ public class WeChatOrderController extends SysController {
         this.render(response, results);
     }
 
-	/**
-	 * 转移订单
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws IOException
-	 */
-	@SuppressWarnings("rawtypes")
-	@RequestMapping(value = "/wechat/order/transfer", method = RequestMethod.GET)
-	public ModelAndView transferOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		_log.info("开始转移订单");
-		ModelAndView andView = new ModelAndView();
-		// 当前登录用户id
-		String userId = SysCache.getWeChatUserByColumn(request, "userId");
-		if (userId == null || userId.equals("") || userId.equals("null")) {
-			andView.setViewName("/htm/wechat/prompt/500");
-			return andView;
-		}
-		// 订单旧用户id
-		String oldUserId = request.getParameter("oldUserId");
-		// 支付订单id
-		String payOrderId = request.getParameter("payOrderId");
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("payOrderId", payOrderId);
-		map.put("oldUserId", oldUserId);
-		map.put("newUserId", userId);
-		_log.info("转移订单的请求参数为：{}", String.valueOf(map));
-		String results = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/shift", map);
-		_log.info("转移订单的返回值为：{}", results);
-		if (results == null || results.equals("") || results.equals("null")) {
-			_log.error("转移订单出现异常，请求的参数为：{}", String.valueOf(map));
-			andView.setViewName("/htm/wechat/prompt/500");
-			return andView;
-		}
+    /**
+     * 转移订单
+     * 
+     * @param request
+     * @param response
+     * @throws IOException
+     */
+    @SuppressWarnings("rawtypes")
+    @RequestMapping(value = "/wechat/order/transfer", method = RequestMethod.GET)
+    public ModelAndView transferOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        _log.info("开始转移订单");
+        ModelAndView andView = new ModelAndView();
+        // 当前登录用户id
+        String userId = SysCache.getWeChatUserByColumn(request, "userId");
+        if (userId == null || userId.equals("") || userId.equals("null")) {
+            andView.setViewName("/htm/wechat/prompt/500");
+            return andView;
+        }
+        // 订单旧用户id
+        String oldUserId = request.getParameter("oldUserId");
+        // 支付订单id
+        String payOrderId = request.getParameter("payOrderId");
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("payOrderId", payOrderId);
+        map.put("oldUserId", oldUserId);
+        map.put("newUserId", userId);
+        _log.info("转移订单的请求参数为：{}", String.valueOf(map));
+        String results = OkhttpUtils.get(SysContext.ORDERURL + "/ord/order/shift", map);
+        _log.info("转移订单的返回值为：{}", results);
+        if (results == null || results.equals("") || results.equals("null")) {
+            _log.error("转移订单出现异常，请求的参数为：{}", String.valueOf(map));
+            andView.setViewName("/htm/wechat/prompt/500");
+            return andView;
+        }
 
-		ObjectMapper mapper = new ObjectMapper();
-		Map m = mapper.readValue(results, Map.class);
-		int result = Integer.parseInt(String.valueOf(m.get("result")));
-		if (result != 1) {
-			andView.setViewName("/htm/wechat/prompt/500");
-			return andView;
-		}
-		andView.addObject("userId", userId);
-		andView.addObject("payOrderId", payOrderId);
-		andView.addObject("orderMoney",
-				new BigDecimal(String.valueOf(m.get("realMoney"))).setScale(4, BigDecimal.ROUND_HALF_UP));
-		andView.setViewName("/htm/wechat/pay/paycenter");
-		return andView;
-	}
+        ObjectMapper mapper = new ObjectMapper();
+        Map m = mapper.readValue(results, Map.class);
+        int result = Integer.parseInt(String.valueOf(m.get("result")));
+        if (result != 1) {
+            andView.setViewName("/htm/wechat/prompt/500");
+            return andView;
+        }
+        andView.addObject("userId", userId);
+        andView.addObject("payOrderId", payOrderId);
+        andView.addObject("orderMoney",
+                new BigDecimal(String.valueOf(m.get("realMoney"))).setScale(4, BigDecimal.ROUND_HALF_UP));
+        andView.setViewName("/htm/wechat/pay/paycenter");
+        return andView;
+    }
 }

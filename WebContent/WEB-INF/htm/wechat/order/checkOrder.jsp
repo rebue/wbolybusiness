@@ -242,7 +242,7 @@
 					if(item.subjectType==1 && item.inviteWxNickname != "" ){
 						html += '<div style="height:146px"  class="mui-input-row mui-checkbox mui-left">';
 					}else{
-						html += '<div  class="mui-input-row mui-checkbox mui-left">';
+						html += '<div style="height:85px;"   class="mui-input-row mui-checkbox mui-left">';
 					}					html += '	<input type="hidden" name="onlineId" value="' + item.onlineId + '"/>';
 					html += '	<div class="car-inner-box">';
 					html += '		<div class="car-inner-box-img">';

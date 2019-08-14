@@ -269,14 +269,12 @@ public class WeChatOAuth2Controller extends SysController {
 					System.out.println("登录成功后对比的用户id：promoterId=" + promoterId + ", userId=" + userId);
 					if (!promoterId.equals(userId)) {
 						Map<String, Object> buyRelationMap = new HashMap<String, Object>();
-						buyRelationMap.put("uplineUserId", promoterId);
-						buyRelationMap.put("downlineUserId", userId);
-						buyRelationMap.put("onlineId", onlineId);
-						buyRelationMap.put("createTime", new Date());
-						_log.info("添加用戶商品購買關係的參賽為: {}", buyRelationMap);
+						buyRelationMap.put("inviterId", promoterId);
+						buyRelationMap.put("inviteeId", userId);
+						_log.info("添加用戶购买关系的参数为: {}", buyRelationMap);
 						String addBuyRelationResult = OkhttpUtils
-								.postByJsonParams(SysContext.ORDERURL + "/ord/goodsbuyrelation", buyRelationMap);
-						_log.info("添加用戶商品購買關係的返回值为: {}", addBuyRelationResult);
+								.postByJsonParams(SysContext.IBRURL + "/ibr/invite-relation", buyRelationMap);
+						_log.info("添加用戶购买关系的结果为: {}", addBuyRelationResult);
 						Map<String, Object> addBuyRelationResultMap = objectMapper.readValue(addBuyRelationResult,
 								Map.class);
 						System.out.println(addBuyRelationResultMap.get("result"));

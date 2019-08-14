@@ -460,7 +460,7 @@
 								}else{
 									wxName=data.message[i].uplineWxNickname;
 								}
-								html += '<div class="invites" style="  height:3em;fontSize:3em; color:#333;  line-height:3em; " >邀请人: ' +'<span style="padding-right:0.5em;"  ><img style="height:2em;line-height:2em; border:solid 1px #bbb;border-radius:20px; margin-bottom:-0.5em;" src="'+data.message[i].uplineWxFace+'"></span>'+
+								html += '<div   class="invites" style="display:none;"  height:3em;fontSize:3em; color:#333;  line-height:3em; " >邀请人: ' +'<span style="padding-right:0.5em;"  ><img style="height:2em;line-height:2em; border:solid 1px #bbb;border-radius:20px; margin-bottom:-0.5em;" src="'+data.message[i].uplineWxFace+'"></span>'+
 										wxName + '<a style="margin-left:20px;color:red"  class="invite"  id="'+data.message[i].id+'">点击转为自己</a>';
 								
 								html += '			<input type="hidden" id="'+data.message[i].id+'" name="invite" value="' + data.message[i].uplineUserId + '"/> </div> ';
