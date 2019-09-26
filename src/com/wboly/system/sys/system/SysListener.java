@@ -99,13 +99,13 @@ public class SysListener implements ServletContextListener {
         String kdiUrl = PropertiesUtil.getPropertiesValue("system.properties", "KDIURL").toString();
         SysContext.KDIURL = kdiUrl;
 
-        // 积分微服务地址
+        // 快递微服务地址
         String pntUrl = PropertiesUtil.getPropertiesValue("system.properties", "PNTURL").toString();
         SysContext.PNTURL = pntUrl;
 
-        // 购买关系微服务地址
-        String ibrUrl = PropertiesUtil.getPropertiesValue("system.properties", "IBRURL").toString();
-        SysContext.IBRURL = ibrUrl;
+        // 大卖微服务地址
+        String damaiUrl = PropertiesUtil.getPropertiesValue("system.properties", "DAMAIURL").toString();
+        SysContext.DAMAIURL = damaiUrl;
 
         /** 微信登录校验key **/
         String loginSignKey = PropertiesUtil.getPropertiesValue("system.properties", "LOGINSIGNKEY").toString();
