@@ -78,6 +78,10 @@ public class SysListener implements ServletContextListener {
         String areaUrl = PropertiesUtil.getPropertiesValue("system.properties", "AREAURL").toString();
         SysContext.AREAURL = areaUrl;
 
+        // 购买关系微服务地址
+        String ibrUrl = PropertiesUtil.getPropertiesValue("system.properties", "IBRURL").toString();
+        SysContext.IBRURL = ibrUrl;
+
         // 微信微服务地址
         String wxxUrl = PropertiesUtil.getPropertiesValue("system.properties", "WXXURL").toString();
         SysContext.WXXURL = wxxUrl;

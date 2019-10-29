@@ -70,10 +70,11 @@ public class SysAuth implements Filter {
             if (requestUrlss.contains("/wechat/oauth2/myPreReg.htm")
                     || requestUrlss.contains("/wechat/oauth2/checkSignature.htm")
                     || requestUrlss.contains("/wechat/user/rulePage.htm")) {
+                System.out.println("11111111111");
                 chain.doFilter(servletRequest, servletResponse);
             } else {
 
-//				CookiesUtil.setCookie("oNklT0bp29pc3Qtk0UEdnCVzotKU", resp);
+//              CookiesUtil.setCookie("oNklT0bp29pc3Qtk0UEdnCVzotKU", resp);
                 // 获取当前登录用户编号
                 String userId = SysCache.getWeChatUserByColumn(request, "userId");
                 System.out.println("拦截器获取到的当前用户id为：" + userId);
@@ -86,8 +87,13 @@ public class SysAuth implements Filter {
                 String oldUserId = request.getParameter("oldUserId");
                 if (!StringUtils.isAnyBlank(promoterId, onlineId) && !userId.equals(promoterId)) {
                     System.out.println("拦截器获取到的上线id为：" + onlineId);
-                    String encodeUrl = "https%3A%2F%2Fwww.duamai.com%2Fwxx-svr%2Fwxx%2Fresponse%2Fauthorizecode";// 线上微信回调地址
-//					String encodeUrl = "http%3A%2F%2F596038980.mynatapp.cc%2Fwxx-svr%2Fwxx%2Fresponse%2Fauthorizecode";// 本地微信回调地址
+                    // 线上微信回调地址
+                    String encodeUrl = "https%3A%2F%2Fwww.duamai.com%2Fwxx-svr%2Fwxx%2Fresponse%2Fauthorizecode%3fappid%3d"
+                            + SysContext.wxAppId;
+                    // 线下微信回调地址
+                    // String encodeUrl =
+                    // "http%3A%2F%2Fxym.natapp1.cc%2Fwxx%2Fresponse%2Fauthorizecode%3fappid%3d"+SysContext.wxAppId
+
                     String state = requestUrlss + "," + promoterId + "," + onlineId + ",invite";
                     String url = SITE.AUTHORIZE.getMessage() + "?appid=" + SysContext.wxAppId + "&redirect_uri="
                             + encodeUrl + "&response_type=code&scope=snsapi_userinfo&state=" + state;
@@ -97,16 +103,22 @@ public class SysAuth implements Filter {
                         && (userId.equals("") || userId.equals("null") || userId == null)) {
                     System.out.println("拦截器获取到的支付订单id为：" + payOrderId);
 
-//					  String backUrl = WxConfig.onLineURL + "/wechat/oauth2/myPreReg.htm";// 微信回调地址
-//					  String encodeUrl = URLEncoder.encode(backUrl, "UTF-8");// 对url进行编码
-
-                    String encodeUrl = "https%3A%2F%2Fwww.duamai.com%2Fwxx-svr%2Fwxx%2Fresponse%2Fauthorizecode";// 线上微信回调地址
+//                    String backUrl = WxConfig.onLineURL + "/wechat/oauth2/myPreReg.htm";// 微信回调地址
+//                    String encodeUrl = URLEncoder.encode(backUrl, "UTF-8");// 对url进行编码
+                    // 线上微信回调地址
+                    String encodeUrl = "https%3A%2F%2Fwww.duamai.com%2Fwxx-svr%2Fwxx%2Fresponse%2Fauthorizecode%3fappid%3d"
+                            + SysContext.wxAppId;
+                    // 线下微信回调地址
+                    // String encodeUrl =
+                    // "http%3A%2F%2Fxym.natapp1.cc%2Fwxx%2Fresponse%2Fauthorizecode%3fappid%3d"+
+                    // SysContext.wxAppId;
                     String state = requestUrlss + "," + payOrderId + "," + oldUserId + ",transfer";
                     String url = SITE.AUTHORIZE.getMessage() + "?appid=" + SysContext.wxAppId + "&redirect_uri="
                             + encodeUrl + "&response_type=code&scope=snsapi_userinfo&state=" + state;
                     System.out.println(url);
                     resp.sendRedirect(url);
                 } else {
+                    System.out.println("2222222");
                     chain.doFilter(servletRequest, servletResponse);
                 }
             }

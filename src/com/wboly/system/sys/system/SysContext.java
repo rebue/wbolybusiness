@@ -124,4 +124,9 @@ public class SysContext {
      * 购买关系微服务地址
      */
     public static String IBRURL;
+
+    /**
+     * 大卖微服务地址
+     */
+    public static String DAMAIURL;
 }
