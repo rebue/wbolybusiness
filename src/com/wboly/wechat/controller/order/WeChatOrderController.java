@@ -564,10 +564,17 @@ public class WeChatOrderController extends SysController {
         ObjectMapper mapper = new ObjectMapper();
         Map m = mapper.readValue(results, Map.class);
         int result = Integer.parseInt(String.valueOf(m.get("result")));
+        
+        // 这里的可能返回值1(成功) -1(失败) -2(警告-超过购买数量)，但是为了友好显示只要不是1都跳转到超过购买数量页面而不是500页面
         if (result != 1) {
-            andView.setViewName("/htm/wechat/prompt/500");
+            andView.setViewName("/htm/wechat/order/limitCount");
             return andView;
         }
+        
+//        if (result != 1) {
+//            andView.setViewName("/htm/wechat/prompt/500");
+//            return andView;
+//        }
         andView.addObject("userId", userId);
         andView.addObject("payOrderId", payOrderId);
         andView.addObject("orderMoney",
