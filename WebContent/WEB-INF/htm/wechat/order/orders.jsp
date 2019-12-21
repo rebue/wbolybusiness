@@ -150,7 +150,7 @@
 							} else if (data.message[i].orderState == 4) {
 								html += '	<span class="orderState">已签收</span>';
 							} else if (data.message[i].orderState == 5) {
-								html += '	<span class="orderState">已签收</span>';
+								html += '	<span class="orderState">已结算</span>';
 							} else if (data.message[i].orderState == "") {
 								html += '	<span class="status">全部订单</span>';
 							} else if (data.message[i].orderState == -1) {
@@ -270,7 +270,13 @@
 											html+='<a href="${ctx}/wechat/goods/goodsDetail.htm?guideDisplay=none&onlineId='+  data.message[i].items[j].onlineId+ '&promoterId=${userId}'+ '"  class="mui-btn locked" style = "margin-top:63px">满足免单条件</a>';
 										}
 									}else{
-										html+='	<a href="${ctx}/wechat/goods/goodsDetail.htm?guideDisplay=none&onlineId='+  data.message[i].items[j].onlineId+ '&promoterId=${userId}'+ '"  class="mui-btn" style = "margin-top:63px">匹配中</a>';
+										if(data.message[i].items[j].subjectType==1){
+											html+='	<a href="${ctx}/wechat/goods/goodsDetail.htm?guideDisplay=none&onlineId='+  data.message[i].items[j].onlineId+ '&promoterId=${userId}'+ '"  class="mui-btn" style = "margin-top:63px">匹配中</a>';
+
+										}else{
+											html+='	<a href="${ctx}/wechat/goods/goodsDetail.htm?guideDisplay=none&onlineId='+  data.message[i].items[j].onlineId+ '&promoterId=${userId}'+ '"  class="mui-btn" style = "margin-top:63px;display:none">匹配中</a>';
+										}
+											
 
 									}
 								};
@@ -473,7 +479,7 @@
 							}else if (data.message[i].orderState == 4) {
 								html += '<span class="status">已签收</span>';
 							}else if (data.message[i].orderState == 5) {
-								html += '<span class="status">已签收</span>';
+								html += '<span class="status">已结算</span>';
 							}else if (data.message[i].orderState == -1) {
 								html += '<span style="color:#8f8f94;border:solid 1px #8f8f94;"    class="status">已取消</span>';
 							};
@@ -598,7 +604,13 @@
 											html+='<a href="${ctx}/wechat/goods/goodsDetail.htm?guideDisplay=none&onlineId='+  data.message[i].items[j].onlineId+ '&promoterId=${userId}'+ '"  class="mui-btn locked" style = "margin-top:63px">满足免单条件</a>';
 										}
 									}else{
-										html+='	<a href="${ctx}/wechat/goods/goodsDetail.htm?guideDisplay=none&onlineId='+  data.message[i].items[j].onlineId+ '&promoterId=${userId}'+ '"  class="mui-btn" style = "margin-top:63px">匹配中</a>';
+										if(data.message[i].items[j].subjectType==1){
+											html+='	<a href="${ctx}/wechat/goods/goodsDetail.htm?guideDisplay=none&onlineId='+  data.message[i].items[j].onlineId+ '&promoterId=${userId}'+ '"  class="mui-btn" style = "margin-top:63px">匹配中</a>';
+
+										}else{
+											html+='	<a href="${ctx}/wechat/goods/goodsDetail.htm?guideDisplay=none&onlineId='+  data.message[i].items[j].onlineId+ '&promoterId=${userId}'+ '"  class="mui-btn" style = "margin-top:63px;display:none">匹配中</a>';
+
+										}
 
 									}
 								};
