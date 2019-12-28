@@ -27,7 +27,7 @@
 			</div> -->
 			<div class="mui-input-row"  style="padding:0 10px;font-size:15px;" >
 				<!-- <input id='verification' type="number" class="mui-input-clear mui-input" placeholder="请输入验证码" data-type="verification"> -->
-			  <p  style="padding-top:10px" >温馨提示：该商品有限购，您已操作购买数量，不能再购买啦-_-!!!</p>	
+			  <p  style="padding-top:10px" >温馨提示：该商品可能已经被购买，请咨询收银员生成新的商品二维码-_-!!!</p>	
 			</div>
 		</div>
 		<div class="mui-content-padded">
