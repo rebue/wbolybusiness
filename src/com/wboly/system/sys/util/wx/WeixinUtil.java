@@ -29,8 +29,7 @@ public class WeixinUtil {
 	 */
 	public static boolean createMenu(String at) {
 
-		String str = "{\"button\":[" + "{\"type\":\"view\"" + ",\"name\":\"大卖购物\"" + ",\"url\":\"" + WxConfig.onLineURL
-				+ "/wechat/oauth2/checkSignature/login.htm\"}]}";
+		String str = "{\"button\":[" + "{\"type\":\"view\"" + ",\"name\":\"微薄利\"" + ",\"url\":\"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx9e24a0de9e3e136c&redirect_uri=https%3A%2F%2Fwww.duamai.com%2Fwxx-svr%2Fwxx%2Fresponse%2Fauthorizecode%3Fappid%3Dwx9e24a0de9e3e136c&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect\"}]}";
 		System.err.println(str);
 		String reqUrl = WX_MENU.CREATE_MENU.GET() + "?access_token=" + at;
 
@@ -226,6 +225,8 @@ public class WeixinUtil {
 		if (accessToken != null && !accessToken.equals("") && !accessToken.equals("null")) {
 			return accessToken;
 		}
+		System.out.println("WxConfig.appid=" + WxConfig.appid);
+		System.out.println("WxConfig.appsecret=" + WxConfig.appsecret);
 		String url = SITE.ACCESS_TOKEN_BASE.URL + "?grant_type=client_credential&appid=" + WxConfig.appid + "&secret="
 				+ WxConfig.appsecret;
 		String result = HttpUtil.getUrl(url);
