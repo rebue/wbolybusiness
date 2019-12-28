@@ -88,11 +88,11 @@ public class SysAuth implements Filter {
                 if (!StringUtils.isAnyBlank(promoterId, onlineId) && !userId.equals(promoterId)) {
                     System.out.println("拦截器获取到的上线id为：" + onlineId);
                     // 线上微信回调地址
-//                    String encodeUrl = "https%3A%2F%2Fwww.duamai.com%2Fwxx-svr%2Fwxx%2Fresponse%2Fauthorizecode%3fappid%3d"
-//                            + SysContext.wxAppId;
+                    String encodeUrl = "https%3A%2F%2Fwww.duamai.com%2Fwxx-svr%2Fwxx%2Fresponse%2Fauthorizecode%3fappid%3d"
+                            + SysContext.wxAppId;
                     // 线下微信回调地址
-                     String encodeUrl =
-                     "http%3A%2F%2Fxym.natapp1.cc%2Fwxx%2Fresponse%2Fauthorizecode%3fappid%3d"+SysContext.wxAppId;
+//                     String encodeUrl =
+//                     "http%3A%2F%2Fxym.natapp1.cc%2Fwxx%2Fresponse%2Fauthorizecode%3fappid%3d"+SysContext.wxAppId;
 
                     String state = requestUrlss + "," + promoterId + "," + onlineId + ",invite";
                     String url = SITE.AUTHORIZE.getMessage() + "?appid=" + SysContext.wxAppId + "&redirect_uri="
@@ -106,12 +106,12 @@ public class SysAuth implements Filter {
 //                    String backUrl = WxConfig.onLineURL + "/wechat/oauth2/myPreReg.htm";// 微信回调地址
 //                    String encodeUrl = URLEncoder.encode(backUrl, "UTF-8");// 对url进行编码
                     // 线上微信回调地址
-//                    String encodeUrl = "https%3A%2F%2Fwww.duamai.com%2Fwxx-svr%2Fwxx%2Fresponse%2Fauthorizecode%3fappid%3d"
-//                            + SysContext.wxAppId;
+                    String encodeUrl = "https%3A%2F%2Fwww.duamai.com%2Fwxx-svr%2Fwxx%2Fresponse%2Fauthorizecode%3fappid%3d"
+                            + SysContext.wxAppId;
                     // 线下微信回调地址
-                     String encodeUrl =
-                     "http%3A%2F%2Fxym.natapp1.cc%2Fwxx%2Fresponse%2Fauthorizecode%3fappid%3d"+
-                     SysContext.wxAppId;
+//                     String encodeUrl =
+//                     "http%3A%2F%2Fxym.natapp1.cc%2Fwxx%2Fresponse%2Fauthorizecode%3fappid%3d"+
+//                     SysContext.wxAppId;
                     String state = requestUrlss + "," + payOrderId + "," + oldUserId + ",transfer";
                     String url = SITE.AUTHORIZE.getMessage() + "?appid=" + SysContext.wxAppId + "&redirect_uri="
                             + encodeUrl + "&response_type=code&scope=snsapi_userinfo&state=" + state;
