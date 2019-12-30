@@ -21,6 +21,15 @@
 	height: 100vh;
 }
 
+.box-tips {
+	height: 28px;
+	width: 100%;
+	background-color: #FFFFE0;
+	text-align: center;
+	line-height: 31px;
+	 display:none; 
+}
+
 .box-seccess-icon img {
 	height: 5.5rem;
 	width: 5rem;
@@ -105,6 +114,13 @@
 </head>
 <body>
 	<div class="pay-success-box">
+		<div id="boxtipsDom" class="box-tips">
+			<a href="https://mp.weixin.qq.com/s/XDvCVq8rN20dW2aooJgXmQ"> <img
+				src="${ctx }/images/wechat/guanzhu.png" width="18px" height="18px"
+				style="margin-top: 5px" /><span style="color: red; font-size: 14px">&nbsp;&nbsp;&nbsp;+关注查看积分与收益</span>
+			</a>
+		</div>
+
 		<div class="box-seccess-icon">
 			<img src="${ctx }/images/wechat/wechatPay.png" />
 		</div>
@@ -163,6 +179,19 @@
 						document.getElementById("totalIncomeDom").innerText = totalIncome;
 						document.getElementById("thisPointDom").innerText = thisPoint;
 						document.getElementById("pointDom").innerText = point;
+						
+						// 获取用户是否关注
+						mui.ajax('${ctx}/wechat/index/checkIsSubscribe.htm',{
+							dataType:'json',// 服务器返回json格式数据
+							type:'post',// HTTP请求类型
+							success:function(data){
+								console.log("查询用户是否关注的返回值："+data);
+								if(!data){
+									document.getElementById("boxtipsDom").style.display = "block"
+								}
+							}
+						})
+						
 					});
 		})(mui, document);
 	</script>

@@ -19,8 +19,8 @@
 				<div class="swiper-pagination"></div>
 			</div>
 			<!--轮播结束-->
-			<a class= "tips" href="https://mp.weixin.qq.com/s/TTOM3jibBDp0mM2Ajegi6w" style = "height:28px;width:100%;background-color:#FFFFE0;text-align:center;line-height:31px;display:none;justify-content:center;position:fixed;top:0"> 
-				<img src="${ctx }/images/wechat/guanzhu.png" width="18px" height="18px" style = "margin-top:5px"/><span style = "color:red;font-size:14px">&nbsp;&nbsp;&nbsp;请点击关注公众号</span>
+			<a class= "tips" href="https://mp.weixin.qq.com/s/XDvCVq8rN20dW2aooJgXmQ" style = "height:28px;width:100%;background-color:#FFFFE0;text-align:center;line-height:31px;display:none;justify-content:center;position:fixed;top:0"> 
+				<img src="${ctx }/images/wechat/guanzhu.png" width="18px" height="18px" style = "margin-top:5px"/><span style = "color:red;font-size:14px">&nbsp;&nbsp;&nbsp;+关注查看积分与收益</span>
 			</a>
 			<div class="rulepage " >
 				<a  href="${ctx }/wechat/user/rulePage.htm?userId=${userId}" 

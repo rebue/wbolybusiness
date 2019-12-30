@@ -56,7 +56,7 @@
 		<div>
 			<a class="tips" id="tip" style="height: 28px; background-color: #FFFFE0; text-align: center; line-height: 31px; display: none; justify-content: center;">
 				<img src="${ctx }/images/wechat/guanzhu.png" width="18px" height="18px" style="margin-top: 5px" />
-				<span style="font-size: 14px">&nbsp;&nbsp;&nbsp;请点击关注公众号</span>
+				<span style="font-size: 14px">&nbsp;&nbsp;&nbsp;+关注查看积分与收益</span>
 			</a>
 		</div>
 		<div class="mui-scroll">
