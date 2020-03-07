@@ -30,20 +30,26 @@
 				<ul class="pay-info">
 					<li class="mui-table-view-cell">
 						<h5>
-							订单金额<span id="smoney" class="ordertotal mui-pull-right">${orderMoney}元</span>
+							订单金额<span id="smoney" class="ordertotal mui-pull-right">
+							
+						${orderMoney}元 
+							
+							</span>
 						</h5>
 					</li>
 					<li class="mui-table-view-cell"><h5>请选择一种支付方式</h5></li>
 				</ul>
 				<form class="mui-input-group" id="goods-group"></form>
 			</div>
-
+			<div  id="total-box" style="height:45px;background:red;margin-top:3px;text-align:center;" >
+				<button style=" height:100%;  width:100%; background:red;border:none;color:white;"  class="paybtn" id="goPay">立即支付</button>
+			</div>
 		</div>
 	</div>
 
-	<footer class="mui-bar total-box mui-checkbox mui-left fixbtm fullbtm" id="total-box">
+<!-- 	<footer   style="overflow:hidden;position:absolute;top:51%;display:none;"  class="mui-bar total-box mui-checkbox mui-left fixbtm fullbtm" id="total-box">
 		<button class="mui-pull-right paybtn" id="goPay">立即支付</button>
-	</footer>
+	</footer> -->
 
 	<script type="text/javascript" charset="utf-8">
 		(function($, doc) {

@@ -578,7 +578,7 @@ public class WeChatOrderController extends SysController {
         andView.addObject("userId", userId);
         andView.addObject("payOrderId", payOrderId);
         andView.addObject("orderMoney",
-                new BigDecimal(String.valueOf(m.get("realMoney"))).setScale(4, BigDecimal.ROUND_HALF_UP));
+                new BigDecimal(String.valueOf(m.get("realMoney"))).setScale(2, BigDecimal.ROUND_HALF_UP));
         andView.setViewName("/htm/wechat/pay/paycenter");
         return andView;
     }
