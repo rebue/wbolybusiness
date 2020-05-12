@@ -97,7 +97,7 @@
 					
 					//点击下一步按钮					
 					goNext.addEventListener('tap', function(event) {
-						window.location.href = "${ctx }/wechat/user/userCenter.htm?promoterId=${userId}";
+						window.location.href = "${ctx }/wechat/user/userCenter.htm";
 					/* 	if(!verifyMobile()){
 							return ;
 						}
